@@ -1,0 +1,450 @@
+Create extensions like postgis, postgis_raster, plpython3u
+
+### Vector Data for Baveria
+--------------------------------------------------------------------------------------------------------------------------------
+
+shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h localhost -p 5432 -U postgres -d VectorDB 
+
+shp2pgsql -s 4326 /home/arkaghosh/Downloads/Baveria/Vector/Baveria_1 baveria_districts | psql -h localhost -p 5432 -U postgres -d Baveria 
+
+#### Relational Queries 
+
+SELECT name_1,name_2, ST_AsText(ST_Transform (geom, 4326)) FROM public.baveria_districts  -- converts pg_geom to WKT MULTIPOLYGONS
+WHERE name_2 in ('München','München (Kreisfreie Stadt)');
+
+
+SELECT name_1,name_2, ST_AsText((ST_Dump(geom)).geom) FROM public.baveria_districts   -- Multipolygons to polygons
+WHERE name_2 in ('München','München (Kreisfreie Stadt)') ;
+
+
+SELECT DISTINCT ON (m.name_2)m.name_2, length(ST_AsText((ST_Dump(m.geom)).geom)), ST_AsText((ST_Dump(m.geom)).geom) 
+FROM baveria_districts as m
+WHERE   m.name_2 = 'Rosenheim'
+
+SELECT DISTINCT ON (m.name_2)m.name_2, length(ST_AsText((ST_Dump(m.geom)).geom)), ST_AsText((ST_Dump(m.geom)).geom) -- first row leng
+FROM baveria_districts as m
+
+
+*******************************************************************************************************************
+### Raster Data (RasDaMan)
+
+wcst_import.sh /home/arkaghosh/Downloads/Baveria/Baveria_Temp.json
+
+### PetascopeDB
+
+SELECT id, coverage_id, domain_set_id, envelope_id, range_type_id, rasdaman_range_set_id 
+FROM public.coverage
+WHERE coverage_id = 'Baveria_Temperature_MODIS_1km';
+
+SELECT * FROM public.envelope
+WHERE envelope_id = 787
+
+SELECT * FROM public.axis_extent
+WHERE envelope_by_axis_id = 788
+
+
+CREATE OR REPLACE VIEW LookUp AS
+
+SELECT coverage.id, geo_axis.general_grid_id, coverage.coverage_id,  axis_extent.axis_label, axis_extent.axis_type, axis_extent.uom_label AS unit, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound, geo_axis.resolution
+FROM public.coverage, public.envelope,  public.axis_extent, public.geo_axis
+WHERE coverage.envelope_id = envelope.envelope_id 
+AND envelope.envelope_by_axis_id = axis_extent.envelope_by_axis_id 
+AND axis_extent.lower_bound = geo_axis.lower_bound
+
+AND coverage_id = 'Baveria_Temperature_MODIS_1km';
+
+********************************************************************************************************************
+### Combined Queries
+
+SELECT rasdaman_op.get_array('select m[49:50, 0:2 , 0:2] from Baveria_Temperature_MODIS_1km as m')
+
+SELECT  m.name_2 AS Kommun,
+        rasdaman_op.aggregated_result(CONCAT('select avg_cells(clip((c[300, 0:* , 0:*]*0.02) - 273.15,',rasdaman_op.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Baveria_Temperature_MODIS_1km AS c')) AS avg_temp_°C  
+FROM    baveria_districts as m
+WHERE   m.name_2 = 'München (Kreisfreie Stadt)';
+
+
+SELECT  m.name_2 AS region,
+	rasdaman_op.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)) AS geom
+FROM    baveria_districts as m
+WHERE   m.name_2 in ('Deggendorf',
+	           'Mühldorf am Inn',
+	           'Passau',
+	           'Regen',
+	           'Kelheim',
+	           'Erding');
+
+SELECT  m.name_2 AS region,
+        rasdaman_op.aggregated_result(CONCAT('select avg_cells(clip((c[100, 0:* , 0:*]*0.02) - 273.15,',rasdaman_op.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Baveria_Temperature_MODIS_1km AS c')) AS avg_temp_°C
+FROM    baveria_districts as m
+WHERE   m.name_2 in ('Deggendorf',
+           'Mühldorf am Inn',
+           'Passau',
+           'Regen',
+           'Kelheim',
+           'Erding');
+
+SELECT  m.name_2 AS region,
+        rasdaman_op.aggregated_result(CONCAT('select min_cells(clip((c[100, 0:* , 0:*]*0.02) - 273.15,',rasdaman_op.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Baveria_Temperature_MODIS_1km AS c')) AS minTemp,
+		rasdaman_op.aggregated_result(CONCAT('select avg_cells(clip((c[100, 0:* , 0:*]*0.02) - 273.15,',rasdaman_op.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Baveria_Temperature_MODIS_1km AS c')) AS avgTemp,
+		rasdaman_op.aggregated_result(CONCAT('select max_cells(clip((c[100, 0:* , 0:*]*0.02) - 273.15,',rasdaman_op.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Baveria_Temperature_MODIS_1km AS c')) AS maxTemp
+FROM    baveria_districts as m
+WHERE   m.name_2 in ('Deggendorf',
+           'Mühldorf am Inn',
+           'Passau',
+           'Regen',
+           'Kelheim',
+           'Erding');
+
+
+*********************************************************************************************************************************
+### Ontology
+
+jdbc:postgresql://localhost:5432/Baveria
+
+:{gid} geo:asWKT {geom}^^geo:wktLiteral .
+
+
+
+:{region} :tempC {tempC}^^xsd:double .
+
+SELECT m.gid as region,
+	   rasdaman_op.aggregated_result('select avg_cells(c[300, 0:* , 0:*]*0.02) - 273.15 from Baveria_Temperature_MODIS_1km AS c') AS tempC
+FROM   baveria_districts as m
+WHERE  m.name_2 = 'München (Kreisfreie Stadt)';
+
+
+
+### Protege
+---------------------------------------------------------------------------------------------------------------------------------------
+
+Mapping ID: rasterData_tempC
+
+:{region} :tempC {tempC}^^xsd:double .
+
+SELECT m.gid as region,
+	   rasdaman_op.aggregated_result('select avg_cells(c[300, 0:* , 0:*]*0.02)- 273.15 from Baveria_Temperature_MODIS_1km AS c') AS tempC
+FROM baveria_districts as m
+
+
+### GeoSPQRQL Query
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <http://www.semanticweb.org/arkaghosh/ontologies/2023/10/untitled-ontology-2/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+select * {
+#?x a :District .
+?x rdfs:label ?region .
+?x :tempC ?avgTEMP .
+}
+
+### Result
+
+<http://www.semanticweb.org/arkaghosh/ontologies/2023/10/untitled-ontology-2/1>	"Aichach-Friedberg"^^xsd:string	"4.4499467896439455"^^xsd:double	
+<http://www.semanticweb.org/arkaghosh/ontologies/2023/10/untitled-ontology-2/2>	"Altötting"^^xsd:string	"4.4499467896439455"^^xsd:double	
+<http://www.semanticweb.org/arkaghosh/ontologies/2023/10/untitled-ontology-2/3>	"Amberg"^^xsd:string	"4.4499467896439455"^^xsd:double	
+<http://www.semanticweb.org/arkaghosh/ontologies/2023/10/untitled-ontology-2/4>	"Amberg-Sulzbach"^^xsd:string	"4.4499467896439455"^^xsd:double
+---------------------------------------------------------------------------------------------------------------------------------------
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+---------------------------------------------------------------------------------------------------------------------------------------
+#### Mapping ID: raster_aggregation
+
+:{region} :raster_aggregation {tempC}^^xsd:double . 
+
+#### Source SQL Query
+
+SELECT m.name_2 as region,
+	   rasdaman_op.aggregated_result('select max_cells(c[300, 0:* , 0:*]*0.02)-273.15 from Baveria_Temperature_MODIS_1km AS c') AS tempC
+FROM    baveria_districts as m
+
+#### GeoSPQRQL Query
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <http://www.semanticweb.org/arkaghosh/ontologies/2023/10/untitled-ontology-2/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+select * {
+#?x a :District .
+#?x rdfs:label ?region .
+?x :raster_aggregation ?avgTEMP .
+}
+---------------------------------------------------------------------------------------------------------------------------------------
+
+:{gid} :getArray {filtered_array}^^xsd:double . 
+
+SELECT m.gid as gid,
+rasdaman_op.get_array('select m[49:50, 0:2 , 0:2] from Baveria_Temperature_MODIS_1km as m') AS filtered_array
+FROM   baveria_districts as m
+
+PREFIX : <http://www.semanticweb.org/arkaghosh/myPhD_ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+select * {
+?x rdfs:label ?region .
+?x :getArray ?filtered_array .
+}
+
+
+
+SELECT  m.name_2 AS regions,
+        rasdaman_op.get_array(CONCAT('select avg_cells(clip((c[100, 0:* , 0:*]*0.02) - 273.15,',rasdaman_op.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Baveria_Temperature_MODIS_1km AS c')) AS avg_temp_°C
+FROM    baveria_districts as m
+
+
+http://www.semanticweb.org/arkaghosh/myPhD_ontology/getArray
+################################################################################################
+MappingID: Temp
+
+SPARQL Query
+
+geo	<http://www.opengis.net/ont/geosparql/> (accessed on 10 June 2023)
+geof	http://www.opengis.net/def/function/geosparql (accessed on 10 June 2023)
+units	http://www.opengis.net/def/uom/OGC/1.0/ (accessed on 10 June 2023)
+crs	http://www.opengis.net/def/crs/OGC/1.3/CRS84/ (accessed on 10 June 2023)
+geo-sf	http://www.opengis.net/def/dataType/OGC-SF/1.0/ (accessed on 10 June 2023)
+dcb	http://www.semanticweb.org/OntologyRasterDataCube/ (accessed on 10 June 2023)
+geop	http://www.opengis.net/def/property/OGC-GeoSPARQL/1.0/ (accessed on 10 June 2023)
+
+select ?raster_cell ?rasterDB_name ?time_stamp 
+where{
+?f	dcb: hasSTL ?stl. ?stl dcb:hasDateTime ?time_stamp;
+        dcb: hasSpatialRef ?sp. ?sp dcb: asFieldWKT ?raster_cell.
+?f      dcb: hasFieldValue ?LST_Day_value; dcb: hasVariableName ?var.
+
+FILTER (?time_stamp> "2009-03-15T00:00:00+02:00"^^xsd:dateTimeStamp &&
+?time stamp < "2009-03-25T00:00:00+02:00"^^xsd:dateTimeStamp && ?var = 'LST_Day_1km' )}
+
+select * {
+?x rdfs:label ?region .
+?x :averageRASTER ?output .
+?f dcb: hasRasterName ?rasterDB_name.
+?f dcb:hasDateTime ?time_stamp;
+
+
+FILTER (?time_stamp> "2009-03-15T00:00:00+02:00"^^xsd:dateTimeStamp &&
+?time stamp < "2009-03-25T00:00:00+02:00"^^xsd:dateTimeStamp && ?rasterDB_name = 'Baveria_Temperature_MODIS_1km' )}
+
+
+****************************************************************
+0. Source preparation
+
+0.1 match Vector data with rasdaman table 
+0.2 look up table creation (general)
+
+
+1. User runs SPARQL 
+
+1. SPARQL
+1.1 Define some functions min/max/avg
+1.2 Define arguments
+1.3 Function average
+	- ?wkt or geometry
+	- time/date
+	- some argument to identify the raster
+1.4 Create sample queries, including obda mappings
+Example query
+?region a :Region .
+?region geo:wkt ?wkt .
+?region :hasraster ?rastername .
+arka_raster_min(?wkt, ?rastername)
+
+Respective example mappings:
+target	:region/{region_id} a :Region
+source	SELECT ?region FROM table_name
+
+target	:region/{region_id} geo:asWKT {geometry}^^geo:wktLiteral
+source	SELECT region_id, geometry FROM table_name
+
+Respective example table schemas:
+CREATE TABLE table_name (
+region_id BIGINT
+geometry GEOMETRY
+etc..
+rastername TEXT
+)
+
+Example rows from these tables.
+Sample pipeline: How you create the rastername value. Do you query Petascope? Provide yourself some values? If so how for Bavaria for example?
+
+2. SPARQL-SQL translation by Ontop
+arka_raster_min -->
+I want the rasdamn string ...
+"SELECT clip c( $1, $2 ...)"
+$1
+
+3. Come up with other plans
+tagging --> what willl the input look like. how will that input be populated?
+
+4. raster specific parameters
+how will you feed these values to rasdapy? look table?
+Maybe, having this in the SQL translation is not ideal ... we don't want the user to see this
+Maybe have a table, maybe a python dataframe which does everything in the background
+How do you populate or extract the info?
+
+
+################################################################################################
+
+SQL Query
+
+SELECT m.name_2 as region,
+rasdaman_op.aggregated_result('select max_cells(c[300, 0:* , 0:*]*0.02)-273.15 from Baveria_Temperature_MODIS_1km AS c') AS output
+FROM    region_bavaria as m
+WHERE   m.name_2 = 'Deggendorf';
+
+
+MAPPING
+
+:{region} :raster_aggregation {output}^^xsd:double . 
+
+
+SPARQL Query
+
+geo	<http://www.opengis.net/ont/geosparql/> 
+geof	<http://www.opengis.net/def/function/geosparql>
+units	<http://www.opengis.net/def/uom/OGC/1.0/>
+crs	<http://www.opengis.net/def/crs/OGC/1.3/CRS84/>
+geo-sf	<http://www.opengis.net/def/dataType/OGC-SF/1.0/>
+rasdb	<http://www.semanticweb.org/RasterDataCube/>
+geop	<http://www.opengis.net/def/property/OGC-GeoSPARQL/1.0/>
+
+
+SELECT * {
+?x rdfs:label ?region .
+?f rasdb: hasRasterName ?rasterDB_name.
+?f rasdb:hasDateTime ?time_stamp;
+?x :averageRASTER ?output .
+
+
+
+FILTER (?time_stamp> "2009-03-15T00:00:00+02:00"^^xsd:dateTimeStamp &&
+?time stamp < "2009-03-25T00:00:00+02:00"^^xsd:dateTimeStamp && ?rasterDB_name = 'Baveria_Temperature_MODIS_1km' )}
+
+
+
+GeoSPARQL Query 02
+-------------------------
+geo	<http://www.opengis.net/ont/geosparql/> 
+geof	<http://www.opengis.net/def/function/geosparql>
+units	<http://www.opengis.net/def/uom/OGC/1.0/>
+crs	<http://www.opengis.net/def/crs/OGC/1.3/CRS84/>
+geo-sf	<http://www.opengis.net/def/dataType/OGC-SF/1.0/>
+rasdb	<http://www.semanticweb.org/RasterDataCube/>
+geop	<http://www.opengis.net/def/property/OGC-GeoSPARQL/1.0/>
+
+
+SELECT * {
+?x rdfs:label ?region_name .
+?x :averageRASTER ?output .
+?r rasdb: hasRasterName ?rasterDB_name .
+?r rasdb:hasDateTime ?start_time .
+?r rasdb:hasDateTime ?end_time .
+
+FILTER (?start_time = "2023-06-26T00:00:00+00:00"^^xsd:dateTimeStamp 
+&&
+?end_time = "2023-07-03T00:00:00+00:00"^^xsd:dateTimeStamp 
+&& 
+?rasterDB_name = 'Baveria_Temperature_MODIS_1km' )}
+
+
+MAPPING (still thinking)
+-------------------------
+:{region} :average_temporal_query {output}^^xsd:double . 
+
+
+SQL Query
+-------------------------
+SELECT m.name_2 as region,
+rasdaman_op.aggregated_result(CONCAT('select avg_cells(c[?start_time:?end_time, 0:* , 0:*]*0.02)-273.15 from, str(?rasterDB_name), AS c')) AS output
+FROM    ?region_bavaria as m
+WHERE   m.name_2 = ?region_name;
+
+
+
+
+SELECT  m.name_2 AS regions,
+        rasdaman_op.get_array(CONCAT('select avg_cells(clip((c[100, 0:* , 0:*]*0.02) - 273.15,',rasdaman_op.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Baveria_Temperature_MODIS_1km AS c')) AS avg_temp_°C
+FROM    baveria_districts as m
+
+
+GeoSPARQL Query 03
+-------------------------
+geo	<http://www.opengis.net/ont/geosparql/> 
+geof	<http://www.opengis.net/def/function/geosparql>
+units	<http://www.opengis.net/def/uom/OGC/1.0/>
+crs	<http://www.opengis.net/def/crs/OGC/1.3/CRS84/>
+geo-sf	<http://www.opengis.net/def/dataType/OGC-SF/1.0/>
+rasdb	<http://www.semanticweb.org/RasterDataCube/>
+geop	<http://www.opengis.net/def/property/OGC-GeoSPARQL/1.0/>
+
+
+SELECT * {
+?region rdfs:label ?region_name .
+?region geo:asWKT ?region_vector_geom .
+?raster rasdb:hasRasterName ?rasterDB_name .
+?raster rasdb:hasDateTime ?start_time .
+?raster rasdb:hasDateTime ?end_time .
+
+BIND(rasdb:temporal_average(?rasterDB_name, 0^^xsd:integer, 250^^xsd:integer, ?region_vector_geom) AS ?avg_result)
+
+}
+
+
+MAPPING (still thinking)
+-------------------------
+
+
+
+SQL Query
+-------------------------
+SELECT m.name_2 as region,
+rasdaman_op.aggregated_result(CONCAT('select avg_cells(c[?start_time:?end_time, 0:* , 0:*]*0.02)-273.15 from, str(?rasterDB_name), AS c')) AS output
+FROM    ?region_bavaria as m
+WHERE   m.name_2 = ?region_name;
+
+
+SPARQL Functions:
+rasdb:spatial_average()
+rasdb:temporal_average()
+rasdb:aggregation_average()
+
+
+Ontop Logic:
+SPARQL Function --> DB Function
+1) SPARQL Function
+rasdb:temporal_average(rasterDB_Name, start_time, end_time, geom)
+2) DB Function 
+Serialization
+"aggregated_result(CONCAT('select avg_cells(c[" + %start_time% + ":" + %end_time% +", 0:* , 0:*]*0.02) from, str(" + %rasterDB_name% + "), AS c')) AS output"
+
+"query2numeric(CONCAT('select min_cells(clip(c[" + %start_time% + ":" + %end_time% +", 0:* , 0:*],', geo2grid_coords(ST_AsText((ST_Dump(%region_vector_geom%)).%region_vector_geom%)),')) from, str(" + %rasterDB_name% + "), AS c')) AS minTemp"
+
+Question: How do I tell Ontop that my plpython function name is "aggregated_result"? 
+Option 1: Properties file with k-v pairs. Needs carefult implementation!
+Option 2: Anyone who wants to use Ontop+Rasdman must use aggregated_result, with that name!
+
+
+GeoSPARQL Query 04
+-------------------------
+geo:	<http://www.opengis.net/ont/geosparql/> 
+geof:	<http://www.opengis.net/def/function/geosparql>
+units:	<http://www.opengis.net/def/uom/OGC/1.0/>
+crs:	<http://www.opengis.net/def/crs/OGC/1.3/CRS84/>
+geo-sf	<http://www.opengis.net/def/dataType/OGC-SF/1.0/>
+rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+geop:	<http://www.opengis.net/def/property/OGC-GeoSPARQL/1.0/>
+
+
+SELECT * {
+?raster rasdb:hasRasterName ?rasterDB_name .
+?raster rasdb:hasDateTime ?start_time .
+?raster rasdb:hasDateTime ?end_time .
+
+BIND(rasdb:temporal_average(?rasterDB_name, 0^^xsd:integer, 250^^xsd:integer) AS ?avg_result)
+
+}
+
+
+SQL
+-----------
+"query2numeric(CONCAT('select avg_cells(c[" + %start_time% + ":" + %end_time% +", 0:* , 0:*]*0.02) from, str(" + %rasterDB_name% + "), AS c')) AS output"

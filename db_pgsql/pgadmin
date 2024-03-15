@@ -1,0 +1,547 @@
+Apache successfully restarted. You can now start using pgAdmin 4 in web mode at http://127.0.0.1/pgadmin4
+
+### POSTGRESQL Command Line ###
+
+arkaghosh@lat7410g:~$ sudo -u postgres psql
+psql (15.2 (Ubuntu 15.2-1.pgdg20.04+1), server 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1))
+Type "help" for help.
+
+postgres=# \l
+                                                  List of databases
+    Name     |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges   
+-------------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ petascopedb | petauser | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ postgres    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ template0   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+             |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+             |          |          |             |             |            |                 | postgres=CTc/postgres
+(4 rows)
+
+postgres=# \du
+                                   List of roles
+ Role name |                         Attributes                         | Member of 
+-----------+------------------------------------------------------------+-----------
+ petauser  | Superuser, Create role, Create DB                          | {}
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+
+postgres=# CREATE DATABASE emp_umea; 
+CREATE DATABASE
+postgres=# \c emp_umea
+psql (15.2 (Ubuntu 15.2-1.pgdg20.04+1), server 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1))
+You are now connected to database "emp_umea" as user "postgres".
+emp_umea=# CREATE TABLE studentsUmU(id SERIAL PRIMARY KEY, first_name VARCHAR, last_name VARCHAR, role VARCHAR);
+CREATE TABLE
+emp_umea=# \dt
+            List of relations
+ Schema |    Name     | Type  |  Owner   
+--------+-------------+-------+----------
+ public | studentsumu | table | postgres
+(1 row)
+
+emp_umea=# INSERT INTO studentsumu(first_name, last_name, role) VALUES ('John', 'Smith', 'PhD');
+INSERT 0 1
+emp_umea=# select * from studentsumu
+emp_umea-# INSERT INTO studentsumu(first_name, last_name, role) VALUES ('John', 'Smith', 'PhD');;
+ERROR:  syntax error at or near "INTO"
+LINE 2: INSERT INTO studentsumu(first_name, last_name, role) VALUES ...
+               ^
+emp_umea=# select * from studentsumu;
+ id | first_name | last_name | role 
+----+------------+-----------+------
+  1 | John       | Smith     | PhD
+(1 row)
+
+emp_umea=# select * from studentsumu 
+INSERT INTO studentsumu(first_name, last_name, role) VALUES ('Ark', 'Gho', 'PhD');;         
+ERROR:  syntax error at or near "INTO"
+LINE 2: INSERT INTO studentsumu(first_name, last_name, role) VALUES ...
+               ^
+emp_umea=# INSERT INTO studentsumu(first_name, last_name, role) VALUES ('Ark', 'Gho', 'PhD');
+INSERT 0 1
+emp_umea=# \dt
+            List of relations
+ Schema |    Name     | Type  |  Owner   
+--------+-------------+-------+----------
+ public | studentsumu | table | postgres
+(1 row)
+
+emp_umea=# select * from studentsumu;
+ id | first_name | last_name | role 
+----+------------+-----------+------
+  1 | John       | Smith     | PhD
+  2 | Ark        | Gho       | PhD
+(2 rows)
+
+emp_umea=# cd..
+emp_umea-# cd
+emp_umea-# exit
+Use \q to quit.
+emp_umea-# \q
+arkaghosh@lat7410g:~$ sudo -u postgres psql
+[sudo] password for arkaghosh: 
+psql (15.2 (Ubuntu 15.2-1.pgdg20.04+1), server 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1))
+Type "help" for help.
+
+postgres=#  \l
+                                                  List of databases
+    Name     |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges   
+-------------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ emp_umea    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ petascopedb | petauser | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ postgres    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ template0   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+             |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+             |          |          |             |             |            |                 | postgres=CTc/postgres
+(5 rows)
+
+postgres=# emp_umu
+postgres-# emp_umea
+postgres-# \c emp_umea
+psql (15.2 (Ubuntu 15.2-1.pgdg20.04+1), server 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1))
+You are now connected to database "emp_umea" as user "postgres".
+emp_umea-# select * from studentsumu;
+ERROR:  syntax error at or near "emp_umu"
+LINE 1: emp_umu
+        ^
+emp_umea=# select * from studentsumu;
+ id | first_name | last_name | role 
+----+------------+-----------+------
+  1 | John       | Smith     | PhD
+  2 | Ark        | Gho       | PhD
+(2 rows)
+
+emp_umea=# \q
+arkaghosh@lat7410g:~$ sudo -u postgres psql
+psql (15.2 (Ubuntu 15.2-1.pgdg20.04+1), server 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1))
+Type "help" for help.
+
+postgres=#  \l                       
+                                                  List of databases
+    Name     |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges   
+-------------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ emp_umea    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ petascopedb | petauser | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ postgres    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ template0   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+             |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+             |          |          |             |             |            |                 | postgres=CTc/postgres
+(5 rows)
+
+postgres=# \c petascopedb 
+psql (15.2 (Ubuntu 15.2-1.pgdg20.04+1), server 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1))
+You are now connected to database "petascopedb" as user "postgres".
+petascopedb=# select * ;
+ERROR:  SELECT * with no tables specified is not valid
+LINE 1: select * ;
+               ^
+petascopedb=# select * from petascopedb;
+ERROR:  relation "petascopedb" does not exist
+LINE 1: select * from petascopedb;
+                      
+postgres=# \c emp_umea
+psql (15.2 (Ubuntu 15.2-1.pgdg20.04+1), server 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1))
+You are now connected to database "emp_umea" as user "postgres".
+emp_umea=# \dt
+            List of relations
+ Schema |    Name     | Type  |  Owner   
+--------+-------------+-------+----------
+ public | studentsumu | table | postgres
+(1 row)
+
+emp_umea=# \q
+arkaghosh@lat7410g:~$ sudo -u postgres psql
+psql (15.2 (Ubuntu 15.2-1.pgdg20.04+1), server 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1))
+Type "help" for help.
+
+postgres=# \l
+                                                  List of databases
+    Name     |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges   
+-------------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ emp_umea    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ petascopedb | petauser | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ postgres    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ template0   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+             |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+             |          |          |             |             |            |                 | postgres=CTc/postgres
+(5 rows)
+
+postgres=# \c petascopedb 
+psql (15.2 (Ubuntu 15.2-1.pgdg20.04+1), server 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1))
+You are now connected to database "petascopedb" as user "postgres".
+petascopedb=# \dt
+petascopedb=# select * from irregular_axis_direct_positions;
+
+
+gdalinfo /home/arkaghosh/Downloads/RASDAMAN_FINALE/Worked/Sweden/Snow_500m.nc
+
+
+-- ====================================== VECTOR DATA ======================================
+
+shp2pgsql -s 4326 /home/arkaghosh/Downloads/RASDAMAN_FINALE/Worked/Sweden/SWE_adm/SWE_adm2 municipalswe | psql -h localhost -p 5432 -U postgres -d Sweden 
+
+shp2pgsql -s 4326 /home/arkaghosh/Downloads/RAS_DATA/world_districts/gadm36 world_districts | psql -h localhost -p 5432 -U postgres -d Sweden 
+
+shp2pgsql -s 4326 /home/arkaghosh/Downloads/RAS_DATA/countries world_countries | psql -h localhost -p 5432 -U postgres -d Sweden 
+
+
+
+
+arkaghosh@lat7410g:~$ shp2pgsql -s 4326 /home/arkaghosh/Downloads/RASDAMAN_FINALE/Worked/Sweden/SWE_adm/SWE_adm1 provinceswe | psql -h localhost -p 5432 -U postgres -d Sweden 
+Field id_0 is an FTDouble with width 10 and precision 0
+Field id_1 is an FTDouble with width 10 and precision 0
+Field id_2 is an FTDouble with width 10 and precision 0
+Shapefile type: Polygon
+Postgis type: MULTIPOLYGON[2]	
+Password for user postgres: 
+SET
+SET
+BEGIN
+CREATE TABLE
+ALTER TABLE
+
+/opt/rasdaman/data/RASBASE
+
+Data resides at /var/lib/postgresql/15/main
+
+arkaghosh@lat7410g:~$ service rasdaman status
+● rasdaman.service - Rasdaman Array Database
+
+arkaghosh@lat7410g:~$ sudo service postgresql status
+[sudo] password for arkaghosh: 
+● postgresql.service - PostgreSQL RDBMS
+
+arkaghosh@lat7410g:~$ sudo service postgresql stop
+arkaghosh@lat7410g:~$ sudo service postgresql status
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: inactive (dead) since Sun 2023-07-02 15:25:20 IST; 3s ago
+    Process: 1388 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+   Main PID: 1388 (code=exited, status=0/SUCCESS)
+
+Jul 02 15:02:06 lat7410g systemd[1]: Starting PostgreSQL RDBMS...
+Jul 02 15:02:06 lat7410g systemd[1]: Finished PostgreSQL RDBMS.
+Jul 02 15:25:20 lat7410g systemd[1]: postgresql.service: Succeeded.
+Jul 02 15:25:20 lat7410g systemd[1]: Stopped PostgreSQL RDBMS.
+
+arkaghosh@lat7410g:~$ sudo service postgresql start
+arkaghosh@lat7410g:~$ sudo service postgresql status
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Sun 2023-07-02 15:25:37 IST; 4s ago
+    Process: 8291 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+   Main PID: 8291 (code=exited, status=0/SUCCESS)
+
+Jul 02 15:25:37 lat7410g systemd[1]: Starting PostgreSQL RDBMS...
+Jul 02 15:25:37 lat7410g systemd[1]: Finished PostgreSQL RDBMS.
+
+arkaghosh@lat7410g:~$ sudo -u postgres psql
+psql (15.3 (Ubuntu 15.3-1.pgdg20.04+1))
+Type "help" for help.
+
+postgres=# 
+
+
+
+
+
+-- ======================================== SQL =====================================================
+
+SELECT name_2, geom FROM municipalswe WHERE municipalswe.name_2 = 'Umeå';
+
+SELECT gid, name_2, geom 
+FROM municipalswe 
+WHERE municipalswe.name_2 in ('Stockholm',
+                'Umeå',
+                'Karlshamn',
+                'Linköping',
+                'Norrköping');
+
+SELECT name_2, geom FROM municipalswe WHERE municipalswe.name_1 = 'Västerbotten';
+
+SELECT name_2, geom FROM municipalswe WHERE municipalswe.name_2 = 'Umeå';
+
+select (ST_ValueCount(ST_Union(ST_Clip(r.rast,r.geom,true),1,'area_sum'))).* from (select * ,(SELECT (ST_SetSRID(ST_GeomFromGeoJSON('{ "type": "Polygon", "coordinates": [[[47.48034200000001,39.13347600000003],[47.49611600000003,39.114525000000015],[47.510418000000016,39.10534899999999],[47.52599799999996,39.08644900000013],[47.54254200000014,39.05803700000013],[47.53256200000004,39.0290940000001],[47.52131200000002,39.00986000000012],[47.49699400000003,38.99015700000001],[47.498607000000106,38.97137000000009],[47.52537600000005,38.96289400000006],[47.52689400000003,38.94405700000004],[47.54134800000014,38.92563300000012],[47.529907000000094,38.906041000000016],[47.519521,38.87627100000009],[47.521041000000025,38.85683000000006],[47.54817600000001,38.83865400000002],[47.58924400000001,38.80162500000006],[47.59110200000009,38.762773000000095],......]]}'), 4326)))as geom from public.layer where filename in ( 'myrasterfile.tif') ) as r where ST_Intersects(r.rast,r.geom))
+
+-- Geometry Data Conversion --
+
+SELECT ST_X(ST_GeomFromEWKT('SRID=4326;POINT(-71.064544 42.28787)')) AS long, ST_Y(ST_GeomFromEWKT('SRID=4326;POINT(-71.064544 42.28787)')) AS lat; -- -71.064544(lon)  42.28787(lat) POINT to Long lat
+
+WITH j AS (
+ SELECT 
+  (ST_DumpPoints(
+    ST_GeomFromText('POLYGON((15.97412109375 63.77277727885664,17.622070312499996 64.1585310519412,17.534179687499996 63.391521744008855,15.97412109375 63.77277727885664))'))).geom AS point
+) 
+SELECT ST_X(j.point) AS long, ST_Y(j.point) AS lat FROM j; -- polygons to list of lat long
+
+SELECT name_2, ST_AsText(ST_Transform (geom, 4326)) FROM municipalswe WHERE municipalswe.name_2 = 'Linköping'; -- converts pg_geom to WKT MULTIPOLYGONS
+
+SELECT name_2, ST_AsText(ST_Transform (geom, 4326)) FROM municipalswe WHERE municipalswe.name_2 = 'Umeå'; --returns geom as MULTIPLYGONS
+
+SELECT name_2, ST_AsText(ST_Transform (geom, 4326)) FROM municipalswe WHERE municipalswe.name_1 = 'Västerbotten'; --returns geom as MULTIPLYGONS
+
+
+SELECT name_2, ST_AsText((ST_Dump(geom)).geom) FROM municipalswe WHERE municipalswe.name_2 = 'Linköping'; --Multipolygons to polygons
+
+SELECT name_2, ST_AsText((ST_Dump(geom)).geom) FROM municipalswe WHERE municipalswe.name_2 = 'Umeå'; --Multipolygons to polygons
+
+-- ======================================= PlPython3 ===============================================
+
+select rasdaman.return_versions()
+
+select rasdaman.connect_rasdaman()
+
+select rasdaman.describe_data('/home/arkaghosh/Downloads/RASDAMAN_FINALE/Worked/Sweden/Snow_500m.nc')
+
+select rasdaman.get_array01('select m[50, 0:100 , 0:100] from Surface_Temperature_Sweden as m')
+
+select rasdaman.get_dim('select sdom(c) from Surface_Temperature_Sweden as c')
+
+select rasdaman.py_wcs()
+
+select rasdaman.py_wms()
+
+SELECT rasdaman.aggregated_result('select avg_cells(c[100:200, 0:* , 0:*]*0.02) from Surface_Temperature_Sweden AS c')
+
+SELECT rasdaman.aggregated_result_numeric('select avg_cells(c[100:200, 0:* , 0:*]*0.02) from Surface_Temperature_Sweden AS c')
+
+
+-- ======================================= PostgreSQL to Rasdaman via python pipeline ============================================
+
+SELECT name_2, ST_AsText((ST_Dump(geom)).geom) FROM municipalswe WHERE municipalswe.name_2 = 'Linköping'; --Multipolygons to polygons
+
+
+SELECT
+    (SELECT name_2 FROM municipalswe WHERE municipalswe.name_2 = 'Linköping') AS place,
+    rasdaman.get_array01('select m[100, 0:10 , 0:10] from Surface_Temperature_Sweden as m') AS array01;
+
+
+SELECT
+    (SELECT name_2 FROM municipalswe WHERE municipalswe.name_2 = 'Linköping') AS place,
+    rasdaman.aggregated_result('select avg_cells(c[100, 0:* , 0:*]*0.02) from Surface_Temperature_Sweden AS c') AS Avarage;
+
+SELECT
+  (SELECT name_2 FROM municipalswe WHERE municipalswe.name_2 = 'Linköping') AS Kommun,
+    (SELECT ST_AsText((ST_Dump(geom)).geom) FROM municipalswe WHERE municipalswe.name_2 = 'Linköping') AS Vector,
+     rasdaman.get_array01('select m[100, 0:10 , 0:10] from Surface_Temperature_Sweden as m') AS rasARRAY;
+
+SELECT
+    (SELECT name_2 FROM municipalswe WHERE municipalswe.name_2 = 'Linköping') AS place,
+    rasdaman.aggregated_result('select avg_cells(clip(c[100, 0:* , 0:*]*0.02, POLYGON ((467 681, 467 764, 720 764, 615 662, 467 681)))) from Surface_Temperature_Sweden AS c') AS avg_clipped;
+
+-- *************************** VECTOR + RASTER Integration *********************************************************
+
+SELECT  m.name_2 AS Kommun,
+        rasdaman.aggregated_result_numeric(CONCAT('select avg_cells(clip((c[190, 0:* , 0:*]*0.02) - 273.15,',rasdaman.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Surface_Temperature_Sweden AS c')) AS avg_temp_°C  
+FROM    municipalswe as m
+WHERE   m.name_2 = 'Linköping';
+
+SELECT  m.name_2 AS Kommun,
+        rasdaman.aggregated_result_numeric(CONCAT('select avg_cells(clip((c[20, 0:* , 0:*]*0.02) - 273.15,',rasdaman.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Surface_Temperature_Sweden AS c')) AS avg_temp_°C ,
+FROM    municipalswe as m
+WHERE   m.name_2 in ('Åsele',
+           'Dorotea',
+           'Lycksele',
+           'Linköping',
+           'Malå',
+           'Sorsele');
+
+SELECT  m.name_2 AS region,
+        rasdaman.aggregated_result(CONCAT('select min_cells(clip((c[100, 0:* , 0:*]*0.02) - 273.15,',rasdaman.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Surface_Temperature_Sweden AS c')) AS minTemp,
+        rasdaman.aggregated_result(CONCAT('select avg_cells(clip((c[100, 0:* , 0:*]*0.02) - 273.15,',rasdaman.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Surface_Temperature_Sweden AS c')) AS avgTemp,
+        rasdaman.aggregated_result(CONCAT('select max_cells(clip((c[100, 0:* , 0:*]*0.02) - 273.15,',rasdaman.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),')) from Surface_Temperature_Sweden AS c')) AS maxTemp
+FROM    municipalswe as m
+WHERE   m.name_2 in ('Åsele',
+           'Dorotea',
+           'Lycksele',
+           'Linköping',
+           'Malå',
+           'Sorsele');
+
+
+-- ****************************************************************************************************
+
+
+
+
+
+-- ======================================= Petascope DB ============================================
+  SELECT * FROM public.geo_axis
+  ORDER BY geo_axis_id ASC --414 (ansi), 415(lat), 416 (long)
+  
+--  SELECT resolution FROM public.geo_axis WHERE geo_axis_id = 415
+
+  SELECT * FROM public.axis_extent -- 420 (ansi), 421 (lat), 422 (long)
+  ORDER BY axis_extent_id ASC 
+
+
+  SELECT * FROM public.index_axis -- 411 (ansi), 412 (lat_width), 413 (long_height)
+  ORDER BY index_axis_id ASC 
+
+
+  SELECT * FROM public.regular_axis -- 415, 416 
+  ORDER BY regular_axis_id ASC 
+
+
+  SELECT * FROM public.irregular_axis -- 414 ansi
+  ORDER BY irregular_axis_id ASC 
+  
+-- ***********************************CURRENLY IN USE ***************************************
+
+    SELECT * FROM public.coverage -- 408, 417, 423
+  ORDER BY id ASC
+
+  SELECT * FROM public.wgs84_bounding_box  -- 419 (USED)
+  ORDER BY wgs84_bounding_box_id ASC 
+
+  SELECT * FROM public.envelope_by_axis
+  ORDER BY envelope_by_axis_id ASC
+  
+  SELECT * FROM public.rasdaman_range_set
+  ORDER BY rasdaman_range_set_id ASC  -- 429 Surface_Temperature_Sweden
+
+  
+-- *******************************************************************************************
+
+  CREATE or REPLACE VIEW Raster_Collection AS
+    SELECT coverage_id as raster_name, min_lat, max_lat, min_long, max_long, resolution 
+    FROM public.coverage, public.wgs84_bounding_box, public.geo_axis;
+    
+  
+  CREATE or REPLACE VIEW Raster_Collection_INDEXED AS
+    SELECT id, coverage_id as raster_name, mdd_type
+    FROM public.coverage, public.rasdaman_range_set
+    WHERE public.coverage.rasdaman_range_set_id = public.rasdaman_range_set.rasdaman_range_set_id
+    
+    
+      
+  CREATE or REPLACE VIEW Raster_Collection_INDEXED AS
+    SELECT id, coverage_id as raster_name, 
+         mdd_type, 
+         max_lat, 
+         min_long, 
+         resolution as pixel_y
+    FROM public.coverage, public.rasdaman_range_set, public.wgs84_bounding_box, public.envelope_by_axis, public.geo_axis
+    WHERE public.coverage.rasdaman_range_set_id = public.rasdaman_range_set.rasdaman_range_set_id AND
+    public.wgs84_bounding_box.wgs84_bounding_box_id = public.envelope_by_axis.wgs84_bounding_box_id AND
+    public.geo_axis.axis_type = 'y' --AND public.geo_axis.axis_type = 'x' AND public.geo_axis.axis_type = 't'
+     
+    
+
+-- DESIRE OUTPUT --
+Raster  Surface_Temperature_Sweden
+long_max  24.170833
+long_min  10.9625
+lat_max   69.0625
+lat_min   55.3375
+long_pixel  0.008328
+lat_pixel   -0.008328
+long_length   1586
+lat_length  1648
+start_date  2022-04-01T00:00:00.000000000
+end_date  2022-11-15T00:00:00.000000000
+time_length   217
+    
+  
+
+-- ====================================== RASQL =====================================================
+
+q1 = "select m[50, 0:10 , 0:10] from Surface_Temperature_Sweden as m"
+
+q2 = "select m[100, 0:* , 0:*] from Surface_Temperature_Sweden as m" 
+
+q3 = "select mr[100, 0:* , 0:*]*0.02 from Surface_Temperature_Sweden as mr" 
+
+q4 = "select ddd[100:200, 0:* , 0:*]*0.02 from Surface_Temperature_Sweden as ddd where avg_cells(ddd)" 
+
+q5* = "select sss[100:200, 0:* , 0:*]*0.02 from Surface_Temperature_Sweden as sss where all_cells(sss < 300)" 
+
+q51 = "select all_cells(s[100, 0:* , 0:*]*0.02 >265) from Surface_Temperature_Sweden AS s"
+
+q52* = "select ddd[100:200, 0:* , 0:*]*0.02 from Surface_Temperature_Sweden as ddd where all_cells(s[100, 0:* , 0:*]*0.02 >265) from Surface_Temperature_Sweden AS s"
+
+
+q6 = "select avg_cells(c) from Surface_Temperature_Sweden AS c"
+
+
+-- ====================================== WCPS =====================================================
+
+for $c in (Surface_Temperature_Sweden) return avg($c) 
+
+for s in (Surface_Temperature_Sweden) 
+return encode(clip(s[ansi("2022-11-15T00:00:00.000Z")],POLYGON((19.610595703125 64.25891273341463,21.15966796875 64.26129833980389,21.181640625 63.47014474656544,19.5556640625 63.48241011133476,19.610595703125 64.25891273341463))),
+"EPSG:4326"),
+"tiff")
+
+for c in (Surface_Temperature_Sweden) 
+return encode(clip(c,POLYGON((
+64.25891273341463 19.610595703125,
+64.26129833980389 21.15966796875,
+63.47014474656544 21.181640625,
+63.48241011133476 19.5556640625,
+64.25891273341463 19.610595703125)))),"tiff")
+
+
+
+for $c in (Surface_Temperature_Sweden) 
+
+let $coordinates := [ansi("2022-04-01":"2022-11-14"), Long(64.25891273341463:63.48241011133476), Lat(19.610595703125:19.5556640625) ]
+
+return encode(clip({$c[$coordinates]}), "tiff")
+
+
+
+for c in (Surface_Temperature_Sweden) 
+
+let $coordinates := [Long(64.25891273341463:63.48241011133476), Lat(19.610595703125:19.5556640625) ]
+
+return encode(clip(c[coordinates]),"tiff")
+
+
+
+
+-- ====================================== WCPS to RASQL =====================================================
+
+for $c in (Surface_Temperature_Sweden) return avg($c)           3.6421253738942254(ans)
+
+TO
+
+q6 = "select avg_cells(c) from Surface_Temperature_Sweden AS c" 3.6421253738942254(ans)
+
+
+-- ===================================== EXPERIMENTING =============================================
+
+SELECT gid, name_2, geom
+FROM municipalswe 
+WHERE municipalswe.name_2 in ('Åsele',
+                 'Dorotea',
+                 'Lycksele',
+                 'Linköping',
+                 'Malå',
+                 'Sorsele'); --Multipolygons to polygons
+
+
+SELECT  m.name_2 AS Kommun,
+        rasdaman.get_array01(CONCAT('select clip((c[190, 0:* , 0:*]*0.02) - 273.15,',rasdaman.geo_index2grid_index(ST_AsText((ST_Dump(m.geom)).geom)),') from Surface_Temperature_Sweden AS c')) AS avg_temp_°C  
+FROM    municipalswe as m
+WHERE   m.name_2 = 'Lycksele';
+
+SELECT  m.name_2 AS Kommun,
+        rasdaman.aggregated_result('select avg_cells(clip(c[20, 0:* , 0:*]*0.02, POLYGON ((467 681, 467 764, 720 764, 615 662, 467 681)))) from Surface_Temperature_Sweden AS c') AS avg_clipped
+        FROM municipalswe as m 
+    WHERE m.name_2 = 'Linköping';
+
+
+SELECT  m.name_2 AS Kommun,
+        rasdaman.aggregated_result('select avg_cells(clip((c[20, 0:* , 0:*]*0.02) - 273.15, POLYGON ((467 681, 467 764, 720 764, 615 662, 467 681)))) from Surface_Temperature_Sweden AS c') AS avg_clipped
+        FROM municipalswe as m 
+    WHERE m.name_2 = 'Linköping';
+    
+
+
+
+
+
