@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.8"
 
 services:
   rasdaman:
@@ -66,3 +66,9 @@ services:
       - rasdaman
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+
+networks:
+  rasdaman:
+    name: rasdaman
+
