@@ -4,6 +4,16 @@ services:
   rasdaman:
     build:
       context: rasdaman
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://host.docker.internal:8080/rasdaman/ows" ] # TODO: check if this is the correct endpoint or "http://localhost:8080/rasdaman/ows"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - rasdaman
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   #TODO: complete Dockerfile
   #TODO: ports, environment etc.
 
@@ -16,12 +26,18 @@ services:
       - POSTGRES_USER=postgres
       - PGUSER=postgres
       - POSTGRES_PASSWORD=postgres2024
+    depends_on:
+      rasdaman:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -h db" ]
       interval: 10s
       timeout: 5s
       retries: 5
-  #TODO: depends_on
+    networks:
+      - rasdaman
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   ontop:
     image: ontop/ontop:5.1.2
@@ -44,3 +60,7 @@ services:
         condition: service_healthy
     ports:
       - "${SERVER_PORT}:8080"
+    networks:
+      - rasdaman
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
