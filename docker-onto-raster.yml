@@ -18,7 +18,9 @@ services:
   #TODO: ports, environment etc.
 
   db:
-    image: postgres
+    #image: postgres
+    build:
+      context: db_pgsql
     restart: unless-stopped
     ports:
       - "${MAPPED_POSTGRES_PORT}:5432"
