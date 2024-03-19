@@ -92,7 +92,7 @@ from affine import Affine
 from shapely.geometry import Polygon
 from shapely import wkt
 
--- Required metadata for geo2grid tranlation. different for each raster  
+-- Required metadata for geo2grid translation. different for each raster  
 xmin = 8.979166665862266  
 ymax = 50.979166665862266 
 pixel_size = 0.008333333332587
