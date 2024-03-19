@@ -3,6 +3,48 @@ CREATE EXTENSION postgis_raster;
 CREATE EXTENSION plpgsql;
 CREATE EXTENSION plpython3u;
 
+-- Database: VectorDB (Contains all types of geometrical shape files)
+
+-- DROP DATABASE IF EXISTS "VectorDB";
+
+CREATE DATABASE "VectorDB"
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.UTF-8'
+    LC_CTYPE = 'en_US.UTF-8'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+-- **********************************************************************************************************************************************
+-- Table: public.petascopedb01 (holds metadata for each raster stored in rasdaman)
+
+-- DROP TABLE IF EXISTS public.petascopedb01;
+
+CREATE TABLE IF NOT EXISTS public.petascopedb01
+(
+    raster_id bigint NOT NULL,
+    raster_name character varying COLLATE pg_catalog."default",
+    axis_label character varying COLLATE pg_catalog."default",
+    axis_type character varying COLLATE pg_catalog."default",
+    dom_lower_bound character varying COLLATE pg_catalog."default",
+    grid_lower_bound bigint,
+    dom_upper_bound character varying COLLATE pg_catalog."default",
+    grid_upper_bound bigint,
+    resolution double precision,
+    scale_factor double precision,
+    CONSTRAINT petascopedb01_pkey PRIMARY KEY (raster_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.petascopedb01
+    OWNER to postgres;
+
+-- **********************************************************************************************************************************************
+
 -- FUNCTION: rasdaman_op.check_rasdaman_conn()
 
 -- DROP FUNCTION IF EXISTS rasdaman_op.check_rasdaman_conn();
