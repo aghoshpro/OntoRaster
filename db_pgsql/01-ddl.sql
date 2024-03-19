@@ -1,0 +1,6 @@
+CREATE EXTENSION postgis;
+CREATE EXTENSION postgis_raster;
+CREATE EXTENSION plpgsql;
+CREATE EXTENSION plpython3u;
+
+
