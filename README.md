@@ -35,7 +35,7 @@ Verify the installation by checking the installed version.
 
 * Source: https://doc.rasdaman.org/stable/02_inst-guide.html#installation-and-administration-guide
 
-#### Open terminal in Ubuntu 20.04 LTS 
+#### 1.2.1 Open terminal in Ubuntu 20.04 LTS 
 
 ```
 wget -O - https://download.rasdaman.org/packages/rasdaman.gpg | sudo apt-key add -
@@ -57,7 +57,7 @@ sudo apt-get install rasdaman
 source /etc/profile.d/rasdaman.sh
 ```
 
-#### Check if rasql is installed and set in path or not 
+#### 1.2.2 Check if rasql is installed and set in path or not 
 ```
 rasql -q 'select c from RAS_COLLECTIONNAMES as c' --out string
 ```
@@ -69,21 +69,44 @@ Query result collection has 0 element(s):
 rasql done
 ```
 
-#### 3. Check that petascope is initialized properly at [OGC Web Coverage Service Endpoint](http://localhost:8080/rasdaman/ows) 
+#### 1.2.3 Check that petascope is initialized properly at [OGC Web Coverage Service Endpoint](http://localhost:8080/rasdaman/ows) 
 
-
-#### 4. Updating
-```
-sudo apt-get update
-sudo service rasdaman stop
-sudo apt-get install rasdaman
-```
-#### 5. Status
+#### 1.2.4 Status
 ```
 service rasdaman start
 service rasdaman stop
 service rasdaman status
 ```
+
+#### 1.2.5 Updating
+```
+sudo apt-get update
+sudo service rasdaman stop
+sudo apt-get install rasdaman
+```
+
+## 2. Datasets
+### 2.1 Vector Data
+
+### 2.2 Raster Data
+#### 2.2.1 MODIS LST TEMP 1 Km
+* World: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
+* Sweden: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
+* Italy: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
+* Germany: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
+* India:
+  
+### 2.3 Data Exploration 
+#### Check the metadata of data using [gdal](https://gdal.org/)
+   * GeoTIFF
+```
+gdalinfo /home/arkaghosh/Downloads/RAS_DATA/MOD11A1.006_LST_Night_1km_doy2017001_aid0001.tif
+```
+   * netCDF
+```
+gdalinfo /home/arkaghosh/Downloads/RAS_DATA/air.mon.mean.v401.nc
+```
+
 
 
 
