@@ -57,7 +57,7 @@ sudo apt-get install rasdaman
 source /etc/profile.d/rasdaman.sh
 ```
 
-#### 1.2.2 Check if rasql is installed and set in path or not 
+#### 1.2.2 Check if `rasql` is installed and set in path or not 
 ```
 rasql -q 'select c from RAS_COLLECTIONNAMES as c' --out string
 ```
@@ -69,7 +69,8 @@ Query result collection has 0 element(s):
 rasql done
 ```
 
-#### 1.2.3 Check that petascope is initialized properly at [OGC Web Coverage Service Endpoint](http://localhost:8080/rasdaman/ows) 
+#### 1.2.3 Check petascope config 
+#### [OGC Web Coverage Service Endpoint](http://localhost:8080/rasdaman/ows) 
 #### --------- Database configuration ----------
 ```
 $ cd /opt/rasdaman/etc
