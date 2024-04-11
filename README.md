@@ -71,22 +71,18 @@ rasql done
 
 #### 1.2.3 Check petascope config 
 #### [OGC Web Coverage Service Endpoint](http://localhost:8080/rasdaman/ows) 
-#### --------- Database configuration ----------
 ```
 $ cd /opt/rasdaman/etc
+```
+```
 $  nano petascope.properties 
 ```
-##### Default configuration for all DBMS.
+##### Default configuration of petascope for all DBMS.
 ```
-spring.jpa.database=default
-spring.jpa.hibernate.ddl-auto=none
-
 spring.datasource.url=jdbc:postgresql://localhost:5432/petascopedb
 spring.datasource.username=petauser
 spring.datasource.password=petapasswd
 spring.datasource.jdbc_jar_path=
-
-
 ```
 #### 1.2.4 Status
 ```
