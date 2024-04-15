@@ -178,7 +178,46 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
 ### 3.2 Raster Data
 
 ### 3.2 Mappings
+```
+[PrefixDeclaration]
+:		http://www.semanticweb.org/arkaghosh/OntoRaster/
+geo:		http://www.opengis.net/ont/geosparql#
+owl:		http://www.w3.org/2002/07/owl#
+rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
+xml:		http://www.w3.org/XML/1998/namespace
+xsd:		http://www.w3.org/2001/XMLSchema#
+obda:		https://w3id.org/obda/vocabulary#
+rdfs:		http://www.w3.org/2000/01/rdf-schema#
+sosa:		http://www.w3.org/ns/sosa/
+rasdb:		http://www.semanticweb.org/RasterDataCube/
 
+[MappingDeclaration] @collection [[
+mappingId	mapping_region_class
+target		:region/{gid} a :region .
+source		select gid from region_bavaria;
+
+mappingId	mapping_region_name
+target		:region/{gid} rdfs:label {region_name}^^xsd:string .
+source		select gid, name_2 as region_name from region_bavaria;
+
+mappingId	mapping_region_geometry
+target		:region/{gid} geo:asWKT {geometry}^^geo:wktLiteral .
+source		select gid, st_astext((st_dump(geom)).geom) as geometry from region_bavaria
+
+mappingId	mapping_rastername
+target		:raster/{raster_id} rasdb:hasRasterName {raster_name}^^xsd:string .
+source		select raster_id, raster_name from petascopedb01;
+
+mappingId	mapping_datetime
+target		:raster/{raster_id} rasdb:hasStartTime {dom_lower_bound}^^xsd:integer ; rasdb:hasEndTime {dom_upper_bound}^^xsd:integer .
+source		select raster_id, dom_lower_bound, dom_upper_bound from petascopedb01;
+
+mappingId	mapping_scale_factor
+target		:raster/{raster_id} rasdb:hasScaleFactor {scale_factor}^^xsd:double .
+source		select raster_id, scale_factor from petascopedb01;
+]]
+
+```
 ### 3.2 Ontologies
 
 ## 4. Query Answering
