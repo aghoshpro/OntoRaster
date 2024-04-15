@@ -167,9 +167,9 @@ CREATE EXTENSION IF NOT EXISTS dblink;
 Now we import the downloaded shapefiles into VectorTablesDB database using the `shp2pgsql` command. In this way, each shapefile is loaded into a separate tables like `region_Bavaria`, `region_Sweden` etc., in the VectorTablesDB database. Each one of these tables contains a column where geometries are stored in binary format (WKB) and an index has been built on that column. 
 
 ```
-$ shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_Bavaria | psql -h localhost -p 5432 -U postgres -d VectorDB
-$ shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_Sweden | psql -h localhost -p 5432 -U postgres -d VectorDB
-$ shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h localhost -p 5432 -U postgres -d VectorDB
+$ shp2pgsql -s 4326 /path_to_shapefile/Bavaria_mun.shp region_Bavaria | psql -h localhost -p 5432 -U postgres -d VectorDB
+$ shp2pgsql -s 4326 /path_to_shapefile/Sweden_mun.shp region_Sweden | psql -h localhost -p 5432 -U postgres -d VectorDB
+$ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h localhost -p 5432 -U postgres -d VectorDB
 ```
 
 
