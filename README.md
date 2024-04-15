@@ -6,6 +6,9 @@ Extension of Ontop, a VKG engine over multidimensional array database or Raster 
 ## Table of Contents
 0. Pre-requisite Installation
 1. [Installation](https://github.com/aghoshpro/myPhD/tree/main/RasDaMan#installation)
+2. [Datasets](https://github.com/aghoshpro/OntoRaster#2-datasets)
+3. [Source Preperation](https://github.com/aghoshpro/OntoRaster#3-source-preparation)
+4. [Query](https://github.com/aghoshpro/OntoRaster#4-queries)
 
 
 ## 0. Pre-requisite Installation [for first time users]
