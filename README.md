@@ -122,7 +122,7 @@ gdalinfo /home/arkaghosh/Downloads/RAS_DATA/air.mon.mean.v401.nc
 
 ## 3. Source Preparation
 ### 3.1 PostgrSQL
-Enabale extesion 'PostGIS' in PostgreSQL ans creat a database namned VectorTablesDB. Now we import the downloaded shapefiles in a VectorTablesDB database using the `shp2pgsql` command. In this way, each shapefile is loaded into a separate
+Enable extesion 'PostGIS' in PostgreSQL ans create a database namned VectorTablesDB. Now we import the downloaded shapefiles in a VectorTablesDB database using the `shp2pgsql` command. In this way, each shapefile is loaded into a separate
 table in the VectorTablesDB database. Each one of these tables contains a column where geometries are stored in binary format (WKB) and an index has been built on that column. 
 
 ```
@@ -140,7 +140,8 @@ CREATE DATABASE "VectorDB"
     IS_TEMPLATE = False;
 
 COMMENT ON DATABASE "VectorDB"
-    IS 'Contains all vector data and relational data based on user's regions of interest (ROI) which will be used querying raster data stored in Rasdaman';
+    IS 'Contains all vector data and relational data based on user's regions of interest (ROI)
+    which will be used querying raster data stored in Rasdaman';
 ```
 
 
