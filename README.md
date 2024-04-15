@@ -260,7 +260,9 @@ To import data into Rasdaman a shell command `wcst_import.sh` is used and takes 
 ### Output [```241.82``` MB has expanded to ```1.43``` GB after successful ingestion in ```16.03``` seconds]
 #### Output in terminal
 
-`$ wcst_import.sh /home/arkaghosh/Downloads/RASDAMAN_FINALE/AIR_TEMP_RAS_X.json`
+```
+$ wcst_import.sh /home/arkaghosh/Downloads/RASDAMAN_FINALE/AIR_TEMP_RAS_X.json
+```
 ```
 wcst_import.sh: rasdaman v10.0.5 build gf81f9b82
 Collected first 1 files: ['/home/arkaghosh/Downloads/RAS_DATA/air.mon.mean.v401.nc']...
@@ -333,7 +335,9 @@ Here I have ingested 3 MODIS Daily LST geotiff file each of size 334 MB. Each im
 ### Output [```1``` GB has expanded to ```10``` GB after successful ingestion in ```143.03``` seconds]
 #### Output in terminal
 ```
-arkaghosh@lat7410g:~$ wcst_import.sh /home/arkaghosh/Downloads/RASDAMAN_FINALE/general_coverage_gdal_LST_Timeseries.json
+$ wcst_import.sh /home/arkaghosh/Downloads/RASDAMAN_FINALE/general_coverage_gdal_LST_Timeseries.json
+```
+```
 wcst_import.sh: rasdaman v10.1.3 build g47ad85de
 Collected first 3 files: ['/home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170101_aid0001.tif', '/home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170115_aid0001.tif', '/home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170126_aid0001.tif']...
 The recipe has been validated and is ready to run.
@@ -376,9 +380,6 @@ Recipe executed successfully
 
 #### Output Endpoint
 ![image](https://user-images.githubusercontent.com/71174892/219706500-7e78936a-13b8-4085-b120-c1659db55962.png)
-
-## **RaSQL Query**
-[Query Language Guide](https://doc.rasdaman.org/stable/04_ql-guide.html#query-language-guide)
 
 
 ### 3.2 Mappings
