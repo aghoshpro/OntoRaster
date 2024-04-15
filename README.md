@@ -200,6 +200,8 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
     + "BIND (rasdb:rasSpatialAverage(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
     + "}\n";
 ```
+* Expected Output
+`"272.88"^^xsd:double<http://www.w3.org/2001/XMLSchema#double>]`
 
 
 
