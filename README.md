@@ -31,6 +31,18 @@ Verify the installation by checking the installed version.
 
 ## 1. Installation
 ### 1.1. PostgreSQL Installation
+```
+$ sudo service postgresql status
+
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Tue 2023-07-25 14:36:14 IST; 23min ago
+    Process: 1432 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+   Main PID: 1432 (code=exited, status=0/SUCCESS)
+
+Jul 25 14:36:14 lat7410g systemd[1]: Starting PostgreSQL RDBMS...
+Jul 25 14:36:14 lat7410g systemd[1]: Finished PostgreSQL RDBMS.
+```
 ### 1.2 Rasdaman Installation
 
 * Source: https://doc.rasdaman.org/stable/02_inst-guide.html#installation-and-administration-guide
@@ -123,7 +135,7 @@ gdalinfo /home/arkaghosh/Downloads/RAS_DATA/air.mon.mean.v401.nc
 
 ## 3. Source Preparation
 ### 3.1 PostgrSQL
-Create a database namned ~VectorTablesDB~. Then create extensions for POSTGIS,POSTGISraster, PlPython and dblink to enable ~VectorTablesDB~ database. 
+Create a database namned *VectorTablesDB*. Then create extensions for POSTGIS,POSTGISraster, PlPython and dblink to enable VectorTablesDB database. 
 
 ```
 -- Database: VectorDB
@@ -155,9 +167,9 @@ CREATE EXTENSION IF NOT EXISTS dblink;
 Now we import the downloaded shapefiles into VectorTablesDB database using the `shp2pgsql` command. In this way, each shapefile is loaded into a separate tables like `region_Bavaria`, `region_Sweden` etc., in the VectorTablesDB database. Each one of these tables contains a column where geometries are stored in binary format (WKB) and an index has been built on that column. 
 
 ```
-shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_Bavaria | psql -h localhost -p 5432 -U postgres -d VectorDB
-shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_Sweden | psql -h localhost -p 5432 -U postgres -d VectorDB
-shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h localhost -p 5432 -U postgres -d VectorDB
+$ shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_Bavaria | psql -h localhost -p 5432 -U postgres -d VectorDB
+$ shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_Sweden | psql -h localhost -p 5432 -U postgres -d VectorDB
+$ shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h localhost -p 5432 -U postgres -d VectorDB
 ```
 
 
