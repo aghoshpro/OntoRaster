@@ -100,7 +100,9 @@ sudo apt-get install rasdaman
 
 ## 2. Datasets
 ### 2.1 Vector Data
-
+* [Municipalities of Sweden](https://gadm.org/download_country.html) 
+* [Municipalities of Bavaria](https://gadm.org/download_country.html) 
+* [Municipalities of South Tyrol](https://gadm.org/download_country.html) 
 ### 2.2 Raster Data
 #### 2.2.1 MODIS LST TEMP 1 Km
 * World: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
