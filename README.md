@@ -184,7 +184,7 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
 ## 4. Queries
 ### 4.1 Simple Queries
 ### 4.2 Aggregated Queries
-#### SPATIAL AVERAGE
+#### 4.2.1 SPATIAL AVERAGE
 ```
     "PREFIX :\t<http://www.semanticweb.org/arkaghosh/OntoRaster/>\n"
     "PREFIX rdfs:\t<http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -202,7 +202,7 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
 ```
 * **Expected Output : **`"274.998"^^xsd:double`
 
-#### SPATIAL Maximum
+#### 4.2.2 SPATIAL Maximum
 ```
     "PREFIX :\t<http://www.semanticweb.org/arkaghosh/OntoRaster/>\n"
     "PREFIX rdfs:\t<http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -220,7 +220,7 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
 ```
 * **Expected Output : **`"277.08"^^xsd:double`
 
-#### SPATIAL Minimum
+#### 4.2.3 SPATIAL Minimum
 ```
      "PREFIX :\t<http://www.semanticweb.org/arkaghosh/OntoRaster/>\n"
      + "PREFIX rdfs:\t<http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -235,7 +235,7 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
      + "BIND (rasdb:rasSpatialMinimum(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
      + "}\n";
 ```
-* **Expected Output : **`"272.88"^^xsd:double`
+* **Expected Output:**`"272.88"^^xsd:double`
 
 
 
