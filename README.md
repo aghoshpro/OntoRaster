@@ -99,6 +99,8 @@ spring.datasource.username=petauser
 spring.datasource.password=petapasswd
 spring.datasource.jdbc_jar_path=
 ```
+
+
 #### 1.2.4 Status
 ```
 service rasdaman start
@@ -176,6 +178,208 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
 ```
 
 ### 3.2 Raster Data
+
+To import data into Rasdaman a shell command `wcst_import.sh` is used and takes follwing two inputs:
+
+* ```Recipe``` - A recipe is a class implementing the BaseRecipe that based on a set of parameters (ingredients) can import a set of files into WCS forming a well defined structure (image, regular timeseries, irregular timeseries etc). 4 types of recipe are as follows (General Recipe,Mosaic Map, Regular Timeseries, Irregular Timeseries) [List of recipes](http://rasdaman.org/browser/applications/wcst_import/recipes?order=name)
+
+* ```Ingredients``` - An ingredients file is a json file containing a set of parameters that define how the recipe should behave (e.g. the WCS endpoint, the CRS resolver etc are all ingredients). [List of ingredients](http://rasdaman.org/browser/applications/wcst_import/ingredients/possible_ingredients.json)
+
+**NOTE** Its only input is an "**ingredient**" file telling everything about the import process that the utility needs to know. (On a side note, such ingredients files constitute an excellent [documentation](http://rasdaman.org/wiki/WCSTImportGuide).)
+
+#### 3.2.1 NetCDF Format
+#### **DATA**: [/Datasets/udel.airt.precip/v401/air.mon.mean.v401.nc](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html) 
+* **Temporal Resolution**: Monthly values for 1901/01 - 2014/12 (V4.01)
+* **Spatial Coverage**: 0.5 degree latitude x 0.5 degree longitude | global grid (720x360) | 3D datacube (time x lat x long = 1380 x 720 x 360).
+
+#### **Ingredient File (AIR_TEMP_RAS_X.json)**
+```{
+    "config": {
+        "service_url": "http://localhost:8080/rasdaman/ows",
+        "tmp_directory": "/tmp/",
+        "mock": false,
+        "automated": true,
+        "track_files": false
+    },
+    "input": {
+        "coverage_id":"AIR_TEMP_X",
+        "paths": [
+            "/home/arkaghosh/Downloads/RAS_DATA/air.mon.mean.v401.nc"
+        ]
+    },
+    "recipe": {
+        "name": "general_coverage",
+        "options": {
+            "coverage": {
+                "crs": "OGC/0/AnsiDate@EPSG/0/4326",
+                "metadata": {
+                    "type": "xml",
+                    "global": "auto"
+                },
+                "slicer": {
+                    "type": "netcdf",
+                    "pixelIsPoint": true,
+                    "bands": [{
+                        "name": "air",
+                        "variable": "air",
+                        "description": "Air Temperature",
+                        "identifier": "air",
+                        "nilvalue":"-9.96921e+36f"
+                    }],
+                    "axes": {
+                        "ansi": {
+                            "statements": "from datetime import datetime, timedelta",
+                             "min": "(datetime(1900,1,1,0,0,0) + timedelta(hours=${netcdf:variable:time:min})).strftime(\"%Y-%m-%dT%H:%M\")",
+                             "max": "(datetime(1900,1,1,0,0,0) + timedelta(hours=${netcdf:variable:time:max})).strftime(\"%Y-%m-%dT%H:%M\")",
+                            "directPositions": "[(datetime(1900,1,1,0,0,0) + timedelta(hours=x)).strftime(\"%Y-%m-%dT%H:%M\") for x in ${netcdf:variable:time}]",
+                            "gridOrder": 0,
+                            "type": "ansidate",
+                            "resolution": 1,
+                            "irregular": true
+                        },
+                        "Long": {
+                            "min": "${netcdf:variable:lon:min}",
+                            "max": "${netcdf:variable:lon:max}",
+                            "gridOrder": 2,
+                            "resolution": "${netcdf:variable:lon:resolution}"
+                        },
+                        "Lat": {
+                            "min": "${netcdf:variable:lat:min}",
+                            "max": "${netcdf:variable:lat:max}",
+                            "gridOrder": 1,
+                            "resolution": "-${netcdf:variable:lat:resolution}"
+                        }
+                    }
+                }
+            },
+            "tiling": "ALIGNED [0:0, 0:359, 0:719]" 
+        }
+    }
+}
+```
+### Output [```241.82``` MB has expanded to ```1.43``` GB after successful ingestion in ```16.03``` seconds]
+#### Output in terminal
+
+`$ wcst_import.sh /home/arkaghosh/Downloads/RASDAMAN_FINALE/AIR_TEMP_RAS_X.json`
+```
+wcst_import.sh: rasdaman v10.0.5 build gf81f9b82
+Collected first 1 files: ['/home/arkaghosh/Downloads/RAS_DATA/air.mon.mean.v401.nc']...
+The recipe has been validated and is ready to run.
+Recipe: general_coverage
+Coverage: AIR_TEMP_X
+WCS Service: http://localhost:8080/rasdaman/ows
+Operation: INSERT
+Subset Correction: False
+Mocked: False
+WMS Import: True
+Import mode: Blocking
+Analyzing file (1/1): /home/arkaghosh/Downloads/RAS_DATA/air.mon.mean.v401.nc ...
+Elapsed time: 0.081 s.
+All files have been analyzed. Please verify that the axis subsets of the first 1 files above are correct.
+Slice 1: {Axis Subset: ansi("1900-01-01T00:00:00+00:00","2014-12-01T00:00:00+00:00") Lat(-90.00,90.00) Long(0.000,360.000) 
+Data Provider: file:///home/arkaghosh/Downloads/RAS_DATA/air.mon.mean.v401.nc}
+
+Progress: [------------------------------] 0/1 0.00% 
+[2022-11-22 13:41:03] coverage 'AIR_TEMP_X' - 1/1 - file 'air.mon.mean.v401.nc' - grid domains [0:1379,0:359,0:719] of size 241.82 MB; Total time to ingest file 16.03 s @ 15.09 MB/s.
+Progress: [##############################] 1/1 100.00% Done.
+
+```
+#### **Output Screenshot**
+![Screenshot from 2022-11-22 13-49-12](https://user-images.githubusercontent.com/71174892/203321589-6abc0681-6488-4e83-a42c-96dd689cba33.png)
+
+#### Output Endpoint
+
+![image](https://user-images.githubusercontent.com/71174892/203323830-ead6e294-52f7-4cad-9c30-89a6ae24d023.png)
+
+
+### 3.2.2 GeoTIFF Format
+**Data**: [MOD11A1.006 Terra Land Surface Temperature and Emissivity Daily Global 1km](https://developers.google.com/earth-engine/datasets/catalog/MODIS_006_MOD11A1#bands)
+Here I have ingested 3 MODIS Daily LST geotiff file each of size 334 MB. Each image has a spatial dimention of 43099 X 20757.
+
+#### **Ingredient File (general_coverage_gdal_LST_Timeseries.json)**
+```{
+  "config": {
+    "service_url": "http://localhost:8080/rasdaman/ows",
+    "tmp_directory": "/tmp/",
+    "crs_resolver": "http://localhost:8080/def/",
+    "default_crs": "http://www.opengis.net/def/crs/EPSG/0/4326",
+    "mock": false,
+    "automated": true
+  },
+  "input": {
+    "coverage_id": "LST_03_GeoTIFF",
+    "paths": [
+      "/home/arkaghosh/Downloads/RAS_DATA/MODIS/*.tif"
+    ]
+  },
+  "recipe": {
+    "name": "time_series_irregular",
+    "options": {
+      "time_parameter": {
+        "filename": {
+          "__comment__": "The regex has to contain groups of tokens, separated by parentheses. The group parameter specifies which regex group to use for retrieving the time value",
+          "regex": "(.*)_(.*)_doy(.+?)_(.*)",
+          "group": "3"
+        },
+        "datetime_format": "YYYYMMDD"
+      },
+      "time_crs": "http://localhost:8080/def/crs/OGC/0/AnsiDate",
+      "tiling": "ALIGNED [0:*,0:43098, 0:20756]"
+    }
+  }
+}
+
+```
+### Output [```1``` GB has expanded to ```10``` GB after successful ingestion in ```143.03``` seconds]
+#### Output in terminal
+```
+arkaghosh@lat7410g:~$ wcst_import.sh /home/arkaghosh/Downloads/RASDAMAN_FINALE/general_coverage_gdal_LST_Timeseries.json
+wcst_import.sh: rasdaman v10.1.3 build g47ad85de
+Collected first 3 files: ['/home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170101_aid0001.tif', '/home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170115_aid0001.tif', '/home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170126_aid0001.tif']...
+The recipe has been validated and is ready to run.
+Recipe: time_series_irregular
+Coverage: LST_03_GeoTIFF
+WCS Service: http://localhost:8080/rasdaman/ows
+Operation: INSERT
+Subset Correction: False
+Mocked: False
+WMS Import: True
+Import mode: Blocking
+Track files: True
+Analyzing file (1/3): /home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170101_aid0001.tif ...
+Elapsed time: 0.001 s.
+Analyzing file (2/3): /home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170115_aid0001.tif ...
+Elapsed time: 0.001 s.
+Analyzing file (3/3): /home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170126_aid0001.tif ...
+Elapsed time: 0.001 s.
+All files have been analyzed. Please verify that the axis subsets of the first 3 files above are correct.
+Slice 1: {Axis Subset: ansi("2017-01-01T00:00:00+00:00") Lat(-84.658333325730799103,88.31666665873561) Lon(-179.15833331724446,179.999999983835549921) 
+Data Provider: file:///home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170101_aid0001.tif}
+
+Slice 2: {Axis Subset: ansi("2017-01-15T00:00:00+00:00") Lat(-84.658333325730799103,88.31666665873561) Lon(-179.15833331724446,179.999999983835549921) 
+Data Provider: file:///home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170115_aid0001.tif}
+
+Slice 3: {Axis Subset: ansi("2017-01-26T00:00:00+00:00") Lat(-84.658333325730799103,88.31666665873561) Lon(-179.15833331724446,179.999999983835549921) 
+Data Provider: file:///home/arkaghosh/Downloads/RAS_DATA/MODIS/MOD11A1.006_LST_Night_1km_doy20170126_aid0001.tif}
+
+Progress: [------------------------------] 0/1 0.00% 
+[2023-02-17 21:24:43] coverage 'LST_03_GeoTIFF' - 1/3 - file 'MOD11A1.006_LST_Night_1km_doy20170101_aid0001.tif' - grid domains [0,0:20756,0:43098] of size 338.81 MB; Total time to ingest file 34.84 s @ 9.72 MB/s.
+Progress: [------------------------------] 0/1 0.00% 
+[2023-02-17 21:25:18] coverage 'LST_03_GeoTIFF' - 2/3 - file 'MOD11A1.006_LST_Night_1km_doy20170115_aid0001.tif' - grid domains [0,0:20756,0:43098] of size 361.2 MB; Total time to ingest file 35.31 s @ 10.23 MB/s.
+Progress: [------------------------------] 0/1 0.00% 
+[2023-02-17 21:25:53] coverage 'LST_03_GeoTIFF' - 3/3 - file 'MOD11A1.006_LST_Night_1km_doy20170126_aid0001.tif' - grid domains [0,0:20756,0:43098] of size 307.71 MB; Total time to ingest file 34.19 s @ 9.0 MB/s.
+Progress: [##############################] 1/1 100.00% Done.
+Recipe executed successfully
+```
+#### Output Screenshot
+![image](https://user-images.githubusercontent.com/71174892/219706205-8a217e48-0afe-4cdc-aa3f-ca03e2d07bd4.png)
+
+#### Output Endpoint
+![image](https://user-images.githubusercontent.com/71174892/219706500-7e78936a-13b8-4085-b120-c1659db55962.png)
+
+## **RaSQL Query**
+[Query Language Guide](https://doc.rasdaman.org/stable/04_ql-guide.html#query-language-guide)
+
 
 ### 3.2 Mappings
 ```
