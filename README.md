@@ -172,6 +172,31 @@ $ shp2pgsql -s 4326 /path_to_shapefile/Sweden_mun.shp region_Sweden | psql -h lo
 $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h localhost -p 5432 -U postgres -d VectorDB
 ```
 
+### 3.2 Raster Data
+
+### 3.2 Mappings
+
+### 3.2 Ontologies
+
+## 4. Queries
+### 4.1 Simple Queries
+### 4.2 Aggregated Queries
+#### SPATIAL AVERAGE
+```
+    "PREFIX :\t<http://www.semanticweb.org/arkaghosh/OntoRaster/>\n"
+    "PREFIX rdfs:\t<http://www.w3.org/2000/01/rdf-schema#>\n"
+    "PREFIX geo:\t<http://www.opengis.net/ont/geosparql#>\n"
+    "PREFIX rasdb:\t<http://www.semanticweb.org/RasterDataCube/>\n"
+               
+    + "SELECT ?v {\n"
+    + "?r rdfs:label ?region_name .\n"
+    + "?x rasdb:hasRasterName ?raster_name .\n"
+    + "?x rasdb:hasScaleFactor ?ras_sf .\n"
+    + "?r geo:asWKT ?region .\n" 
+    + "FILTER (?region_name = 'Kelheim'\n)" // Regen Erding Kelheim
+    + "BIND (rasdb:rasSpatialAverage(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
+    + "}\n";
+```
 
 
 
