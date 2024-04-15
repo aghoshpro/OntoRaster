@@ -197,8 +197,8 @@ We are using **GeoSPARQL** for vector data and **rasSPARQL** for raster data.
     + "?x rasdb:hasRasterName ?raster_name .\n"
     + "?x rasdb:hasScaleFactor ?ras_sf .\n"
     + "?r geo:asWKT ?region .\n" 
-    + "FILTER (?region_name = 'Kelheim'\n)" // Regen Erding Kelheim
-    + "BIND (rasdb:rasSpatialAverage(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
+    + "FILTER (?region_name = 'Deggendorf'\n)" // Regen Erding Kelheim
+    + "BIND (`rasdb:rasSpatialAverage`(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
     + "}\n";
 ```
 * **Expected Output :** `"274.998"^^xsd:double`
@@ -215,7 +215,7 @@ We are using **GeoSPARQL** for vector data and **rasSPARQL** for raster data.
     + "?x rasdb:hasRasterName ?raster_name .\n"
     + "?x rasdb:hasScaleFactor ?ras_sf .\n"
     + "?r geo:asWKT ?region .\n" 
-    + "FILTER (?region_name = 'Kelheim'\n)" // Regen Erding Kelheim
+    + "FILTER (?region_name = 'Deggendorf'\n)" // Regen Erding Kelheim
     + "BIND (rasdb:rasSpatialMaximum(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
     + "}\n";
 ```
