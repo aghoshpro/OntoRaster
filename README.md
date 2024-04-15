@@ -185,7 +185,10 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
 We are using **GeoSPARQL** for vector data and **rasSPARQL** for raster data.
 ### 4.1 Simple Queries
 ### 4.2 Aggregated Queries
+
 #### 4.2.1 SPATIAL AVERAGE
+* **INPUT -** "FILTER (?region_name = `'Deggendorf'`\n)" and `rasdb:rasSpatialAverage(100, ?ras_sf, ?region, ?raster_name)`
+* **OUTPUT -** `"277.08"^^xsd:double`
 ```
     "PREFIX :\t<http://www.semanticweb.org/arkaghosh/OntoRaster/>\n"
     "PREFIX rdfs:\t<http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -204,6 +207,8 @@ We are using **GeoSPARQL** for vector data and **rasSPARQL** for raster data.
 * **Expected Output :** `"274.998"^^xsd:double`
 
 #### 4.2.2 SPATIAL Maximum
+* **INPUT -** "FILTER (?region_name = `'Deggendorf'`\n)" and `rasdb:rasSpatialMaximum(100, ?ras_sf, ?region, ?raster_name)`
+* **OUTPUT -** `"277.08"^^xsd:double`
 ```
     "PREFIX :\t<http://www.semanticweb.org/arkaghosh/OntoRaster/>\n"
     "PREFIX rdfs:\t<http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -219,9 +224,11 @@ We are using **GeoSPARQL** for vector data and **rasSPARQL** for raster data.
     + "BIND (rasdb:rasSpatialMaximum(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
     + "}\n";
 ```
-* **Expected Output :** `"277.08"^^xsd:double`
+
 
 #### 4.2.3 SPATIAL Minimum
+* **INPUT -** "FILTER (?region_name = `'Deggendorf'`\n)" and `rasdb:rasSpatialMinimum(100, ?ras_sf, ?region, ?raster_name)`
+* **OUTPUT -** `"272.88"^^xsd:double`
 ```
      "PREFIX :\t<http://www.semanticweb.org/arkaghosh/OntoRaster/>\n"
      + "PREFIX rdfs:\t<http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -236,7 +243,7 @@ We are using **GeoSPARQL** for vector data and **rasSPARQL** for raster data.
      + "BIND (rasdb:rasSpatialMinimum(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
      + "}\n";
 ```
-* **Expected Output:** `"272.88"^^xsd:double`
+
 
 
 
