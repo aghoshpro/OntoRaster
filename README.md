@@ -113,7 +113,7 @@ sudo apt-get install rasdaman
 ## 2. Datasets
 ### 2.1 Vector Data
 * Download [GADM data](https://gadm.org/download_country.html) GADM data (version 4.1) based on region of interest (ROI) such as Municipalities of Sweden, Germany, Italy.
-*  
+* User can download vector shape or csv file of their own choice.
 ### 2.2 Raster Data
 #### 2.2.1 MODIS LST TEMP 1 Km
 * World: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
