@@ -122,8 +122,7 @@ gdalinfo /home/arkaghosh/Downloads/RAS_DATA/air.mon.mean.v401.nc
 
 ## 3. Source Preparation
 ### 3.1 PostgrSQL
-Enable extesion 'PostGIS' in PostgreSQL ans create a database namned VectorTablesDB. Now we import the downloaded shapefiles in a VectorTablesDB database using the `shp2pgsql` command. In this way, each shapefile is loaded into a separate
-table in the VectorTablesDB database. Each one of these tables contains a column where geometries are stored in binary format (WKB) and an index has been built on that column. 
+Create a database namned ~VectorTablesDB~. Then create extensions for POSTGIS,POSTGISraster, PlPython and dblink to enable ~VectorTablesDB~ database. 
 
 ```
 -- Database: VectorDB
@@ -143,6 +142,23 @@ COMMENT ON DATABASE "VectorDB"
     IS 'Contains all vector data and relational data based on user's regions of interest (ROI)
     which will be used querying raster data stored in Rasdaman';
 ```
+```
+CREATE EXTENSION IF NOT EXISTS postgis;
+-- enabling raster support
+CREATE EXTENSION IF NOT EXISTS postgis_raster;
+-- enabling plpython
+CREATE EXTENSION IF NOT EXISTS plpython3u;
+-- dblink
+CREATE EXTENSION IF NOT EXISTS dblink;
+```
+Now we import the downloaded shapefiles into VectorTablesDB database using the `shp2pgsql` command. In this way, each shapefile is loaded into a separate tables like `region_Bavaria`, `region_Sweden` etc., in the VectorTablesDB database. Each one of these tables contains a column where geometries are stored in binary format (WKB) and an index has been built on that column. 
+
+```
+shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_Bavaria | psql -h localhost -p 5432 -U postgres -d VectorDB
+shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_Sweden | psql -h localhost -p 5432 -U postgres -d VectorDB
+shp2pgsql -s 4326 /home/arkaghosh/Downloads/Bolzano/Vector/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h localhost -p 5432 -U postgres -d VectorDB
+```
+
 
 
 
