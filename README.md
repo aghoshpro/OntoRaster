@@ -200,8 +200,42 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
     + "BIND (rasdb:rasSpatialAverage(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
     + "}\n";
 ```
-* Expected Output
-`"272.88"^^xsd:double<http://www.w3.org/2001/XMLSchema#double>]`
+* **Expected Output : **`"274.998"^^xsd:double`
+
+#### SPATIAL Maximum
+```
+    "PREFIX :\t<http://www.semanticweb.org/arkaghosh/OntoRaster/>\n"
+    "PREFIX rdfs:\t<http://www.w3.org/2000/01/rdf-schema#>\n"
+    "PREFIX geo:\t<http://www.opengis.net/ont/geosparql#>\n"
+    "PREFIX rasdb:\t<http://www.semanticweb.org/RasterDataCube/>\n"
+               
+    + "SELECT ?v {\n"
+    + "?r rdfs:label ?region_name .\n"
+    + "?x rasdb:hasRasterName ?raster_name .\n"
+    + "?x rasdb:hasScaleFactor ?ras_sf .\n"
+    + "?r geo:asWKT ?region .\n" 
+    + "FILTER (?region_name = 'Kelheim'\n)" // Regen Erding Kelheim
+    + "BIND (rasdb:rasSpatialMaximum(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
+    + "}\n";
+```
+* **Expected Output : **`"277.08"^^xsd:double`
+
+#### SPATIAL Minimum
+```
+     "PREFIX :\t<http://www.semanticweb.org/arkaghosh/OntoRaster/>\n"
+     + "PREFIX rdfs:\t<http://www.w3.org/2000/01/rdf-schema#>\n"
+     + "PREFIX geo:\t<http://www.opengis.net/ont/geosparql#>\n"
+     + "PREFIX rasdb:\t<http://www.semanticweb.org/RasterDataCube/>\n"
+     + "SELECT ?v {\n"
+     + "?r rdfs:label ?region_name .\n"
+     + "?x rasdb:hasRasterName ?raster_name .\n"
+     + "?x rasdb:hasScaleFactor ?ras_sf .\n"
+     + "?r geo:asWKT ?region .\n"
+     + "FILTER (?region_name = 'Deggendorf'\n)"
+     + "BIND (rasdb:rasSpatialMinimum(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
+     + "}\n";
+```
+* **Expected Output : **`"272.88"^^xsd:double`
 
 
 
