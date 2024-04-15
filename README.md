@@ -8,7 +8,7 @@ Extension of Ontop, a VKG engine over multidimensional array database or Raster 
 1. [Installation](https://github.com/aghoshpro/myPhD/tree/main/RasDaMan#installation)
 2. [Datasets](https://github.com/aghoshpro/OntoRaster#2-datasets)
 3. [Source Preperation](https://github.com/aghoshpro/OntoRaster#3-source-preparation)
-4. [Query](https://github.com/aghoshpro/OntoRaster#4-queries)
+4. [Query Answering](https://github.com/aghoshpro/OntoRaster#4-queries)
 
 
 ## 0. Pre-requisite Installation [for first time users]
@@ -181,7 +181,8 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
 
 ### 3.2 Ontologies
 
-## 4. Queries
+## 4. Query Answering
+We are using **GeoSPARQL** for vector data and **rasSPARQL** for raster data.
 ### 4.1 Simple Queries
 ### 4.2 Aggregated Queries
 #### 4.2.1 SPATIAL AVERAGE
@@ -200,7 +201,7 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
     + "BIND (rasdb:rasSpatialAverage(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
     + "}\n";
 ```
-* **Expected Output : **`"274.998"^^xsd:double`
+* **Expected Output :** `"274.998"^^xsd:double`
 
 #### 4.2.2 SPATIAL Maximum
 ```
@@ -218,7 +219,7 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
     + "BIND (rasdb:rasSpatialMaximum(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
     + "}\n";
 ```
-* **Expected Output : **`"277.08"^^xsd:double`
+* **Expected Output :** `"277.08"^^xsd:double`
 
 #### 4.2.3 SPATIAL Minimum
 ```
@@ -235,7 +236,7 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
      + "BIND (rasdb:rasSpatialMinimum(100, ?ras_sf, ?region, ?raster_name) AS ?v)"
      + "}\n";
 ```
-* **Expected Output:**`"272.88"^^xsd:double`
+* **Expected Output:** `"272.88"^^xsd:double`
 
 
 
