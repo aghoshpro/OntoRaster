@@ -59,18 +59,9 @@ CREATE OR REPLACE VIEW lookup_peta_X AS
 	AND axis_extent.upper_bound = geo_axis.upper_bound
 	AND coverage.id = lookup_temp_X.id
 
-    -- OR
-
-CREATE OR REPLACE VIEW lookup_peta_X AS	
-    SELECT coverage.id, geo_axis.general_grid_id, coverage.coverage_id,  axis_extent.axis_label, axis_extent.axis_type, axis_extent.uom_label AS unit, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound, geo_axis.resolution
-    FROM public.coverage, public.envelope,  public.axis_extent, public.geo_axis
-    WHERE coverage.envelope_id = envelope.envelope_id 
-    AND envelope.envelope_by_axis_id = axis_extent.envelope_by_axis_id 
-    AND axis_extent.upper_bound = geo_axis.upper_bound
-
 SELECT * FROM lookup_peta_X -- Lookup Table in petascopedb
 
--- 4. Switch to VectorDB and import lookup_peta_X as lookup_main_X using dblink
+-- 4. Switch to VectorDB and import lookup_peta_X as lookup_main_X1 using dblink
 
 CREATE OR REPLACE VIEW lookup_main_X1 AS		
 SELECT *
@@ -105,11 +96,11 @@ FROM lookup_main_X1
 GROUP BY raster_id, raster_name;
 
 
-select * from sample_lookup_X1 -- Build mappings with this table
+select * from sample_lookup_X1 -- Build mappings with this table in VectorDB
 	
 
 -- ###########################################
--- ### PL/Pgsql Functions ### **********************************************************************************************************************************************
+-- ### PL/pgsql Functions ### **********************************************************************************************************************************************
 -- ###########################################
 
 -- FUNCTION 01: rasdaman_op.timestamp2grid(text, text)
