@@ -28,5 +28,5 @@ ENTRYPOINT ["/entrypoint.sh"]
 # tail -f /dev/null
 
 #CMD /bin/sh -c '/opt/rasdaman/bin/start_rasdaman.sh --allow-root && sleep 60 && /opt/rasdaman/bin/wcst_import.sh /data/Bavaria_Temp.json && tail -f /dev/null'
-#CMD /bin/sh -c '/opt/rasdaman/bin/start_rasdaman.sh --allow-root && sleep 60 && /opt/rasdaman/bin/wcst_import.sh /data/Bolzano_Temp.json && tail -f /dev/null'
+#CMD /bin/sh -c '/opt/rasdaman/bin/start_rasdaman.sh --allow-root && sleep 60 && /opt/rasdaman/bin/wcst_import.sh /data/South_Tyrol_Temp.json && tail -f /dev/null'
 
