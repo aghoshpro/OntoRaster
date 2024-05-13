@@ -1,0 +1,63 @@
+{
+    "config": {
+        "service_url": "http://localhost:8080/rasdaman/ows",
+        "tmp_directory": "/tmp/",
+        "mock": false,
+        "automated": true,
+        "track_files": false
+    },
+    "input": {
+        "coverage_id":"South_Tyrol_Temperature_MODIS_1km",
+        "paths": [
+            "/home/arkaghosh/Downloads/Bolzano/Raster/Bolzano_Temp_MOD11A1.061_1km_aid0001.nc"
+        ]
+    },
+    "recipe": {
+        "name": "general_coverage",
+        "options": {
+            "coverage": {
+                "crs": "OGC/0/AnsiDate@EPSG/0/4326",
+                "metadata": {
+                    "type": "xml",
+                    "global": "auto"
+                },
+                "slicer": {
+                    "type": "netcdf",
+                    "pixelIsPoint": true,
+                    "bands": [{
+                        "name": "LST_Night_1km",
+                        "variable": "LST_Night_1km",
+                        "description": "Daily Temp over South Tyrol from 01 Jan 2023 to November 1, 2023",
+                        "identifier": "LST_Night_1km",
+                        "nilvalue":"0"
+                    }],
+                    "axes": {
+                        "ansi": {
+                            "statements": "from datetime import datetime, timedelta",
+                            "min": "(datetime(2000,1,1,0,0,0) + timedelta(days=${netcdf:variable:time:min})).strftime(\"%Y-%m-%dT%H:%M\")",
+                            "max": "(datetime(2000,1,1,0,0,0) + timedelta(days=${netcdf:variable:time:max})).strftime(\"%Y-%m-%dT%H:%M\")",
+                            "directPositions": "[(datetime(2000,1,1,0,0,0) + timedelta(days=x)).strftime(\"%Y-%m-%dT%H:%M\") for x in ${netcdf:variable:time}]",
+                            "gridOrder": 0,
+                            "type": "ansidate",
+                            "resolution": 1,
+                            "irregular": true
+                        },
+                        "Long": {
+                            "min": "${netcdf:variable:lon:min}",
+                            "max": "${netcdf:variable:lon:max}",
+                            "gridOrder": 2,
+                            "resolution": "${netcdf:variable:lon:resolution}"
+                        },
+                        "Lat": {
+                            "min": "${netcdf:variable:lat:min}",
+                            "max": "${netcdf:variable:lat:max}",
+                            "gridOrder": 1,
+                            "resolution": "-${netcdf:variable:lat:resolution}"
+                        }
+                    }
+                }
+            },
+            "tiling": "ALIGNED [0:0, 0:105, 0:251]" 
+        }
+    }
+}
