@@ -9,7 +9,7 @@
     "input": {
         "coverage_id":"South_Tyrol_Temperature_MODIS_1km",
         "paths": [
-            "/home/arkaghosh/Downloads/Bolzano/Raster/Bolzano_Temp_MOD11A1.061_1km_aid0001.nc"
+            "/data/Bolzano_Temp_MOD11A1.061_1km_aid0001.nc"
         ]
     },
     "recipe": {
