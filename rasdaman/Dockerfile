@@ -3,10 +3,10 @@ FROM albulenpano/rasdaman:10.2.1
 # Copy the ingredient and netcdf file into the container
 COPY /data/Bavaria_Temp_MOD11A1.061_1km_aid0001.nc
 COPY /data/Bavaria_Temp.json
-COPY /data/Sweden_MOD11A1.061_1km_aid0001.nc
+# COPY /data/Sweden_MOD11A1.061_1km_aid0001.nc
 COPY /data/Sweden_Temperature_1km.json
-COPY /data/Bolzano_Temp_MOD11A1.061_1km_aid0001.nc
-COPY /data/Bolzano_Temp.json
+COPY /data/South_Tyrol_Temp_MOD11A1.061_1km_aid0001.nc
+COPY /data/South_Tyrol_Temp.json
 
 # Overwrite petascope.properties
 #TODO: Use the ENV properties to set the values in petascope.properties
