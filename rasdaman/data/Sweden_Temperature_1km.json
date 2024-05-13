@@ -9,7 +9,7 @@
     "input": {
         "coverage_id":"Sweden_Temperature_TRIGGERED",
         "paths": [
-            "/home/arkaghosh/Downloads/RASDAMAN_FINALE/Worked/Sweden/MOD11A1.061_1km_aid0001.nc"
+            "/data/Sweden_MOD11A1.061_1km_aid0001.nc"
         ]
     },
     "recipe": {
