@@ -28,25 +28,41 @@ services:
     container_name: rasdaman
     build:
       context: rasdaman
-    # TODO: test
-#    healthcheck:
-#      test: [ "CMD", "curl", "-f", "http://localhost:8080/rasdaman/ows" ]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
-#      start_period: 30s
+    # TODO: Must find a good way to do this for an arbitrary file
+    healthcheck:
+      #"http://host.docker.internal:8080/rasdaman/ows" can be reached before the file is loaded, not a good test
+      test: [ "CMD", "curl", "-f", "http://host.docker.internal:8080/rasdaman/ows" ]
+      #currently failing
+      #test: ["CMD-SHELL", "docker logs rasdaman | grep -q \"Recipe at '/data/Bavaria_Temp.json' executed successfully\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      # Provide ample time for the rasdaman server to start
+      start_period: 45s
     ports:
       - "${RASDAMAN_SERVER_PORT}:8080"
+    depends_on:
+      rasdatabase:
+        condition: service_healthy
     networks:
       - rasdaman-network
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  db_edit:
+    build:
+      context: db_pgsql
+    container_name: db_edit
+    depends_on:
+      rasdaman:
+        condition: service_healthy
+    networks:
+      - rasdaman-network
+
   ontop:
     #TODO: Update with custom image supporting rasdaman functions
     image: ontop/ontop:5.1.2
     env_file: .env
-    restart: unless-stopped
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/OntoRaster.owx
       ONTOP_XML_CATALOG_FILE: /opt/ontop/input/catalog-v001.xml
@@ -60,8 +76,8 @@ services:
       - ./jdbc:/opt/ontop/jdbc
       #- ./wait-for-it:/opt/wait-for-it
     depends_on:
-      rasdaman:
-        condition: service_healthy
+      db_edit:
+        condition: service_completed_successfully
     ports:
       - "${ONTOP_SERVER_PORT}:8080"
     networks:

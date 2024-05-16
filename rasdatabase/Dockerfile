@@ -9,11 +9,6 @@ RUN apt-get update && apt-get install -y \
     postgresql-plpython3-15 \
     python3.11-venv
 
-# Set the environment variables
-#ENV POSTGRES_DB=petascopedb
-#ENV POSTGRES_USER=petauser
-#ENV POSTGRES_PASSWORD=petapasswd
-#ENV POSTGRES_MULTIPLE_DATABASES=petascopedb,vectordb
 
 # Step 1 - Load the required Python files and set up the Python environment for PlPython
 # Create a Python virtual environment
@@ -28,11 +23,9 @@ RUN /opt/envrasdaman/bin/pip install -r /opt/envrasdaman/requirements.txt
 # Set the PYTHONPATH environment variable
 ENV PYTHONPATH=/opt/envrasdaman/lib/python3.11/site-packages
 
-#TODO: Does /etc/postgresql/postgresql.conf need to be modified?
-
-# Step 2 - Load the required SQL files and data
+# Step 2 - Initial SQL scripts
+# NOTE: PostgreSQL runs scripts sequentially in alphabetical order
 COPY *.sql /docker-entrypoint-initdb.d/
 COPY *.sql.gz /docker-entrypoint-initdb.d/
-# TODO: Set up shp2pgsql
-#COPY import_data.sh .
-#RUN chmod +x import_data.sh
+
+EXPOSE 5432

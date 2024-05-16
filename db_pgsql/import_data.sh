@@ -1,10 +1,31 @@
 #!/bin/bash
 
-# Vector Geometry Data of REGION_OF_INTEREST(ROI)
-shp2pgsql -s 4326 /db_pgsql/vector_data/Bavaria_1.shp region_Bavaria | psql -h localhost -p 5432 -U postgres -d VectorDB
-shp2pgsql -s 4326 /db_pgsql/vector_data/gadm41_SWE_2.shp region_Sweden | psql -h localhost -p 5432 -U postgres -d VectorDB
-shp2pgsql -s 4326 /db_pgsql/vector_data/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h localhost -p 5432 -U postgres -d VectorDB
-# Add more shp2pgsql commands as needed...
+echo "Viewing the PostgreSQL Client Version"
+psql -Version
 
-# TODO: Check if port is correct or MAPPED_PORT is needed
-# TODO: Check if different databases are needed, in that case 2 different docker containers are needed
+echo "Give rasdaman time to finish importing files"
+# TODO: Must remove in the future
+sleep 90
+
+echo "Set password"
+export PGPASSWORD="petapasswd"
+
+# shp2pgsql scripts
+echo "Load Bavaria2"
+shp2pgsql -s 4326 /data/Bavaria_1.shp region_Bavaria | psql -h rasdatabase -p 5432 -U petauser -d vectordb
+sleep 5
+echo "Load Sweden"
+shp2pgsql -s 4326 /data/gadm41_SWE_2.shp region_Sweden | psql -h rasdatabase -p 5432 -U petauser -d vectordb
+sleep 5
+echo "Load South Tyrol"
+shp2pgsql -s 4326 /data/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h rasdatabase -p 5432 -U petauser -d vectordb
+sleep 10
+
+
+# Additional scripts to create lookup table
+# TODO: Custom scripts for either petascopedb or vectordb
+psql -h rasdatabase -p 5432 -U petauser -d petascopedb -f scripts.sql
+
+
+
+unset PGPASSWORD

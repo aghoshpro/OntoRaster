@@ -1,6 +1,11 @@
-FROM postgis/postgis:13-3.3-alpine
-COPY *.sql /docker-entrypoint-initdb.d/
-COPY *.sql.gz /docker-entrypoint-initdb.d/
+FROM ubuntu:latest
+RUN apt-get update
+RUN apt-get install -y postgis && apt-get install -y postgresql-client
+
+# Copy shapefiles and other sql files
+COPY data /data
 COPY import_data.sh .
 RUN chmod +x import_data.sh
-USER postgres
+
+# Load data
+ENTRYPOINT ["/import_data.sh"]
