@@ -22,9 +22,17 @@ shp2pgsql -s 4326 /data/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h rasdat
 sleep 10
 
 
+# pg_dump copy all data from petascopedb to vectordb since Ontop does not support multiple databases
+pg_dump -h rasdatabase -p 5432 -U petauser -d petascopedb -n public --schema-only > schema_dump.sql
+pg_dump -h rasdatabase -p 5432 -U petauser -d petascopedb -n public --data-only > data_dump.sql
+sleep 10
+psql -h rasdatabase -p 5432 -U petauser -d vectordb -f schema_dump.sql
+psql -h rasdatabase -p 5432 -U petauser -d vectordb -f data_dump.sql
+
+
+sleep 10
 # Additional scripts to create lookup table
-# TODO: Custom scripts for either petascopedb or vectordb
-psql -h rasdatabase -p 5432 -U petauser -d petascopedb -f scripts.sql
+psql -h rasdatabase -p 5432 -U petauser -d vectordb -f lookup_scripts.sql
 
 
 
