@@ -1,0 +1,61 @@
+-- ###########################################
+-- ### LookUp Table Creation In Petacopedb ### **********************************************************************************************************************************************
+-- ###########################################
+
+-- 1. lookup_temp (to get min max values as double)
+CREATE OR REPLACE VIEW lookup_temp AS
+	SELECT coverage.id, coverage.coverage_id, wgs84_bounding_box.max_lat, wgs84_bounding_box.min_lat, wgs84_bounding_box.max_long, wgs84_bounding_box.min_long 	
+	FROM public.coverage
+	JOIN public.envelope ON coverage.envelope_id = envelope.envelope_id
+	JOIN public.envelope_by_axis ON  envelope.envelope_by_axis_id = envelope_by_axis.envelope_by_axis_id
+	JOIN public.wgs84_bounding_box ON envelope_by_axis.wgs84_bounding_box_id = wgs84_bounding_box.wgs84_bounding_box_id
+		
+
+-- 2. lookup_peta (build from selected tables from petascope and max min from lookup_temp).
+	
+CREATE OR REPLACE VIEW lookup_peta AS	
+	SELECT coverage.id, coverage.coverage_id,  axis_extent.axis_label, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound,lookup_temp.max_lat, lookup_temp.min_lat, lookup_temp.max_long, lookup_temp.min_long, geo_axis.resolution
+	FROM public.coverage, public.envelope,  public.axis_extent, public.geo_axis, lookup_temp
+	WHERE coverage.envelope_id = envelope.envelope_id 
+	AND envelope.envelope_by_axis_id = axis_extent.envelope_by_axis_id 
+	AND axis_extent.upper_bound = geo_axis.upper_bound
+	AND coverage.id = lookup_temp.id
+
+SELECT * FROM lookup_peta -- Lookup Table in petascopedb
+
+-- 3. Switch to VectorDB and import lookup_peta as lookup_unstructured using dblink
+
+CREATE OR REPLACE VIEW lookup_unstructured AS		
+SELECT *
+    FROM dblink('host=localhost dbname=petascopedb user=petauser password=petapasswd options=-csearch_path=',
+	   'SELECT id, coverage_id, axis_label, lower_bound, upper_bound, grid_lower_bound, grid_upper_bound, resolution, min_long, max_long, min_lat, max_lat FROM public.lookup_peta')
+AS remote_table(raster_id text, raster_name text, axis_label text, domain_lower_bound text, domain_upper_bound date, grid_lower_bound date, grid_upper_bound integer, resolution float, min_long float, max_long float, min_lat float, max_lat float);
+
+
+
+-- 4. Build sample_lookup
+
+CREATE OR REPLACE VIEW sample_lookup AS
+SELECT 
+    raster_id,
+    raster_name,
+    MAX(CASE WHEN axis_label = 'Long' THEN min_long END) AS min_lon,
+    MAX(CASE WHEN axis_label = 'Long' THEN max_long END) AS max_lon,
+	  MAX(CASE WHEN axis_label = 'Long' THEN grid_lower_bound END) AS min_lon_grid,
+    MAX(CASE WHEN axis_label = 'Long' THEN grid_upper_bound END) AS max_lon_grid,
+	  MAX(CASE WHEN axis_label = 'Long' THEN resolution END) AS res_lon,
+    MAX(CASE WHEN axis_label = 'Lat' THEN min_lat END) AS min_lat,
+    MAX(CASE WHEN axis_label = 'Lat' THEN max_lat END) AS max_lat,
+	  MAX(CASE WHEN axis_label = 'Lat' THEN grid_lower_bound END) AS min_lat_grid,
+    MAX(CASE WHEN axis_label = 'Lat' THEN grid_upper_bound END) AS max_lat_grid,
+	  MAX(CASE WHEN axis_label = 'Lat' THEN resolution END) AS res_lat,
+	  MAX(CASE WHEN axis_label = 'ansi' THEN domain_lower_bound date END) AS start_time,
+    MAX(CASE WHEN axis_label = 'ansi' THEN domain_upper_bound date END) AS end_time,
+	  MAX(CASE WHEN axis_label = 'ansi' THEN grid_lower_bound END) AS start_time_grid,
+    MAX(CASE WHEN axis_label = 'ansi' THEN grid_upper_bound END) AS end_time_grid,
+	  MAX(CASE WHEN axis_label = 'ansi' THEN resolution END) AS res_time
+FROM lookup_unstructured
+GROUP BY raster_id, raster_name;
+
+
+--select * from sample_lookup -- Build mappings with this table in VectorDB
