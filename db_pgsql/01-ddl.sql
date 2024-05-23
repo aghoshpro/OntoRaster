@@ -2,6 +2,7 @@ CREATE EXTENSION postgis;
 CREATE EXTENSION postgis_raster;
 CREATE EXTENSION plpgsql;
 CREATE EXTENSION plpython3u;
+CREATE EXTENSION dblink;
 
 -- Database: VectorDB (Contains all types of geometrical shape files)
 
@@ -19,85 +20,7 @@ CREATE DATABASE "VectorDB"
     IS_TEMPLATE = False;
 
 
--- ###########################################
--- ### LookUp Table Creation In petacopedb ### **********************************************************************************************************************************************
--- ###########################################
 
--- 1. Selected Tables from petascopedb
-
-SELECT * FROM public.axis_extent
-
-SELECT * FROM public.geo_axis
-
-SELECT * FROM public.index_axis
-
-SELECT * FROM public.coverage
-
-SELECT * FROM public.envelope
-
-SELECT * FROM public.envelope_by_axis
-
-SELECT * FROM public.wgs84_bounding_box
-	
-
--- 2. lookup_temp (to get extent as double)
-CREATE OR REPLACE VIEW lookup_temp_X AS
-	SELECT coverage.id, coverage.coverage_id, wgs84_bounding_box.max_lat, wgs84_bounding_box.min_lat, wgs84_bounding_box.max_long, wgs84_bounding_box.min_long 	
-	FROM public.coverage
-	JOIN public.envelope ON coverage.envelope_id = envelope.envelope_id
-	JOIN public.envelope_by_axis ON  envelope.envelope_by_axis_id = envelope_by_axis.envelope_by_axis_id
-	JOIN public.wgs84_bounding_box ON envelope_by_axis.wgs84_bounding_box_id = wgs84_bounding_box.wgs84_bounding_box_id
-		
-
--- 3. lookup_peta build from selected tables joined lookup_temp.
-	
-CREATE OR REPLACE VIEW lookup_peta_X AS	
-	SELECT coverage.id, coverage.coverage_id,  axis_extent.axis_label, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound,lookup_temp_X.max_lat, lookup_temp_X.min_lat, lookup_temp_X.max_long, lookup_temp_X.min_long, geo_axis.resolution
-	FROM public.coverage, public.envelope,  public.axis_extent, public.geo_axis, lookup_temp_X
-	WHERE coverage.envelope_id = envelope.envelope_id 
-	AND envelope.envelope_by_axis_id = axis_extent.envelope_by_axis_id 
-	AND axis_extent.upper_bound = geo_axis.upper_bound
-	AND coverage.id = lookup_temp_X.id
-
-SELECT * FROM lookup_peta_X -- Lookup Table in petascopedb
-
--- 4. Switch to VectorDB and import lookup_peta_X as lookup_main_X1 using dblink
-
-CREATE OR REPLACE VIEW lookup_main_X1 AS		
-SELECT *
-    FROM dblink('host=localhost dbname=petascopedb user=petauser password=petapasswd options=-csearch_path=',
-	   'SELECT id, coverage_id, axis_label, lower_bound, upper_bound, grid_lower_bound, grid_upper_bound, resolution, min_long, max_long, min_lat, max_lat FROM public.lookup_peta_x')
-AS remote_table(raster_id text, raster_name text, axis_label text, domain_lower_bound text, domain_upper_bound date, grid_lower_bound date, grid_upper_bound integer, resolution float, min_long float, max_long float, min_lat float, max_lat float);
-
-
-
--- 5. Build sample_lookup_X
-
-CREATE OR REPLACE VIEW sample_lookup_X1 AS
-SELECT 
-    raster_id,
-    raster_name,
-    MAX(CASE WHEN axis_label = 'Long' THEN min_long END) AS min_lon,
-    MAX(CASE WHEN axis_label = 'Long' THEN max_long END) AS max_lon,
-	MAX(CASE WHEN axis_label = 'Long' THEN grid_lower_bound END) AS min_lon_grid,
-    MAX(CASE WHEN axis_label = 'Long' THEN grid_upper_bound END) AS max_lon_grid,
-	MAX(CASE WHEN axis_label = 'Long' THEN resolution END) AS res_lon,
-    MAX(CASE WHEN axis_label = 'Lat' THEN min_lat END) AS min_lat,
-    MAX(CASE WHEN axis_label = 'Lat' THEN max_lat END) AS max_lat,
-	MAX(CASE WHEN axis_label = 'Lat' THEN grid_lower_bound END) AS min_lat_grid,
-    MAX(CASE WHEN axis_label = 'Lat' THEN grid_upper_bound END) AS max_lat_grid,
-	MAX(CASE WHEN axis_label = 'Lat' THEN resolution END) AS res_lat,
-	MAX(CASE WHEN axis_label = 'ansi' THEN domain_lower_bound date END) AS start_time,
-    MAX(CASE WHEN axis_label = 'ansi' THEN domain_upper_bound date END) AS end_time,
-	MAX(CASE WHEN axis_label = 'ansi' THEN grid_lower_bound END) AS start_time_grid,
-    MAX(CASE WHEN axis_label = 'ansi' THEN grid_upper_bound END) AS end_time_grid,
-	MAX(CASE WHEN axis_label = 'ansi' THEN resolution END) AS res_time
-FROM lookup_main_X1
-GROUP BY raster_id, raster_name;
-
-
-select * from sample_lookup_X1 -- Build mappings with this table in VectorDB
-	
 
 -- ###########################################
 -- ### PL/pgsql Functions ### **********************************************************************************************************************************************
