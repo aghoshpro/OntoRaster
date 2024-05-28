@@ -1,7 +1,8 @@
 # OntoRaster
 Extension of Ontop, a VKG engine over multidimensional array database or Raster data combined with geomtrical data (e.g. Vector Data) and Relational Data
 
-![OntoRaster](https://github.com/aghoshpro/OntoRaster/assets/71174892/bbf751b2-78fc-43e0-8225-825f3228c902)
+![OntoRaster (2)](https://github.com/aghoshpro/OntoRaster/assets/71174892/49751ecd-ba5b-49ef-8071-18f68e0dde37)
+
 
 ## Table of Contents
 0. [Pre-requisite Installation](https://github.com/aghoshpro/OntoRaster/blob/main/README.md#0-pre-requisite-installation-for-first-time-users) 
