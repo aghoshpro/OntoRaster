@@ -31,7 +31,7 @@ CREATE OR REPLACE VIEW lookup_unstructured AS
 SELECT *
     FROM dblink('host=localhost dbname=vectordb user=petauser password=petapasswd options=-csearch_path=',
 	   'SELECT id, coverage_id, axis_label, lower_bound, upper_bound, grid_lower_bound, grid_upper_bound, resolution, min_long, max_long, min_lat, max_lat FROM public.lookup_peta')
-AS remote_table(raster_id text, raster_name text, axis_label text, domain_lower_bound text, domain_upper_bound date, grid_lower_bound date, grid_upper_bound integer, resolution float, min_long float, max_long float, min_lat float, max_lat float);
+AS remote_table(raster_id text, raster_name text, axis_label text, domain_lower_bound text, domain_upper_bound text, grid_lower_bound integer, grid_upper_bound integer, resolution float, min_long float, max_long float, min_lat float, max_lat float);
 
 
 
