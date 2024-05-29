@@ -2,3 +2,4 @@ rasdapy3
 protobuf==3.20.*
 affine
 shapely
+gdal
