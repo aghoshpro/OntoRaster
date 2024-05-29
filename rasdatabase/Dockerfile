@@ -9,6 +9,14 @@ RUN apt-get update && apt-get install -y \
     postgresql-plpython3-15 \
     python3.11-venv
 
+# Install the necessary packages to get the gdal working in Python
+
+RUN apt-get update && apt-get install -y \
+    binutils libproj-dev gdal-bin libgdal-dev
+
+# Set environment variables for GDAL
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
 
 # Step 1 - Load the required Python files and set up the Python environment for PlPython
 # Create a Python virtual environment

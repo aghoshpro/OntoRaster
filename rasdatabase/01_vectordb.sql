@@ -2,7 +2,7 @@ CREATE DATABASE vectordb;
 \connect vectordb;
 CREATE EXTENSION postgis;
 CREATE EXTENSION postgis_raster;
-CREATE EXTENSION plpgsql;
+-- CREATE EXTENSION plpgsql;
 CREATE EXTENSION plpython3u;
 
 -- Activate plpython venv
@@ -25,78 +25,6 @@ CREATE EXTENSION plpython3u;
 -- SELECT activate_python_venv('/opt/envrasdaman');
 
 CREATE SCHEMA IF NOT EXISTS rasdaman_op;
-
-CREATE OR REPLACE FUNCTION rasdaman_op.timestamp2grid(
-	input_time text,
-	input_raster text)
-    RETURNS integer
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE PARALLEL UNSAFE
-AS $BODY$
-DECLARE
-example_date_grid_val INTEGER;
-BEGIN
-SELECT start_time_grid + EXTRACT(DAY FROM (input_time::TIMESTAMP - start_time::TIMESTAMP))INTO example_date_grid_val
-FROM sample_lookup
-WHERE start_time::TIMESTAMP <= input_time::TIMESTAMP AND end_time::TIMESTAMP >= input_time::TIMESTAMP AND raster_name = input_raster;
-
-RETURN example_date_grid_val;
-END;
-
-$BODY$;
-
--- FUNCTION: rasdaman_op.get_min_longitude(text)
-
-CREATE OR REPLACE FUNCTION rasdaman_op.get_min_longitude(
-	input_raster text,
-	OUT min_lon double precision)
-    RETURNS double precision
-    LANGUAGE 'sql'
-    COST 100
-    VOLATILE PARALLEL UNSAFE
-AS $BODY$
-SELECT min_lon FROM sample_lookup WHERE raster_name = input_raster
-$BODY$;
-
--- FUNCTION: rasdaman_op.get_res_lon(text)
-
-CREATE OR REPLACE FUNCTION rasdaman_op.get_res_lon(
-	input_raster text,
-	OUT res_lon double precision)
-    RETURNS double precision
-    LANGUAGE 'sql'
-    COST 100
-    VOLATILE PARALLEL UNSAFE
-AS $BODY$
-SELECT res_lon FROM sample_lookup WHERE raster_name = input_raster
-$BODY$;
-
--- FUNCTION: rasdaman_op.get_max_latitude(text)
-
-CREATE OR REPLACE FUNCTION rasdaman_op.get_max_latitude(
-	input_raster text,
-	OUT max_lat double precision)
-    RETURNS double precision
-    LANGUAGE 'sql'
-    COST 100
-    VOLATILE PARALLEL UNSAFE
-AS $BODY$
-SELECT max_lat FROM sample_lookup WHERE raster_name = input_raster
-$BODY$;
-
--- FUNCTION: rasdaman_op.get_res_lat(text)
-
-CREATE OR REPLACE FUNCTION rasdaman_op.get_res_lat(
-	input_raster text,
-	OUT res_lat double precision)
-    RETURNS double precision
-    LANGUAGE 'sql'
-    COST 100
-    VOLATILE PARALLEL UNSAFE
-AS $BODY$
-SELECT res_lat FROM sample_lookup WHERE raster_name = input_raster
-$BODY$;
 
 
 -- FUNCTION 02: rasdaman_op.get_geom_wkt(geometry)
@@ -140,7 +68,7 @@ CREATE OR REPLACE FUNCTION rasdaman_op.geo2grid_final(
 AS $BODY$
 import numpy as np
 import re
-import gdal
+
 from affine import Affine
 from shapely.geometry import Polygon
 from shapely.ops import unary_union
@@ -250,7 +178,7 @@ def query2array(query):
     numpy_array = result.to_array()
     return numpy_array.tolist()
 
-db_connector = DBConnector("localhost", 7001, "rasadmin", "rasadmin")
+db_connector = DBConnector("host.docker.internal", 7001, "rasadmin", "rasadmin")
 query_executor = QueryExecutor(db_connector)
 db_connector.open()
 
@@ -279,7 +207,7 @@ def query2result(query):
    output_val = float("{}".format(output_val))
    return output_val
 
-db_connector = DBConnector("localhost", 7001, "rasadmin", "rasadmin")
+db_connector = DBConnector("host.docker.internal", 7001, "rasadmin", "rasadmin")
 query_executor = QueryExecutor(db_connector)
 db_connector.open()
 
@@ -306,7 +234,7 @@ def query2result(query):
    output_val = query_executor.execute_read(query)
    return output_val
 
-db_connector = DBConnector("localhost", 7001, "rasadmin", "rasadmin")
+db_connector = DBConnector("host.docker.internal", 7001, "rasadmin", "rasadmin")
 query_executor = QueryExecutor(db_connector)
 db_connector.open()
 

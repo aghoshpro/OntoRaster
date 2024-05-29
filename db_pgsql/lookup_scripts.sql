@@ -61,3 +61,79 @@ GROUP BY raster_id, raster_name;
 
 
 --select * from sample_lookup -- Build mappings with this table in VectorDB
+
+
+-- Add plpython functions
+
+
+CREATE OR REPLACE FUNCTION rasdaman_op.timestamp2grid(
+	input_time text,
+	input_raster text)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE
+example_date_grid_val INTEGER;
+BEGIN
+SELECT start_time_grid + EXTRACT(DAY FROM (input_time::TIMESTAMP - start_time::TIMESTAMP))INTO example_date_grid_val
+FROM sample_lookup
+WHERE start_time::TIMESTAMP <= input_time::TIMESTAMP AND end_time::TIMESTAMP >= input_time::TIMESTAMP AND raster_name = input_raster;
+
+RETURN example_date_grid_val;
+END;
+
+$BODY$;
+
+-- FUNCTION: rasdaman_op.get_min_longitude(text)
+
+CREATE OR REPLACE FUNCTION rasdaman_op.get_min_longitude(
+	input_raster text,
+	OUT min_lon double precision)
+    RETURNS double precision
+    LANGUAGE 'sql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+SELECT min_lon FROM sample_lookup WHERE raster_name = input_raster
+    $BODY$;
+
+-- FUNCTION: rasdaman_op.get_res_lon(text)
+
+CREATE OR REPLACE FUNCTION rasdaman_op.get_res_lon(
+	input_raster text,
+	OUT res_lon double precision)
+    RETURNS double precision
+    LANGUAGE 'sql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+SELECT res_lon FROM sample_lookup WHERE raster_name = input_raster
+    $BODY$;
+
+-- FUNCTION: rasdaman_op.get_max_latitude(text)
+
+CREATE OR REPLACE FUNCTION rasdaman_op.get_max_latitude(
+	input_raster text,
+	OUT max_lat double precision)
+    RETURNS double precision
+    LANGUAGE 'sql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+SELECT max_lat FROM sample_lookup WHERE raster_name = input_raster
+    $BODY$;
+
+-- FUNCTION: rasdaman_op.get_res_lat(text)
+
+CREATE OR REPLACE FUNCTION rasdaman_op.get_res_lat(
+	input_raster text,
+	OUT res_lat double precision)
+    RETURNS double precision
+    LANGUAGE 'sql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+SELECT res_lat FROM sample_lookup WHERE raster_name = input_raster
+    $BODY$;
