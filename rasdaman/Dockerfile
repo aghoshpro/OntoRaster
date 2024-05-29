@@ -5,8 +5,9 @@ FROM albulenpano/rasdaman:10.2.1
 COPY data /data
 
 # Overwrite petascope.properties
-#TODO: Use the ENV properties to set the values in petascope.properties
+#TODO: Use the ENV properties to set the values in petascope.properties and rasmgr.conf
 COPY petascope.properties /opt/rasdaman/etc/petascope.properties
+COPY rasmgr.conf /opt/rasdaman/etc/rasmgr.conf
 
 # Modify CMD command to import input file
 COPY entrypoint.sh /entrypoint.sh
