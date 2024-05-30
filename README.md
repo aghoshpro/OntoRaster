@@ -7,11 +7,12 @@ Raster Extension of VKG engine Ontop to query over multidimensional Raster Data 
  - Setup Git
  - [Setup Docker](#setup-docker)
  - [Start Docker-Compose](#start-docker-compose)
-* [Demo](#demo)
-* [Framework](#framework)
-* [Dataset](#dataset)
-* [Mapping](#mapping)
-* [More info](#to-know-more)
+* [Framework](#2-framework)
+* [Demo](#3-demo)
+* [Dataset](#4-dataset)
+* [Mapping](#5-mapping)
+* [Ontology](#6-ontology)
+* [More info](#7-to-know-more)
 
 ## 2. Framework
 
