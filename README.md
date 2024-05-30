@@ -1,8 +1,8 @@
 # OntoRaster
 Raster Extension of VKG engine Ontop to query over multidimensional Raster Data combined with Relational data including Geometrical Vector Data
 
-## Table of contents
-### Requirements
+## Table of Contents
+### 1. Requirements
  - [Setup Docker](https://www.docker.com/)
  - Setup Git
  - [Setup Docker](#setup-docker)
@@ -13,13 +13,13 @@ Raster Extension of VKG engine Ontop to query over multidimensional Raster Data 
 * [Mapping](#mapping)
 * [More info](#to-know-more)
 
-## Framework
+## 2. Framework
 
 ![OntoRaster (2)](https://github.com/aghoshpro/OntoRaster/assets/71174892/49751ecd-ba5b-49ef-8071-18f68e0dde37)
 
 
-
-## Clone this repository
+## 3. Demo
+### 3.1 Clone this repository
 
 On Windows
 ```sh
@@ -31,10 +31,10 @@ Otherwise, on MacOS and Linux:
 git clone https://github.com/aghoshpro/OntoRaster
 ```
 
-## Setup Docker
+### 3.2 Setup Docker
 Go to https://docs.docker.com/desktop/ and install docker on your favourite os.
 
-## Demo
+## 3.3 Run the demo
 * Go to the `OntoRaster` repository
   
 * First, stop the current docker-compose:
@@ -56,22 +56,27 @@ For this tutorial, we assume that the ports `7001-7010, 8082` (used for database
 For example, RasSPARQL queries are available at [endpoint](http://localhost:8082/).
 
 
-## 2. Datasets
-### 2.1 Vector Data
+## 4. Datasets
+
+### 4.1 Vector Data
 * Download [GADM data](https://gadm.org/download_country.html) GADM data (version 4.1) based on region of interest (ROI) such as Municipalities of Sweden, Germany, Italy.
 * User can download vector shape or csv file of their own choice.
-### 2.2 Raster Data
-#### 2.2.1 MODIS LST TEMP 1 Km
+
+### 4.2 Raster Data
 * World: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * Sweden: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * Italy: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * Germany: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
-* India:
 
 
-## Mapping
+## 5. Mapping
 
-## To know more
+## 6. Ontology
+
+![Ontology](https://github.com/aghoshpro/OntoRaster/assets/71174892/d4ba1875-e589-4f36-b108-28b9f5d2cb50)
+
+
+## 7. To know more
 
 Visit the official website of Ontop https://ontop-vkg.org, which also provides a more detailed tutorial.
 
