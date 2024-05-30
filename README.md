@@ -1,120 +1,56 @@
 # OntoRaster
-Extension of Ontop, a VKG engine over multidimensional array database or Raster data combined with geomtrical data (e.g. Vector Data) and Relational Data
+Extension of Ontop, a VKG engine over multidimensional array database or Raster data combined with geometrical data (e.g. Vector Data) and Relational Data
 
-![OntoRaster (2)](https://github.com/aghoshpro/OntoRaster/assets/71174892/49751ecd-ba5b-49ef-8071-18f68e0dde37)
-
-
-## Table of Contents
-0. [Pre-requisite Installation](https://github.com/aghoshpro/OntoRaster/blob/main/README.md#0-pre-requisite-installation-for-first-time-users) 
-1. [Installation](https://github.com/aghoshpro/myPhD/tree/main/RasDaMan#installation)
-2. [Datasets](https://github.com/aghoshpro/OntoRaster#2-datasets)
-3. [Source Preperation](https://github.com/aghoshpro/OntoRaster#3-source-preparation)
-4. [Query Answering](https://github.com/aghoshpro/OntoRaster#4-queries)
+This tutorial is adapted from [the Virtual Knowledge Graph](https://github.com/noi-techpark/it.bz.opendatahub.sparql) of the South Tyrolean [Open Data Hub](https://opendatahub.bz.it/).
 
 
-## 0. Pre-requisite Installation [for first time users]
+## Materials 
+Slides of the tutorial given at the Knowledge Graph Conference (KGC) 2021 can be found in the `slides` directory.
 
-(i) **Install Python 3.8 or more on Ubuntu 22.04**
-Install the required dependency for adding custom PPAs.
+The video of the tutorial is available [here](https://knowledgegraphconference.vhx.tv/kgc-2021/videos/may-3rd-t3-integrating-data-through-virtual-knowledge-graphs-with-ontop-bb71a1dc-c38d-4729-baa0-03917fdd0d99) (subscription or conference ticket required).
 
-* ```sudo apt install software-properties-common -y```
+## Requirements
+ - [Docker](https://www.docker.com/)
+ - Protégé 5.5 with the Ontop 4.1.0 plugin installed. A bundle is available [here](https://sourceforge.net/projects/ontop4obda/files/ontop-4.1.0/).
+ - Optionally [DBeaver](https://dbeaver.io/) or another database tool for visualizing the data source.
 
-Then proceed and add the deadsnakes PPA to the APT package manager sources list as below.
+## Clone this repository
 
-* ```sudo add-apt-repository ppa:deadsnakes/ppa```
-
-Press Enter to continue. Now download Python 3.10 with the single command below.
-
-* ```sudo apt install python3.10```
-
-Verify the installation by checking the installed version.
-* ```python3 --version```
-
-(ii) **install netcdf4 package**
-``` sudo pip3 install netCDF4```
-
-## 1. Installation
-### 1.1. PostgreSQL Installation
-```
-$ sudo service postgresql status
-
-● postgresql.service - PostgreSQL RDBMS
-     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
-     Active: active (exited) since Tue 2023-07-25 14:36:14 IST; 23min ago
-    Process: 1432 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
-   Main PID: 1432 (code=exited, status=0/SUCCESS)
-
-Jul 25 14:36:14 lat7410g systemd[1]: Starting PostgreSQL RDBMS...
-Jul 25 14:36:14 lat7410g systemd[1]: Finished PostgreSQL RDBMS.
-```
-### 1.2 Rasdaman Installation
-
-* Source: https://doc.rasdaman.org/stable/02_inst-guide.html#installation-and-administration-guide
-
-#### 1.2.1 Open terminal in Ubuntu 20.04 LTS 
-
-```
-wget -O - https://download.rasdaman.org/packages/rasdaman.gpg | sudo apt-key add -
+On Windows
+```sh
+git clone https://github.com/ontopic-vkg/destination-tutorial  --config core.autocrlf=input
 ```
 
-```
-echo "deb [arch=amd64] https://download.rasdaman.org/packages/deb focal stable" | sudo tee /etc/apt/sources.list.d/rasdaman.list
-```
-
-```
-sudo apt-get update
+Otherwise, on MacOS and Linux:
+```sh
+git clone https://github.com/ontopic-vkg/destination-tutorial
 ```
 
-```
-sudo apt-get install rasdaman
-```
-
-```
-source /etc/profile.d/rasdaman.sh
-```
-
-#### 1.2.2 Check if `rasql` is installed and set in path or not 
-```
-rasql -q 'select c from RAS_COLLECTIONNAMES as c' --out string
-```
-```
-rasql: rasdaman query tool 10.0.5.
-Opening database RASBASE at 127.0.0.1:7001... ok.
-Executing retrieval query... ok.
-Query result collection has 0 element(s):
-rasql done
-```
-
-#### 1.2.3 Check petascope config 
-#### [OGC Web Coverage Service Endpoint](http://localhost:8080/rasdaman/ows) 
-```
-$ cd /opt/rasdaman/etc
-```
-```
-$  nano petascope.properties 
-```
-##### Default configuration of petascope for all DBMS.
-```
-spring.datasource.url=jdbc:postgresql://localhost:5432/petascopedb
-spring.datasource.username=petauser
-spring.datasource.password=petapasswd
-spring.datasource.jdbc_jar_path=
-```
+## Table of contents
+* [Setup Docker](#setup-docker)
+* [Start Docker-Compose](#start-docker-compose)
+* [Framework](#framework)
+* [Dataset](#dataset)
+* [Mapping](#mapping)
+* [Solutions](#solutions)
+* [More info](#to-know-more)
 
 
-#### 1.2.4 Status
-```
-service rasdaman start
-service rasdaman stop
-service rasdaman status
+
+## Setup Docker
+
+## Start Docker-compose
+
+* Go to the `destination-tutorial` repository
+* Start the default Docker-compose file
+
+```sh
+docker-compose pull && docker-compose up
 ```
 
-#### 1.2.5 Updating
-```
-sudo apt-get update
-sudo service rasdaman stop
-sudo apt-get install rasdaman
-```
+This command starts and initializes the database. Once the database is ready, it launches the SPARQL endpoint from Ontop at http://localhost:8080 .
+
+For this tutorial, we assume that the ports 7777 (used for database) and 8080 (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
 
 ## 2. Datasets
 ### 2.1 Vector Data
@@ -127,6 +63,47 @@ sudo apt-get install rasdaman
 * Italy: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * Germany: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * India:
+
+
+## Mapping
+
+
+## Framework
+
+## Demo
+
+First, stop the current docker-compose:
+```sh
+docker-compose stop
+```
+
+Then, specify the file by using *-f* : 
+```sh
+docker-compose -f docker-compose.ontoraster.yml up
+```
+
+This Docker-compose file uses the mapping `vkg/OntoRaster.obda`.
+
+You can see it in Protégé by opening the ontology `vkg/OntoRaster.ttl` in a different window.
+
+For example RasSPARQL queries are available at [endpoint](http://localhost:8082/).
+
+## To know more
+
+Visit the official website of Ontop https://ontop-vkg.org, which also provides a more detailed tutorial.
+
+![OntoRaster (2)](https://github.com/aghoshpro/OntoRaster/assets/71174892/49751ecd-ba5b-49ef-8071-18f68e0dde37)
+
+
+## Table of Contents
+0. [Pre-requisite Installation](https://github.com/aghoshpro/OntoRaster/blob/main/README.md#0-pre-requisite-installation-for-first-time-users) 
+1. [Installation](https://github.com/aghoshpro/myPhD/tree/main/RasDaMan#installation)
+2. [Datasets](https://github.com/aghoshpro/OntoRaster#2-datasets)
+3. [Source Preperation](https://github.com/aghoshpro/OntoRaster#3-source-preparation)
+4. [Query Answering](https://github.com/aghoshpro/OntoRaster#4-queries)
+
+
+
   
 ### 2.3 Data Exploration 
 #### Check the metadata of data using [gdal](https://gdal.org/)
@@ -170,7 +147,7 @@ CREATE EXTENSION IF NOT EXISTS plpython3u;
 -- dblink
 CREATE EXTENSION IF NOT EXISTS dblink;
 ```
-Now we import the downloaded shapefiles into VectorTablesDB database using the `shp2pgsql` command. In this way, each shapefile is loaded into a separate tables like `region_Bavaria`, `region_Sweden` etc., in the VectorTablesDB database. Each one of these tables contains a column where geometries are stored in binary format (WKB) and an index has been built on that column. 
+Now we import the downloaded shapefiles into VectorTablesDB database using the `shp2pgsql` command. In this way, each shapefile is loaded into a separate table like `region_Bavaria`, `region_Sweden` etc., in the VectorTablesDB database. Each one of these tables contains a column where geometries are stored in binary format (WKB) and an index has been built on that column. 
 
 ```
 $ shp2pgsql -s 4326 /path_to_shapefile/Bavaria_mun.shp region_Bavaria | psql -h localhost -p 5432 -U postgres -d VectorDB
@@ -180,13 +157,13 @@ $ shp2pgsql -s 4326 /path_to_shapefile/South_Tyrol_LOD3.shp region_South_Tyrol |
 
 ### 3.2 Raster Data
 
-To import data into Rasdaman a shell command `wcst_import.sh` is used and takes follwing two inputs:
+<!--To import data into Rasdaman a shell command `wcst_import.sh` is used and takes following two inputs:
 
-* ```Recipe``` - A recipe is a class implementing the BaseRecipe that based on a set of parameters (ingredients) can import a set of files into WCS forming a well defined structure (image, regular timeseries, irregular timeseries etc). 4 types of recipe are as follows (General Recipe,Mosaic Map, Regular Timeseries, Irregular Timeseries) [List of recipes](http://rasdaman.org/browser/applications/wcst_import/recipes?order=name)
+* ```Recipe``` - A recipe is a class implementing the BaseRecipe that based on a set of parameters (ingredients) can import a set of files into WCS forming a well-defined structure (image, regular timeseries, irregular timeseries etc). 4 types of recipes are as follows (General Recipe,Mosaic Map, Regular Timeseries, Irregular Timeseries) [List of recipes](http://rasdaman.org/browser/applications/wcst_import/recipes?order=name)
 
 * ```Ingredients``` - An ingredients file is a json file containing a set of parameters that define how the recipe should behave (e.g. the WCS endpoint, the CRS resolver etc are all ingredients). [List of ingredients](http://rasdaman.org/browser/applications/wcst_import/ingredients/possible_ingredients.json)
 
-**NOTE** Its only input is an "**ingredient**" file telling everything about the import process that the utility needs to know. (On a side note, such ingredients files constitute an excellent [documentation](http://rasdaman.org/wiki/WCSTImportGuide).)
+**NOTE** Its only input is an "**ingredient**" file telling everything about the import process that the utility needs to know. (On a side note, such ingredients files constitute excellent [documentation](http://rasdaman.org/wiki/WCSTImportGuide).)
 
 #### 3.2.1 NetCDF Format
 #### **DATA**: [/Datasets/udel.airt.precip/v401/air.mon.mean.v401.nc](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html) 
@@ -487,6 +464,6 @@ We are using **GeoSPARQL** for vector data and **rasSPARQL** for raster data.
 ```
 
 
-
+--!>
 
 
