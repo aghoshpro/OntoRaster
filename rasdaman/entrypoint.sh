@@ -1,4 +1,4 @@
-#!/bin/bash\r
+#!/bin/bash
 
 # Start rasdaman
 /opt/rasdaman/bin/start_rasdaman.sh --allow-root &
