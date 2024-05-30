@@ -33,39 +33,29 @@ Otherwise, on MacOS and Linux:
 git clone https://github.com/aghoshpro/OntoRaster
 ```
 
-
 ## Setup Docker
-
-## Start Docker-compose
-
-* Go to the `OntoRaster` repository
-* Start the default Docker-compose file
-
-```sh
-docker-compose pull && docker-compose up
-```
-
-This command starts and initializes the database. Once the database is ready, it launches the SPARQL endpoint from Ontop at http://localhost:8080 .
-
-For this tutorial, we assume that the ports 7777 (used for database) and 8080 (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
+Go to https://docs.docker.com/desktop/ and install docker on your favourite os.
 
 ## Demo
-
-First, stop the current docker-compose:
+* Go to the `OntoRaster` repository
+  
+* First, stop the current docker-compose:
 ```sh
 docker-compose stop
 ```
 
-Then, specify the file by using *-f* : 
+* Then, specify the file by using *-f* : 
 ```sh
 docker-compose -f docker-compose.ontoraster.yml up
 ```
 
 This Docker-compose file uses the mapping `vkg/OntoRaster.obda`.
 
-You can see it in Protégé by opening the ontology `vkg/OntoRaster.ttl` in a different window.
+This command starts and initializes the database. Once the database is ready, it launches the SPARQL endpoint from Ontop at http://localhost:8082/.
 
-For example RasSPARQL queries are available at [endpoint](http://localhost:8082/).
+For this tutorial, we assume that the ports `7001-7010, 8082` (used for database) and `8080` (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
+
+For example, RasSPARQL queries are available at [endpoint](http://localhost:8082/).
 
 
 ## 2. Datasets
