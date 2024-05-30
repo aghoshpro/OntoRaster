@@ -1,7 +1,5 @@
 # OntoRaster
-Extension of Ontop, a VKG engine over multidimensional array database or Raster data combined with geometrical data (e.g. Vector Data) and Relational Data
-
-This tutorial is adapted from [the Virtual Knowledge Graph](https://github.com/noi-techpark/it.bz.opendatahub.sparql) of the South Tyrolean [Open Data Hub](https://opendatahub.bz.it/).
+Raster Extension of VKG engine Ontop to query over multidimensional Raster Data combined with Relational data including Geometrical Vector Data
 
 ## Table of contents
 ### Requirements
