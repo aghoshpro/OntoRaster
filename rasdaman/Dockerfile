@@ -16,4 +16,4 @@ RUN chmod +x /entrypoint.sh
 
 RUN echo "starting entrypoint"
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/rasdaman/entrypoint.sh"]
