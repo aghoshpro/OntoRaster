@@ -5,8 +5,8 @@ This tutorial is adapted from [the Virtual Knowledge Graph](https://github.com/n
 
 ## Table of contents
 ### Requirements
- - [Docker](https://www.docker.com/)
- - Git
+ - [Setup Docker](https://www.docker.com/)
+ - Setup Git
  - [Setup Docker](#setup-docker)
  - [Start Docker-Compose](#start-docker-compose)
 * [Demo](#demo)
@@ -33,7 +33,7 @@ git clone https://github.com/ontopic-vkg/destination-tutorial
 
 ## Start Docker-compose
 
-* Go to the `destination-tutorial` repository
+* Go to the `OntoRaster` repository
 * Start the default Docker-compose file
 
 ```sh
