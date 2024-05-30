@@ -15,17 +15,22 @@ This tutorial is adapted from [the Virtual Knowledge Graph](https://github.com/n
 * [Mapping](#mapping)
 * [More info](#to-know-more)
 
+## Framework
+
+![OntoRaster (2)](https://github.com/aghoshpro/OntoRaster/assets/71174892/49751ecd-ba5b-49ef-8071-18f68e0dde37)
+
+
 
 ## Clone this repository
 
 On Windows
 ```sh
-git clone https://github.com/ontopic-vkg/destination-tutorial  --config core.autocrlf=input
+git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
 ```
 
 Otherwise, on MacOS and Linux:
 ```sh
-git clone https://github.com/ontopic-vkg/destination-tutorial
+git clone https://github.com/aghoshpro/OntoRaster
 ```
 
 
@@ -77,12 +82,6 @@ For example RasSPARQL queries are available at [endpoint](http://localhost:8082/
 
 
 ## Mapping
-
-
-## Framework
-
-![OntoRaster (2)](https://github.com/aghoshpro/OntoRaster/assets/71174892/49751ecd-ba5b-49ef-8071-18f68e0dde37)
-
 
 ## To know more
 
