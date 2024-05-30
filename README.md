@@ -2,7 +2,7 @@
 Raster Extension of VKG engine Ontop to query over multidimensional Raster Data combined with Relational data including Geometrical Vector Data
 
 ## Table of Contents
-* [2. Framework](#2-framework)
+* 2. [Framework](#2-framework)
 * [3. Demo](#3-demo)
  - [Setup Docker](https://www.docker.com/)
  - Setup Git
