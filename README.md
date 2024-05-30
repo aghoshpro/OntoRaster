@@ -34,7 +34,7 @@ git clone https://github.com/aghoshpro/OntoRaster
 ### 3.2 Setup Docker
 Go to https://docs.docker.com/desktop/ and install docker on your favourite os.
 
-## 3.3 Run the demo
+### 3.3 Run the demo
 * Go to the `OntoRaster` repository
   
 * First, stop the current docker-compose:
