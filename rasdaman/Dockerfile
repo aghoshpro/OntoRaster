@@ -12,7 +12,7 @@ COPY rasmgr.conf /opt/rasdaman/etc/rasmgr.conf
 # Modify CMD command to import input file
 COPY entrypoint.sh /entrypoint.sh
 
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /rasdaman/entrypoint.sh
 
 RUN echo "starting entrypoint"
 
