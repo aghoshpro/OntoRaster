@@ -7,7 +7,7 @@ Raster Extension of VKG engine Ontop to query over **multidimensional gridded da
 3. [Dataset](#3-dataset)
 4. [Mapping](#4-mapping)
 5. [Ontology](#5-ontology)
-6. [More info](#6-more-details)
+6. [More details](#6-more-details)
 
 ## 1. Framework
 
@@ -43,22 +43,22 @@ docker-compose stop
 docker-compose -f docker-compose.ontoraster.yml up
 ```
 
-This Docker-compose file uses the mapping `vkg/OntoRaster.obda`.
+* This command starts and initializes the database. Once the database is ready, it launches the SPARQL endpoint from Ontop at http://localhost:8082/.
 
-This command starts and initializes the database. Once the database is ready, it launches the SPARQL endpoint from Ontop at http://localhost:8082/.
+* For this tutorial, we assume that the ports `7001-7010, 8082` (used for the database) and `8080` (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
 
-For this tutorial, we assume that the ports `7001-7010, 8082` (used for the database) and `8080` (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
+* This Docker-compose file uses the mapping `vkg/OntoRaster.obda` and ontology `vkg/OntoRaster.owl`.
 
-For example, RasSPARQL queries are available at [endpoint](http://localhost:8082/).
+* To check RasSPARQL queries are available at `vkg/OntoRaster.toml`
 
 
-## 4. Datasets
+## 3. Datasets
 
-### 4.1 Relational Data (including Vector Data)
+### 3.1 Relational Data (including Vector Data)
 * [GADM data](https://gadm.org/download_country.html) (version 4.1): Contains a large number of relational data including geometrical vector data based on the user's region of interest (ROI). For this demo, we selected all municipalities of Sweden, Germany, and Italy (approx 500 unique regions with region shape geometry and other attributes).
 
 
-### 4.2 Raster Data
+### 3.2 Raster Data
 * Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager")
 * World: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * Sweden: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
@@ -66,16 +66,16 @@ For example, RasSPARQL queries are available at [endpoint](http://localhost:8082
 * Germany: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 
 
-## 5. Mapping
+## 4. Mapping
 
-## 6. Ontology
+## 5. Ontology
 
 ![Ontology](https://github.com/aghoshpro/OntoRaster/assets/71174892/d4ba1875-e589-4f36-b108-28b9f5d2cb50)
 
 
-## 7. More details
+## 6. More details
 
-Please visit the official website of Ontop https://ontop-vkg.org, which also provides more details.
+Please visit the official website of Ontop https://ontop-vkg.org, for more details.
 
 
 
