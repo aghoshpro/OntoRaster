@@ -2,12 +2,12 @@
 Raster Extension of VKG engine Ontop to query over **multidimensional gridded data** or **raster data** or **coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
 ## Table of Contents
-1. [Framework](#2-framework)
-2. [Demo](#3-demo)
-3. [Dataset](#4-dataset)
-4. [Mapping](#5-mapping)
-5. [Ontology](#6-ontology)
-6. [More info](#7-more-details)
+1. [Framework](#1-framework)
+2. [Demo](#2-demo)
+3. [Dataset](#3-dataset)
+4. [Mapping](#4-mapping)
+5. [Ontology](#5-ontology)
+6. [More info](#6-more-details)
 
 ## 1. Framework
 
@@ -15,7 +15,7 @@ Raster Extension of VKG engine Ontop to query over **multidimensional gridded da
 
 
 ## 2. Demo
-### 3.1 Clone this repository
+### 2.1 Clone this repository
 
 On Windows
 ```sh
@@ -54,11 +54,12 @@ For example, RasSPARQL queries are available at [endpoint](http://localhost:8082
 
 ## 4. Datasets
 
-### 4.1 Vector Data
-* Download [GADM data](https://gadm.org/download_country.html) GADM data (version 4.1) based on the region of interest (ROI) such as Municipalities of Sweden, Germany, and Italy.
-* User can download vector data (in shapefile, CSV) of their own choice.
+### 4.1 Relational Data (including Vector Data)
+* [GADM data](https://gadm.org/download_country.html) (version 4.1): Contains a large number of relational data including geometrical vector data based on the user's region of interest (ROI). For this demo, we selected all municipalities of Sweden, Germany, and Italy (approx 500 unique regions with region shape geometry and other attributes).
+
 
 ### 4.2 Raster Data
+* Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager")
 * World: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * Sweden: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * Italy: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
