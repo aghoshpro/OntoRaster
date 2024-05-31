@@ -2,19 +2,19 @@
 Raster Extension of VKG engine Ontop to query over **multidimensional gridded data** or **raster data** or **coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
 ## Table of Contents
-2. [Framework](#2-framework)
-3. [Demo](#3-demo)
-4. [Dataset](#4-dataset)
-5. [Mapping](#5-mapping)
-6. [Ontology](#6-ontology)
-7. [More info](#7-more-details)
+1. [Framework](#2-framework)
+2. [Demo](#3-demo)
+3. [Dataset](#4-dataset)
+4. [Mapping](#5-mapping)
+5. [Ontology](#6-ontology)
+6. [More info](#7-more-details)
 
-## 2. Framework
+## 1. Framework
 
 ![OntoRaster (2)](https://github.com/aghoshpro/OntoRaster/assets/71174892/49751ecd-ba5b-49ef-8071-18f68e0dde37)
 
 
-## 3. Demo
+## 2. Demo
 ### 3.1 Clone this repository
 
 On Windows
@@ -27,18 +27,18 @@ Otherwise, on MacOS and Linux:
 git clone https://github.com/aghoshpro/OntoRaster
 ```
 
-### 3.2 Setup Docker
+### 2.2 Setup Docker
 Go to https://docs.docker.com/desktop/ and install docker on your favourite OS.
 
-### 3.3 Run the demo
-* Go to the `OntoRaster` repository
+### 2.3 Run the demo
+* Open `terminal` or `cmd` and navigate to the `OntoRaster` repository
   
-* First, stop the current docker-compose:
+* Stop the current docker-compose:-
 ```sh
 docker-compose stop
 ```
 
-* Then, specify the file by using *-f* : 
+* Run the following:-
 ```sh
 docker-compose -f docker-compose.ontoraster.yml up
 ```
