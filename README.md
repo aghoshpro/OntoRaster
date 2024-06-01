@@ -45,7 +45,7 @@ docker-compose -f docker-compose.ontoraster.yml up
 
 * This command starts and initializes the database. Once the database is ready, it launches the SPARQL endpoint from Ontop at http://localhost:8082/.
 
-* For this tutorial, we assume that the ports `7001-7010, 8082` (used for the database) and `8080` (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
+* For this tutorial, we assume that the ports `7001-7010, 8080` (used for the RDBMS and Array DBMS) and `8082` (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
 
 * This Docker-compose file uses the mapping `vkg/OntoRaster.obda` and ontology `vkg/OntoRaster.owl`.
 
