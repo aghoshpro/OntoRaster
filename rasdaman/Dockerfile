@@ -16,4 +16,7 @@ RUN chmod +x /entrypoint.sh
 
 RUN echo "starting entrypoint"
 
+RUN apt-get update && apt-get install -y dos2unix
+RUN dos2unix entrypoint.sh
+
 ENTRYPOINT ["/entrypoint.sh"]
