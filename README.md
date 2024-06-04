@@ -38,8 +38,10 @@ Go to https://docs.docker.com/desktop/ and install docker on your favourite OS.
 docker-compose -f docker-compose.ontoraster.yml up
 ```
 
-* This command starts and initializes the PostgreSQL with PostGIS database. Once the database is ready, 
-Rasdaman starts and it imports the raster data. Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ 
+* This command starts and initializes the PostgreSQL with the PostGIS database. Once the database is ready, 
+Rasdaman starts and it imports the raster data.
+
+* Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ 
 with a set of sample queries.
 
 * For this tutorial, we assume that the ports `7777`, `7001-7010, 8080` (used for the RDBMS and Array DBMS) and `8082` (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
