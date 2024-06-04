@@ -15,7 +15,6 @@ Raster Extension of VKG engine Ontop to query over **multidimensional gridded da
 
 
 ## 2. Demo
-![OntopSolution](https://github.com/aghoshpro/OntoRaster/assets/71174892/c4649b67-3810-411e-a6d1-47ab6fbc42df)
 
 ### 2.1 Clone this repository
 
@@ -51,6 +50,10 @@ with a set of sample queries.
 * This Docker-compose file uses the mapping `vkg/OntoRaster.obda` and ontology `vkg/OntoRaster.owl`.
 
 * Sample RasSPARQL queries are available at `vkg/OntoRaster.toml`.
+
+### 2.4 Endpoint
+
+![OntopSolution](https://github.com/aghoshpro/OntoRaster/assets/71174892/c4649b67-3810-411e-a6d1-47ab6fbc42df)
 
 
 ## 3. Datasets
