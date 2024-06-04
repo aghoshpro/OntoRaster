@@ -21,12 +21,49 @@ FILTER (CONTAINS(?raster_name, 'Bavaria'))
 BIND (rasdb:rasDimension(?raster_name) AS ?answer)
 }
 """
+
 [[tabGroups.tabs]]
 
-name="Query 5. Spatial Average"
+name="Query 2"
+query="""
+#####################################################################
+#### Query 2.
+#####################################################################
+"""
+
+[[tabGroups.tabs]]
+
+name="Query 3"
+query="""
+#####################################################################
+#### Query 3.
+#####################################################################
+"""
+
+[[tabGroups.tabs]]
+
+name="Query 4"
+query="""
+#####################################################################
+#### Query 4.
+#####################################################################
+"""
+
+[[tabGroups.tabs]]
+
+name="Query 5"
+query="""
+#####################################################################
+#### Query 5.
+#####################################################################
+"""
+
+[[tabGroups.tabs]]
+
+name="Query 6. Spatial Average"
 query="""
 #############################################################################################################
-#### Query 5. Find spatial average value over a user-specific vector Region (Polygon) and Raster dataset ####
+#### Query 6. Find spatial average value over a user-specific vector Region (Polygon) and Raster dataset ####
 #############################################################################################################
 
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
@@ -47,8 +84,12 @@ BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name)
 
 [[tabGroups.tabs]]
 
-name="Q6. Find spatial average value over a user-specific vector Region (MultiPolygon) and Raster dataset"
+name="Query 7. Spatial Maximum"
 query="""
+#############################################################################################################
+#### Query 7. Find spatial maximum value over a user-specific vector Region (MultiPolygon) and Raster dataset ####
+#############################################################################################################
+
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
@@ -67,8 +108,37 @@ BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name)
 
 [[tabGroups.tabs]]
 
-name="Q9. Clip Raster based on vector Region over user-specific raster dataset"
+name="Query 8. Spatial Minimum"
 query="""
+#############################################################################################################
+#### Query 8. Find spatial minimum value over a user-specific vector Region (Polygon) and Raster dataset ####
+#############################################################################################################
+
+PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+
+SELECT ?answer {
+?vector rdfs:label ?vector_region_name .
+?vector geo:asWKT ?vector_region_wkt .
+?raster rasdb:hasRasterName ?raster_name .
+FILTER (?vector_region_name = 'Ultimo')
+FILTER (CONTAINS(?raster_name, 'Tyrol'))
+BIND ('2023-07-24T00:00:00+00:00' AS ?timestamp)
+BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answer)
+}
+"""
+
+
+[[tabGroups.tabs]]
+
+name="Query 9. Clip Raster"
+query="""
+#####################################################################################################################
+#### Query 9. Clip a portion of the raster based on the shape of vector Region over user-specific raster dataset ####
+#####################################################################################################################
+
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
@@ -87,8 +157,13 @@ BIND (rasdb:rasClipRaster(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answ
 
 [[tabGroups.tabs]]
 
-name="Q10. Clip Raster over any custom vector Region over user-specific raster dataset"
+name="Query 10. Clip Raster Custom Region"
 query="""
+
+#################################################################################################################################
+#### Query 10. Clip a portion of the raster based on the shape of the custom vector Region over user-specific raster dataset ####
+#################################################################################################################################
+
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
