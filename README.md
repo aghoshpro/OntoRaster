@@ -57,7 +57,7 @@ with a set of example RasSPARQL queries.
 ![OntopSolution](https://github.com/aghoshpro/OntoRaster/assets/71174892/c4649b67-3810-411e-a6d1-47ab6fbc42df)
 
 
-## 3. Datasets
+## 3. Dataset
 
 ### 3.1 Relational Data (including Vector Data)
 * In this demo we used municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as vector data consists a total of approx. 500 unique regions with different geometries and other attributes downloaded from [GADM data](https://gadm.org/download_country.html).
