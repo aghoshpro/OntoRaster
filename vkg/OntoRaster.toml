@@ -2,51 +2,63 @@ title="OntoRaster Demonstration"
 
 [[tabGroups]]
 
-name="Examples"
+name="RasSPARQL Queries"
 
 [[tabGroups.tabs]]
 
-name="Calculate Spatial Average Over User Specific Vector Region (polygon_wkt) and Raster"
+name="Q1. Find the dimension of user-specific Raster dataset"
+query="""
+PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+
+SELECT ?answer {
+?raster rasdb:hasRasterName ?raster_name .
+FILTER (CONTAINS(?raster_name, 'Bavaria'))
+BIND (rasdb:rasDimension(raster_name) AS ?answer)
+}
+"""
+
+name="Q5. Find spatial average value over a user-specific vector Region (Pplygon) and Raster dataset"
 query="""
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
-SELECT ?v {
+SELECT ?answer {
 ?vector rdfs:label ?vector_region_name .
 ?vector geo:asWKT ?vector_region_wkt .
 ?raster rasdb:hasRasterName ?raster_name .
 FILTER (?vector_region_name = 'München')
 FILTER (CONTAINS(?raster_name, 'Bavaria'))
 BIND ('2023-07-24T00:00:00+00:00' AS ?timestamp)
-BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name) AS ?v)
+BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answer)
 }
 """
 
 [[tabGroups.tabs]]
 
-name="Calculate Spatial Average Over User Specific Vector Region (multipolygon_wkt) and Raster"
+name="Q6. Find spatial average value over a user-specific vector Region (MultiPolygon) and Raster dataset"
 query="""
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
-SELECT ?v {
+SELECT ?answer {
 ?vector rdfs:label ?vector_region_name .
 ?vector geo:asWKT ?vector_region_wkt .
 ?raster rasdb:hasRasterName ?raster_name .
 FILTER (?vector_region_name = 'Göteborg')
 FILTER (CONTAINS(?raster_name, 'Sweden'))
 BIND ('2022-08-24T00:00:00+00:00' AS ?timestamp)
-BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name) AS ?v)
+BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answer)
 }
 """
 
 [[tabGroups.tabs]]
 
-name="Q9. Clip Raster based on Region "
+name="Q9. Clip Raster based on vector Region over user-specific raster dataset"
 query="""
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
@@ -66,18 +78,18 @@ BIND (rasdb:rasClipRaster(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answ
 
 [[tabGroups.tabs]]
 
-name="Clip Raster over any custom geometry over user specific raster"
+name="Q10. Clip Raster over any custom vector Region over user-specific raster dataset"
 query="""
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
-SELECT ?v {
+SELECT ?answer {
 ?raster rasdb:hasRasterName ?raster_name .
 BIND ('POLYGON((11.324157714843748 48.29050321714061,11.911926269531248 48.279537342260085,11.88995361328125 48.01932418480118,11.340637207031248 48.01564978668938,11.324157714843748 48.29050321714061))' AS ?custom_region_wkt)
 FILTER (CONTAINS(?raster_name, 'Bavaria'))
 BIND ('2023-07-24T00:00:00+00:00' AS ?timestamp)
-BIND (rasdb:rasClipRasterAnyGeom(?timestamp, ?custom_region_wkt, ?raster_name) AS ?v)
+BIND (rasdb:rasClipRasterAnyGeom(?timestamp, ?custom_region_wkt, ?raster_name) AS ?answer)
 }
 """
