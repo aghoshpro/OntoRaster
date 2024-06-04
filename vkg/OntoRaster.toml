@@ -6,9 +6,12 @@ name="RasSPARQL Queries"
 
 [[tabGroups.tabs]]
 
-name="Q1. Find the dimension of user-specific Raster dataset"
+name="Query 1. Get Dimension"
 query="""
-# "Q1. Find the dimension of user-specific Raster dataset"
+#####################################################################
+#### Query 1. Find the dimension of user-specific Raster dataset ####
+#####################################################################
+
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
@@ -20,8 +23,12 @@ BIND (rasdb:rasDimension(?raster_name) AS ?answer)
 """
 [[tabGroups.tabs]]
 
-name="Q5. Find spatial average value over a user-specific vector Region (Polygon) and Raster dataset"
+name="Query 5. Spatial Average"
 query="""
+#############################################################################################################
+#### Query 5. Find spatial average value over a user-specific vector Region (Polygon) and Raster dataset ####
+#############################################################################################################
+
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
