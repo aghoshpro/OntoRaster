@@ -159,7 +159,6 @@ BIND (rasdb:rasClipRaster(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answ
 
 name="Query 10. Clip Raster Custom Region"
 query="""
-
 #################################################################################################################################
 #### Query 10. Clip a portion of the raster based on the shape of the custom vector Region over user-specific raster dataset ####
 #################################################################################################################################
