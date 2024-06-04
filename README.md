@@ -52,7 +52,7 @@ with a set of example RasSPARQL queries.
 
 * RasSPARQL queries are available at `vkg/OntoRaster.toml`.
 
-### 2.3.1 Endpoint
+### 2.4  Demo Endpoint
 
 ![OntopSolution](https://github.com/aghoshpro/OntoRaster/assets/71174892/c4649b67-3810-411e-a6d1-47ab6fbc42df)
 
