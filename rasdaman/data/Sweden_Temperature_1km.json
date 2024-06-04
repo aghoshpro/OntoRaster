@@ -7,7 +7,7 @@
         "track_files": false
     },
     "input": {
-        "coverage_id":"Sweden_Temperature_TRIGGERED",
+        "coverage_id":"Sweden_Surface_Temperature",
         "paths": [
             "/data/Sweden_MOD11A1.061_1km_aid0001.nc"
         ]
