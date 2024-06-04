@@ -1,6 +1,8 @@
 # OntoRaster
 Raster Extension of VKG engine Ontop to query over **multidimensional gridded data** or **raster data** or **coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
+We are also working on our methodology which will enable **OntoRaster** to query over generic **raster data** and **vector data** of any domain using the VKG paradigm. 
+
 ## Table of Contents
 1. [Framework](#1-framework)
 2. [Demo](#2-demo)
@@ -39,8 +41,7 @@ git clone https://github.com/aghoshpro/OntoRaster
 docker-compose -f docker-compose.ontoraster.yml up
 ```
 
-* This command starts and initializes the PostgreSQL with the PostGIS database. Once the database is ready, 
-Rasdaman starts and it imports the raster data.
+* This command starts and initializes the PostgreSQL with the PostGIS database. Once the database is ready, Rasdaman starts and it imports the raster data.
 
 * Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ 
 with a set of sample queries.
@@ -59,16 +60,21 @@ with a set of sample queries.
 ## 3. Datasets
 
 ### 3.1 Relational Data (including Vector Data)
-* In this demo we used municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as our vector data with a total approx. 500 unique regions with different geometries and other attributes downloaded from [GADM data](https://gadm.org/download_country.html).
+* In this demo we used municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as vector data consists a total of approx. 500 unique regions with different geometries and other attributes downloaded from [GADM data](https://gadm.org/download_country.html).
+
+* Stored in **PostgreSQL** with spatial extension PostGIS.
   
-* Ideally any user-specific vector data for any region of interest will work   
+* Ideally any user-specific vector data for any region of interest will work.   
 
 ### 3.2 Raster Data
 * Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager")
+  
 * [World Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 * [South Tyrol Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 * [Bavaria Surface Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
+
+* Ideally any user-specific vector data for any region of interest will work   
 
 
 ## 4. Mapping
