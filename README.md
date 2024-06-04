@@ -1,7 +1,7 @@
 # OntoRaster
 Raster Extension of VKG engine Ontop to query over **multidimensional gridded data** or **raster data** or **coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
-We are also working on our methodology which will enable **OntoRaster** to query over generic **raster data** and **vector data** of any domain using the VKG paradigm. 
+We are also working on our methodology which will enable **OntoRaster** to query over generic **raster data** and **vector data** of any domain under the VKG paradigm. 
 
 ## Table of Contents
 1. [Framework](#1-framework)
