@@ -15,6 +15,12 @@ Raster Extension of VKG engine Ontop to query over **multidimensional gridded da
 
 
 ## 2. Demo
+![OntopSolution](https://github.com/aghoshpro/OntoRaster/assets/71174892/c4649b67-3810-411e-a6d1-47ab6fbc42df)
+
+
+https://github.com/aghoshpro/OntoRaster/assets/71174892/b89a73b8-8ed1-4963-973b-27ef6ee7b82b
+
+
 ### 2.1 Clone this repository
 
 On Windows
