@@ -1,5 +1,5 @@
 # OntoRaster
-Raster Extension of Ontop, a Virtual Knowledge Graph (VKG) engine to query over **multidimensional gridded data** or **raster data** or **coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
+Raster Extension of Ontop, a Virtual Knowledge Graph (VKG) system to query over **multidimensional gridded data** or **raster data** or **coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
 We are also working on our methodology which will enable **OntoRaster** to query over generic **raster data** and **vector data** of any domain under the VKG paradigm. 
 
