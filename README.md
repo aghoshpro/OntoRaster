@@ -18,18 +18,18 @@ Raster Extension of VKG engine Ontop to query over **multidimensional gridded da
 
 ### 2.1 Clone this repository
 
-On Windows
+* On Windows
 ```sh
 git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
 ```
 
-Otherwise, on MacOS and Linux:
+* Otherwise, on MacOS and Linux:
 ```sh
 git clone https://github.com/aghoshpro/OntoRaster
 ```
 
 ### 2.2 Setup Docker
-Go to https://docs.docker.com/desktop/ and install docker on your favourite OS.
+* Go to https://docs.docker.com/desktop/ and install docker on your favourite OS.
 
 ### 2.3 Run the demo
 * Open `terminal` or `cmd` and navigate to the `OntoRaster` repository
@@ -59,9 +59,9 @@ with a set of sample queries.
 ## 3. Datasets
 
 ### 3.1 Relational Data (including Vector Data)
-* In this demo we selected all municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) (total approx. 500 unique regions with different geometries and other attributes) downloaded from [GADM data](https://gadm.org/download_country.html) (v4.1) which consists a large number of vector data of every country around the world.
+* In this demo we used municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as our vector data with a total approx. 500 unique regions with different geometries and other attributes downloaded from [GADM data](https://gadm.org/download_country.html).
   
-* Ideally any vector region as per the user's requirement will work   
+* Ideally any user-specific vector data for any region of interest will work   
 
 ### 3.2 Raster Data
 * Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager")
