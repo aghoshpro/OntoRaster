@@ -8,6 +8,7 @@ name="RasSPARQL Queries"
 
 name="Q1. Find the dimension of user-specific Raster dataset"
 query="""
+# "Q1. Find the dimension of user-specific Raster dataset"
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
