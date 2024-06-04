@@ -11,7 +11,7 @@ We are also working on our methodology which will enable **OntoRaster** to query
 5. [Ontology](#5-ontology)
 6. [More details](#6-more-details)
 
-## 1. :one: Framework
+## 1. Framework
 
 ![OntoRaster (2)](https://github.com/aghoshpro/OntoRaster/assets/71174892/49751ecd-ba5b-49ef-8071-18f68e0dde37)
 
