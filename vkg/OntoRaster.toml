@@ -17,6 +17,7 @@ FILTER (CONTAINS(?raster_name, 'Bavaria'))
 BIND (rasdb:rasDimension(raster_name) AS ?answer)
 }
 """
+[[tabGroups.tabs]]
 
 name="Q5. Find spatial average value over a user-specific vector Region (Pplygon) and Raster dataset"
 query="""
