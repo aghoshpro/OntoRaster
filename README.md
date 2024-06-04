@@ -59,15 +59,16 @@ with a set of sample queries.
 ## 3. Datasets
 
 ### 3.1 Relational Data (including Vector Data)
-* [GADM data](https://gadm.org/download_country.html) (version 4.1): Contains a large number of relational data including geometrical vector data based on the user's region of interest (ROI). For this demo, we selected all municipalities of Sweden, Germany, and Italy (approx. 500 unique regions with region shape geometry and other attributes).
-
+* In this demo we selected all municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) (total approx. 500 unique regions with different geometries and other attributes) downloaded from [GADM data](https://gadm.org/download_country.html) (v4.1) which consists a large number of vector data of every country around the world.
+  
+* Ideally any vector region as per the user's requirement will work   
 
 ### 3.2 Raster Data
 * Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager")
-* World: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
-* Sweden: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
-* Italy: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
-* Germany: [Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
+* [World Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
+* [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
+* [South Tyrol Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
+* [Bavaria Surface Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 
 
 ## 4. Mapping
