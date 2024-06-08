@@ -16,7 +16,8 @@ PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?gridCoverage rasdb:hasRasterName ?rasterName .
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?rasterName, 'Bavaria'))
 BIND (rasdb:rasDimension(?rasterName) AS ?answer)
 }
@@ -45,10 +46,10 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?region a Region .
-?region rdfs:label ?regionName.
+?region a :Region .
+?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
-?gridCoverage a Raster .
+?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?regionName, 'München'))
 FILTER (CONTAINS(?rasterName, 'Bavaria'))
@@ -71,10 +72,10 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?region a Region .
-?region rdfs:label ?regionName.
+?region a :Region .
+?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
-?gridCoverage a Raster .
+?gridCoverage a :Raster .
 ?gridCoverage rasdb:hasRasterName ?rasterName .
 FILTER (CONTAINS(?regionName, 'Göteborg'))
 FILTER (CONTAINS(?rasterName, 'Sweden'))
@@ -97,10 +98,10 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?region a Region .
-?region rdfs:label ?regionName.
+?region a :Region .
+?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
-?gridCoverage a Raster .
+?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?regionName, 'Ultimo'))
 FILTER (CONTAINS(?rasterName, 'Tyrol'))
@@ -123,10 +124,10 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?region a Region .
-?region rdfs:label ?regionName.
+?region a :Region .
+?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
-?gridCoverage a Raster .
+?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?regionName, 'Cham')) # Try with Bayreuth, Würzburg, 
 FILTER (CONTAINS(?rasterName, 'Bavaria'))
@@ -150,10 +151,10 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?region a Region .
-?region rdfs:label ?regionName.
+?region a :Region .
+?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
-?gridCoverage a Raster .
+?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?regionName, 'Stockholm')) # Try with Linköping, 
 FILTER (CONTAINS(?rasterName, 'Sweden'))
@@ -177,10 +178,10 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?region a Region .
-?region rdfs:label ?regionName.
+?region a :Region .
+?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
-?gridCoverage a Raster .
+?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?regionName, 'Stockholm')) 
 FILTER (CONTAINS(?rasterName, 'Tyrol'))
@@ -204,10 +205,10 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?region a Region .
-?region rdfs:label ?regionName.
+?region a :Region .
+?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
-?gridCoverage a Raster .
+?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (?regionName = 'Castelrotto') 
 FILTER (CONTAINS(?rasterName, 'Tyrol')) 
@@ -230,11 +231,15 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?gridCoverage a Raster .
+?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?rasterName, 'Bavaria')) 
 BIND ('POLYGON((11.324157714843748 48.29050321714061,11.911926269531248 48.279537342260085,11.88995361328125 48.01932418480118,11.340637207031248 48.01564978668938,11.324157714843748 48.29050321714061))' AS ?customRegionWkt)
 BIND ('2023-07-24T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
 BIND (rasdb:rasClipRasterAnyGeom(?timeStamp, ?customRegionWkt, ?rasterName) AS ?answer) 
 }
+
+[[tabGroups]]
+
+name="All Queries"
 """
