@@ -57,7 +57,7 @@ with a set of example RasSPARQL queries.
 ![OntopSolution](https://github.com/aghoshpro/OntoRaster/assets/71174892/c4649b67-3810-411e-a6d1-47ab6fbc42df)
 
 
-## 3. Dataset
+## 3. Dataset (***D***)
 
 ### 3.1 Relational Data (including Vector Data)
 * In this demo we used municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as vector data consists a total of approx. 500 unique regions with different geometries and other attributes downloaded from [GADM data](https://gadm.org/download_country.html).
@@ -66,7 +66,7 @@ with a set of example RasSPARQL queries.
   
 * Ideally any user-specific vector data for any region of interest will work.   
 
-### 3.2 Raster Data
+### 3.2 Raster Data 
 * Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager")
   
 * [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
@@ -76,13 +76,14 @@ with a set of example RasSPARQL queries.
 * Ideally any user-specific vector data for any region of interest will work   
 
 
-## 4. Ontology
+## 4. Ontology (***O***)
 * Here we have provided **Raster** ontology that describe meta-level information of generic raster data of any domain such as medical, cosmological, geospatial etc.
 * We also provided ontology for geospatial raster data a.k.a **grid coverage** a prominent subclass of generic raster data conforming to [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) standard. 
 
-![Ontology](https://github.com/aghoshpro/OntoRaster/assets/71174892/d4ba1875-e589-4f36-b108-28b9f5d2cb50)
+![RasOnto](https://github.com/aghoshpro/OntoRaster/assets/71174892/5272ef45-4c8f-4eae-9611-ceeeb4560b5d)
 
-## 5. Mappings
+
+## 5. Mapping (***M***)
 
 Mappings design is the most crusial user-centric step in generating Virtual Knowledge Graph (VKG).
 A mapping consist of three main parts: a mapping id, a source and a target. 
