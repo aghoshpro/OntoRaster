@@ -6,7 +6,7 @@ name="RasSPARQL Queries"
 
 [[tabGroups.tabs]]
 
-name="Query 1. Get Dimension"
+name="Q1. Get Dimension"
 query="""
 #####################################################################
 #### Query 1. Find the dimension of user-specific Raster dataset ####
@@ -16,15 +16,15 @@ PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?raster rasdb:hasRasterName ?raster_name .
-FILTER (CONTAINS(?raster_name, 'Bavaria'))
-BIND (rasdb:rasDimension(?raster_name) AS ?answer)
+?gridCoverage rasdb:hasRasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Bavaria'))
+BIND (rasdb:rasDimension(?rasterName) AS ?answer)
 }
 """
 
 [[tabGroups.tabs]]
 
-name="Query 2"
+name="Q2. Cell Operation"
 query="""
 #####################################################################
 #### Query 2.
@@ -33,37 +33,10 @@ query="""
 
 [[tabGroups.tabs]]
 
-name="Query 3"
-query="""
-#####################################################################
-#### Query 3.
-#####################################################################
-"""
-
-[[tabGroups.tabs]]
-
-name="Query 4"
-query="""
-#####################################################################
-#### Query 4.
-#####################################################################
-"""
-
-[[tabGroups.tabs]]
-
-name="Query 5"
-query="""
-#####################################################################
-#### Query 5.
-#####################################################################
-"""
-
-[[tabGroups.tabs]]
-
-name="Query 6. Spatial Average"
+name="Q3. Spatial Average"
 query="""
 #############################################################################################################
-#### Query 6. Find spatial average value over a user-specific vector Region (Polygon) and Raster dataset ####
+#### Query 3. Find spatial average value over a user-specific vector Region (polygon) and Raster dataset ####
 #############################################################################################################
 
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
@@ -72,22 +45,50 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?vector rdfs:label ?vector_region_name .
-?vector geo:asWKT ?vector_region_wkt .
-?raster rasdb:hasRasterName ?raster_name .
-FILTER (?vector_region_name = 'München')
-FILTER (CONTAINS(?raster_name, 'Bavaria'))
-BIND ('2023-07-24T00:00:00+00:00' AS ?timestamp)
-BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answer)
-}
+?region a Region .
+?region rdfs:label ?regionName.
+?region geo:asWKT ?regionWkt .
+?gridCoverage a Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?regionName, 'München'))
+FILTER (CONTAINS(?rasterName, 'Bavaria'))
+BIND ('2023-09-4T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
+} 
 """
 
 [[tabGroups.tabs]]
 
-name="Query 7. Spatial Maximum"
+name="Q4. Spatial Maximum"
+query="""
+##################################################################################################################
+#### Query 4. Find spatial maximum value over a user-specific vector Region (multipolygon) and Raster dataset ####
+##################################################################################################################
+
+PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+
+SELECT ?answer {
+?region a Region .
+?region rdfs:label ?regionName.
+?region geo:asWKT ?regionWkt .
+?gridCoverage a Raster .
+?gridCoverage rasdb:hasRasterName ?rasterName .
+FILTER (CONTAINS(?regionName, 'Göteborg'))
+FILTER (CONTAINS(?rasterName, 'Sweden'))
+BIND ('2022-08-24T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
+BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q5. Spatial Minimum"
 query="""
 #############################################################################################################
-#### Query 7. Find spatial maximum value over a user-specific vector Region (MultiPolygon) and Raster dataset ####
+#### Query 5. Find spatial minimum value over a user-specific vector Region (polygon) and Raster dataset ####
 #############################################################################################################
 
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
@@ -96,23 +97,25 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?vector rdfs:label ?vector_region_name .
-?vector geo:asWKT ?vector_region_wkt .
-?raster rasdb:hasRasterName ?raster_name .
-FILTER (?vector_region_name = 'Göteborg')
-FILTER (CONTAINS(?raster_name, 'Sweden'))
-BIND ('2022-08-24T00:00:00+00:00' AS ?timestamp)
-BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answer)
-}
+?region a Region .
+?region rdfs:label ?regionName.
+?region geo:asWKT ?regionWkt .
+?gridCoverage a Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?regionName, 'Ultimo'))
+FILTER (CONTAINS(?rasterName, 'Tyrol'))
+BIND ('2023-07-24T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
+BIND (rasdb:rasSpatialMinimum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
+} 
 """
 
 [[tabGroups.tabs]]
 
-name="Query 8. Spatial Minimum"
+name="Q6. Temporal Average"
 query="""
-#############################################################################################################
-#### Query 8. Find spatial minimum value over a user-specific vector Region (Polygon) and Raster dataset ####
-#############################################################################################################
+##########################################################################################################################################
+#### Query 6. Find temporal average value over a user-specific vector Region (multipolygon) and Raster dataset between two timestamps ####
+##########################################################################################################################################
 
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
@@ -120,20 +123,76 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?vector rdfs:label ?vector_region_name .
-?vector geo:asWKT ?vector_region_wkt .
-?raster rasdb:hasRasterName ?raster_name .
-FILTER (?vector_region_name = 'Ultimo')
-FILTER (CONTAINS(?raster_name, 'Tyrol'))
-BIND ('2023-07-24T00:00:00+00:00' AS ?timestamp)
-BIND (rasdb:rasSpatialAverageFINAL(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answer)
-}
+?region a Region .
+?region rdfs:label ?regionName.
+?region geo:asWKT ?regionWkt .
+?gridCoverage a Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?regionName, 'Cham')) # Try with Bayreuth, Würzburg, 
+FILTER (CONTAINS(?rasterName, 'Bavaria'))
+BIND ('2023-06-15T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
+BIND ('2023-07-21T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
+BIND (rasdb:rasTemporalAverage(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
+} 
 """
-
 
 [[tabGroups.tabs]]
 
-name="Query 9. Clip Raster"
+name="Q7. Temporal Maximum"
+query="""
+#####################################################################################################################################
+#### Query 7. Find temporal maximum value over a user-specific vector Region (Polygon) and Raster dataset between two timestamps ####
+#####################################################################################################################################
+
+PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+
+SELECT ?answer {
+?region a Region .
+?region rdfs:label ?regionName.
+?region geo:asWKT ?regionWkt .
+?gridCoverage a Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?regionName, 'Stockholm')) # Try with Linköping, 
+FILTER (CONTAINS(?rasterName, 'Sweden'))
+BIND ('2022-04-18T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
+BIND ('2023-04-28T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
+BIND (rasdb:rasTemporalAverage(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q8. Temporal Minimum"
+query="""
+#####################################################################################################################################
+#### Query 8. Find temporal minimum value over a user-specific vector Region (Polygon) and Raster dataset between two timestamps ####
+#####################################################################################################################################
+
+PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+
+SELECT ?answer {
+?region a Region .
+?region rdfs:label ?regionName.
+?region geo:asWKT ?regionWkt .
+?gridCoverage a Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?regionName, 'Stockholm')) 
+FILTER (CONTAINS(?rasterName, 'Tyrol'))
+BIND ('2023-01-24T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
+BIND ('2023-07-24T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
+BIND (rasdb:rasTemporalAverage(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q9. Clip Raster"
 query="""
 #####################################################################################################################
 #### Query 9. Clip a portion of the raster based on the shape of vector Region over user-specific raster dataset ####
@@ -145,19 +204,21 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?vector rdfs:label ?vector_region_name .
-?vector geo:asWKT ?vector_region_wkt .
-?raster rasdb:hasRasterName ?raster_name .
-FILTER (?vector_region_name = 'Castelrotto')
-FILTER (CONTAINS(?raster_name, 'Tyrol'))
-BIND ('2023-09-24T00:00:00+00:00' AS ?timestamp)
-BIND (rasdb:rasClipRaster(?timestamp, ?vector_region_wkt, ?raster_name) AS ?answer)
+?region a Region .
+?region rdfs:label ?regionName.
+?region geo:asWKT ?regionWkt .
+?gridCoverage a Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (?regionName = 'Castelrotto') 
+FILTER (CONTAINS(?rasterName, 'Tyrol')) 
+BIND ('2023-09-24T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
+BIND (rasdb:rasClipRaster(?timeStamp, ?regionWkt, ?rasterName) AS ?answer) 
 }
 """
 
 [[tabGroups.tabs]]
 
-name="Query 10. Clip Raster Custom Region"
+name="Q10. Clip Raster Custom Region"
 query="""
 #################################################################################################################################
 #### Query 10. Clip a portion of the raster based on the shape of the custom vector Region over user-specific raster dataset ####
@@ -169,10 +230,11 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
-?raster rasdb:hasRasterName ?raster_name .
-BIND ('POLYGON((11.324157714843748 48.29050321714061,11.911926269531248 48.279537342260085,11.88995361328125 48.01932418480118,11.340637207031248 48.01564978668938,11.324157714843748 48.29050321714061))' AS ?custom_region_wkt)
-FILTER (CONTAINS(?raster_name, 'Bavaria'))
-BIND ('2023-07-24T00:00:00+00:00' AS ?timestamp)
-BIND (rasdb:rasClipRasterAnyGeom(?timestamp, ?custom_region_wkt, ?raster_name) AS ?answer)
+?gridCoverage a Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Bavaria')) 
+BIND ('POLYGON((11.324157714843748 48.29050321714061,11.911926269531248 48.279537342260085,11.88995361328125 48.01932418480118,11.340637207031248 48.01564978668938,11.324157714843748 48.29050321714061))' AS ?customRegionWkt)
+BIND ('2023-07-24T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
+BIND (rasdb:rasClipRasterAnyGeom(?timeStamp, ?customRegionWkt, ?rasterName) AS ?answer) 
 }
 """
