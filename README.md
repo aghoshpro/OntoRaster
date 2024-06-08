@@ -7,8 +7,8 @@ We are also working on our methodology which will enable **OntoRaster** to query
 1. [Framework](#1-framework)
 2. [Demo](#2-demo)
 3. [Dataset](#3-dataset)
-4. [Mapping](#4-mapping)
-5. [Ontology](#5-ontology)
+4. [Ontology](#4-ontology)
+5. [Mapping](#5-mapping)
 6. [More details](#6-more-details)
 
 ## 1. Framework
@@ -69,7 +69,6 @@ with a set of example RasSPARQL queries.
 ### 3.2 Raster Data
 * Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager")
   
-* [World Air Temperature](https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html)
 * [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 * [South Tyrol Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 * [Bavaria Surface Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
@@ -77,12 +76,82 @@ with a set of example RasSPARQL queries.
 * Ideally any user-specific vector data for any region of interest will work   
 
 
-## 5. Ontology
+## 4. Ontology
 * Here we have provided **Raster** ontology that describe meta-level information of generic raster data of any domain such as medical, cosmological, geospatial etc.
 * We also provided ontology for geospatial raster data a.k.a **grid coverage** a prominent subclass of generic raster data conforming to [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) standard. 
 
 ![Ontology](https://github.com/aghoshpro/OntoRaster/assets/71174892/d4ba1875-e589-4f36-b108-28b9f5d2cb50)
 
+## 5. Mappings
+
+Mappings design is the most crusial user-centric step in generating Virtual Knowledge Graph (VKG).
+A mapping consist of three main parts: a mapping id, a source and a target. 
+
+- **Mapping ID** is an arbitary but unique identifier
+- **Source** refers to a regular SQL query expressed over a relational database fetching the data from the table using the chosen column name.
+- **Target** is RDF triple pattern that uses the answer variables from preceding SQL query as placeholders and described using [Turtle syntax](https://github.com/ontop/ontop/wiki/TurtleSyntax) 
+
+Here we have provided a few example mappings for Raster metadata and vector Regions. 
+
+***M1 `Vector Data` - Region Class***
+
+Region includes municipalities, provinces, country, administrative boundaries or any usecase specific custom geometrical vector data.  
+
+- Target
+```sparql
+:vector_region/demo/{regionId} a :Region .
+```
+- Source
+```sql
+SELECT regionId from sample_regions_of_interest
+```
+
+***M2 `Vector Data` - Region Name***
+
+- Target
+```sparql
+vector_region/demo/{regionId} rdfs:label {regionName}^^xsd:string .
+```
+- Source
+```sql
+SELECT regionId, name_2 AS regionName from sample_regions_of_interest
+```
+
+***M3 `Vector Data` - Region Geometry (in WKT format)***
+
+- Target
+```sparql
+:vector_region/demo/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
+```
+- Source
+```sql
+SELECT region_id,
+             CASE
+                 WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
+                 ELSE ST_AsText(geom)
+             END AS regionWkt
+FROM sample_regions_of_interest
+```
+
+***R1 `Raster Metadata` - Raster Class***
+- Target
+```sparql
+:raster/{rasterId} a :Raster .
+```
+- Source
+```sql
+SELECT rasterId FROM sample_lookup
+```
+
+***R2 `Raster Metadata` - Raster Name***
+- Target
+```sparql
+:raster/{rasterId} rasdb:hasRasterName {rasterName}^^xsd:string .
+```
+- Source
+```sql
+SELECT rasterId FROM sample_lookup
+```
 
 ## 6. More details
 
