@@ -77,9 +77,9 @@ with a set of example RasSPARQL queries.
 * Ideally any user-specific vector data for any region of interest will work   
 
 
-## 4. Mapping
-
 ## 5. Ontology
+* Here we have provided **Raster** ontology that describe meta-level information of generic raster data of any domain such as medical, cosmological, geospatial etc.
+* We also provided ontology for geospatial raster data a.k.a **grid coverage** a prominent subclass of generic raster data conforming to [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) standard. 
 
 ![Ontology](https://github.com/aghoshpro/OntoRaster/assets/71174892/d4ba1875-e589-4f36-b108-28b9f5d2cb50)
 
