@@ -34,6 +34,8 @@ git clone https://github.com/aghoshpro/OntoRaster
 * Go to https://docs.docker.com/desktop/ and install docker on your favourite OS.
 
 ### 2.3 Run the demo
+* For this demo, we assume that the ports `7777`, `7001-7010, 8080` (used for the RDBMS and Array DBMS) and `8082` (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
+
 * Open `terminal` or `cmd` and navigate to the `OntoRaster` repository
   
 * Run the following:
@@ -42,8 +44,6 @@ docker-compose -f docker-compose.ontoraster.yml up
 ```
 
 * This command starts and initializes the relational database **PostgreSQL** with the spatial extension **PostGIS**. Once the relational database is ready, the array database **Rasdaman** initiates and imports the raster data.
-
-* For this tutorial, we assume that the ports `7777`, `7001-7010, 8080` (used for the RDBMS and Array DBMS) and `8082` (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
 
 * This Docker-compose file uses the mapping `vkg/OntoRaster.obda` and ontology `vkg/OntoRaster.owl`.
 
