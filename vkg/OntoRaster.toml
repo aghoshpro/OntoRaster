@@ -172,7 +172,7 @@ FILTER (?regionName = 'Umeå')
 FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-04-18T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
 BIND ('2023-04-28T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
-BIND (rasdb:rasTemporalAverage(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
+BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
 } 
 """
 
@@ -195,11 +195,11 @@ SELECT ?answer {
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Stockholm') 
+FILTER (?regionName = 'Racines') 
 FILTER (CONTAINS(?rasterName, 'Tyrol'))
 BIND ('2023-01-24T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
 BIND ('2023-07-24T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
-BIND (rasdb:rasTemporalAverage(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
+BIND (rasdb:rasTemporalMinimum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
 } 
 """
 
