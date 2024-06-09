@@ -27,19 +27,19 @@ BIND (rasdb:rasDimension(?rasterName) AS ?answer)
 
 name="Q2. Cell Operation"
 query="""
-############################################################################################################
-#### Query 2. Perform element-wise operation over raster array cells with user-specific operator and operand
-############################################################################################################
+#################################################################################################################
+#### Query 2. Perform element-wise operation over raster array cells with user-specific operator and operand ####
+#################################################################################################################
 
 PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
 PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
 
 SELECT ?answer {
 ?raster rasdb:rasterName ?raster_name .
-FILTER (CONTAINS(?rasterName, 'Bavaria'))
-BIND ('*' AS ?operator\n)"
- BIND (0.02 AS ?operand\n)"
-BIND ('2023-07-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+FILTER (CONTAINS(?rasterName, 'Sweden'))
+BIND ('*' AS ?operator) 
+BIND (0.02 AS ?operand)
+BIND ('2022-04-18T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasProcessRasterOp(?timeStamp, ?operator, ?operand, ?rasterName) AS ?answer)
 }
 """
@@ -251,9 +251,3 @@ BIND ('2023-07-24T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
 BIND (rasdb:rasClipRasterAnyGeom(?timeStamp, ?customRegionWkt, ?rasterName) AS ?answer) 
 }
 """
-
-[[tabGroups]]
-
-name="All Queries"
-
-[[tabGroups.tabs]]
