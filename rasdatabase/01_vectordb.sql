@@ -95,7 +95,7 @@ def add_closing_coordinates(d):
     return d[:j] + ", " + d[i:c] + d[j:]
 
 def processPOLYGON(inputPOLYGON):
-    if inputPOLYGON.area < 0.005:
+    if inputPOLYGON.area < 0.006:
 	    pass
     elif len(inputPOLYGON.interiors) == 0:
         coords = np.dstack(inputPOLYGON.boundary.xy).tolist()[0][:-1]
