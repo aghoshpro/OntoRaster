@@ -63,7 +63,9 @@ GROUP BY raster_id, raster_name;
 --select * from sample_lookup -- Build mappings with this table in VectorDB
 
 
--- Add plpython functions
+-- ##########################
+-- ### PL/pgsql Functions ### **********************************************************************************************************************************************
+-- ##########################
 
 
 CREATE OR REPLACE FUNCTION rasdaman_op.timestamp2grid(
