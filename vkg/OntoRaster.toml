@@ -63,7 +63,7 @@ SELECT ?answer {
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'München') # Polygon but also try with Daggendorf, Bayreuth, Würzburg etc.         
+FILTER (?regionName = 'München') # also try with Daggendorf, Bayreuth, Würzburg etc.         
 FILTER (CONTAINS(?rasterName, 'Bavaria'))
 BIND ('2023-09-4T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
 BIND (rasdb:rasSpatialAverage(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
@@ -89,7 +89,7 @@ SELECT ?answer {
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:hasRasterName ?rasterName .
-FILTER (?regionName = 'Göteborg') # MultiPolygon, also try with Linköping, Uppsala, Umeå etc.
+FILTER (?regionName = 'Göteborg') # also try with Linköping, Uppsala, Umeå etc.
 FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-08-24T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
 BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
@@ -115,7 +115,7 @@ SELECT ?answer {
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Ultimo') # Polygon, also try with Castelrotto etc.
+FILTER (?regionName = 'Bolzano') # also try with Castelrotto, Sarentino, Fortezza  etc.
 FILTER (CONTAINS(?rasterName, 'Tyrol'))
 BIND ('2023-07-24T00:00:00+00:00'^^xsd:datetime AS ?timeStamp)
 BIND (rasdb:rasSpatialMinimum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
@@ -195,7 +195,7 @@ SELECT ?answer {
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Racines') 
+FILTER (?regionName = 'Sarentino') 
 FILTER (CONTAINS(?rasterName, 'Tyrol'))
 BIND ('2023-01-24T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
 BIND ('2023-07-24T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
