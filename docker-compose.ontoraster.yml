@@ -64,8 +64,7 @@ services:
 
   ontop:
     container_name: ontop
-    #TODO: Update with custom image supporting rasdaman functions
-    image: albulenpano/ontoraster:v1
+    image: aghoshpro/ontoraster:v1
     env_file: .env
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/OntoRaster.owx
