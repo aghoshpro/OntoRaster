@@ -141,7 +141,7 @@ SELECT ?answer {
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (CONTAINS(?regionName, 'Cham')) 
+FILTER (?regionName = 'Cham')
 FILTER (?regionName = 'Bavaria')
 BIND ('2023-06-15T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
 BIND ('2023-07-21T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
