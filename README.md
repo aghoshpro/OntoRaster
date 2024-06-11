@@ -72,7 +72,7 @@ with a set of example RasSPARQL queries.
 * [South Tyrol Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 * [Bavaria Surface Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 
-* Ideally any user-specific vector data for any region of interest will work   
+* Ideally any user-specific gridded raster data in geospaial domain should work.   
 
 
 ## 4. Ontology (***O***)
