@@ -13,8 +13,7 @@ We are also working on our methodology which will enable **OntoRaster** to query
 
 ## 1. Framework
 
-![OntoRaster (2)](https://github.com/aghoshpro/OntoRaster/assets/71174892/49751ecd-ba5b-49ef-8071-18f68e0dde37)
-
+<img src="diagrams/OntoRaster_Framwowork.png"/>
 
 ## 2. Demo
 
@@ -54,7 +53,7 @@ with a set of example RasSPARQL queries.
 
 ### 2.4  Demo Endpoint
 
-![OntopSolution](https://github.com/aghoshpro/OntoRaster/assets/71174892/c4649b67-3810-411e-a6d1-47ab6fbc42df)
+<img src="diagrams/OntopSolution.gif"/>
 
 
 ## 3. Dataset (***D***)
@@ -80,7 +79,7 @@ with a set of example RasSPARQL queries.
 * Here we have provided **Raster** ontology that describe meta-level information of generic raster data of any domain such as medical, cosmological, geospatial etc.
 * We also provided ontology for geospatial raster data a.k.a **grid coverage** a prominent subclass of generic raster data conforming to [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) standard. 
 
-![RasOnto (1)](https://github.com/aghoshpro/OntoRaster/assets/71174892/f6ce5c7d-2920-4a5f-a9aa-e1bca4686f4e)
+<img src="diagrams/RasterOntology.png"/>
 
 
 ## 5. Mapping (***M***)
