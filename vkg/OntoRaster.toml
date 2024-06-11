@@ -89,7 +89,7 @@ SELECT ?answer {
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Göteborg') # also try with Söderköping, Linköping, Uppsala, Göteborg, Stockholm etc.
+FILTER (?regionName = 'Göteborg') # also try with Linköping, Uppsala, Göteborg, Stockholm etc.
 FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
