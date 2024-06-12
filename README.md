@@ -6,10 +6,11 @@ We are also working on our methodology which will enable **OntoRaster** to query
 ## Table of Contents
 1. [Framework](#1-framework)
 2. [Demo](#2-demo)
-3. [Dataset](#3-dataset-d)
+3. [Queries](#3-queries-q)
 4. [Ontology](#4-ontology-o)
-5. [Mapping](#5-mapping-m)
-6. [More details](#6-more-details)
+5. [Dataset](#5-dataset-d)
+6. [Mapping](#6-mapping-m)
+7. [More details](#7-more-details)
 
 ## 1. Framework
 
@@ -55,6 +56,26 @@ with a set of example RasSPARQL queries.
 
 <img src="diagrams/OntopSolution.gif"/>
 
+## 3. Queries (***Q***)
+| | |
+| ------------- | ------------- |
+| ***Q1*** | What is the dimension of the input raster dataset?  |
+| ***Q2*** | Perform element-wise operation over cells of an array of an input raster dataset at a particular timestamp with the user-specific operator and operator.  |
+| ***Q3*** | Find spatial average value from the raster dataset over a user-specific vector region at a specific timestamp|
+| ***Q4*** | Find spatial maximum value from the raster dataset over a user-specific vector region at a specific timestamp|
+| ***Q5*** | Find spatial minimum value from the raster dataset over a user-specific vector region at a specific timestamp|
+| ***Q6*** | Find the temporal average value from a user-specific raster dataset over a user-specific vector region between start time and end time.|
+| ***Q7*** | Find the temporal maximum value from a user-specific raster dataset over a user-specific vector region between start time and end time.|
+| ***Q8*** |Find the temporal minimum value from a user-specific raster dataset over a user-specific vector region between start time and end time.|
+| ***Q9*** | Clip a portion of user-specific raster data using the geometry of a user-specific vector region at a particular time and return the clipped array|
+| ***Q10***| Clip a portion of user-specific raster data based on the shape of custom vector region at a particular time and return filtered arrays|
+
+## 4. Ontology (***O***)
+* Here we have provided **Raster** ontology that describe meta-level information of generic raster data of any domain such as medical, cosmological, geospatial etc.
+* We also provided ontology for geospatial raster data a.k.a **grid coverage** a prominent subclass of generic raster data conforming to [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) standard. 
+
+<img src="diagrams/RasterOntology.png"/>
+
 
 ## 3. Dataset (***D***)
 
@@ -66,20 +87,13 @@ with a set of example RasSPARQL queries.
 * Ideally any user-specific vector data for any region of interest will work.   
 
 ### 3.2 Raster Data 
-* Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager")
+* Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
   
 * [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 * [South Tyrol Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 * [Bavaria Surface Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 
-* Ideally any user-specific gridded raster data in geospatial domain should work.   
-
-
-## 4. Ontology (***O***)
-* Here we have provided **Raster** ontology that describe meta-level information of generic raster data of any domain such as medical, cosmological, geospatial etc.
-* We also provided ontology for geospatial raster data a.k.a **grid coverage** a prominent subclass of generic raster data conforming to [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) standard. 
-
-<img src="diagrams/RasterOntology.png"/>
+* Demo data are in `rasdaman\data\`. Ideally any n-D gridded raster data of geospatial domain should work.
 
 
 ## 5. Mapping (***M***)
@@ -91,19 +105,21 @@ A mapping consist of three main parts: a mapping id, a source and a target.
 - **Source** refers to a regular SQL query expressed over a relational database fetching the data from the table using the chosen column name.
 - **Target** is RDF triple pattern that uses the answer variables from preceding SQL query as placeholders and described using [Turtle syntax](https://github.com/ontop/ontop/wiki/TurtleSyntax) 
 
-Here we have provided a few example mappings for Raster metadata and vector Regions. 
+Here we have provided the actual mappings for the demo dataset (D). We simply substituted the table name `sample_regions_of_interest` with real table names kept in RDBMS including `region_sweden`, `region_bavaria`, `region_south_tyrol` displaying vector data for municipalities of Sweden, Bavaria (Germany) and South Tyrol (Italy) respectively.
+
+**User can add their own vector data by writing their own mappings in similar fashion shown below.**
 
 ***M1 `Vector Data` - Region Class***
 
-Region includes municipalities, provinces, country, administrative boundaries or any usecase specific custom geometrical vector data.  
+Region includes municipalities, provinces, country, administrative boundaries or any usecase specific custom geometrical vector data. 
 
 - Target
 ```sparql
-:vector_region/demo/{regionId} a :Region .
+:vector_region/sweden/{gid} a :Region .
 ```
 - Source
 ```sql
-SELECT regionId from sample_regions_of_interest
+SELECT gid AS regionId FROM region_sweden
 ```
 
 ***M2 `Vector Data` - Region Name***
@@ -114,10 +130,10 @@ vector_region/demo/{regionId} rdfs:label {regionName}^^xsd:string .
 ```
 - Source
 ```sql
-SELECT regionId, name_2 AS regionName from sample_regions_of_interest
+SELECT gid AS regionId, name_2 AS region_name FROM region_sweden
 ```
 
-***M3 `Vector Data` - Region Geometry (in WKT format)***
+***M3 `Vector Data` - Region Geometry***
 
 - Target
 ```sparql
@@ -125,12 +141,12 @@ SELECT regionId, name_2 AS regionName from sample_regions_of_interest
 ```
 - Source
 ```sql
-SELECT region_id,
+SELECT regionId,
              CASE
                  WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
                  ELSE ST_AsText(geom)
              END AS regionWkt
-FROM sample_regions_of_interest
+FROM region_sweden
 ```
 
 ***R1 `Raster Metadata` - Raster Class***
@@ -146,11 +162,11 @@ SELECT rasterId FROM sample_lookup
 ***R2 `Raster Metadata` - Raster Name***
 - Target
 ```sparql
-:raster/{rasterId} rasdb:hasRasterName {rasterName}^^xsd:string .
+:raster/{rasterId} rasdb:rasterName {rasterName}^^xsd:string .
 ```
 - Source
 ```sql
-SELECT rasterId FROM sample_lookup
+SELECT raster_id AS rasterId, raster_name AS rasterName FROM sample_lookup
 ```
 
 ## 6. More details

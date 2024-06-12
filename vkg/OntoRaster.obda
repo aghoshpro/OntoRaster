@@ -15,25 +15,6 @@ mappingId	mapping_checkConn
 target		:conn/{gid} rasdb:hasConnection {conn}^^xsd:string .
 source		SELECT 404 AS gid, rasdaman_op.check_rasdaman_conn() AS conn
 
-; ---------------- Mapping for Sample Region of Interests -----------------
-
-;mappingId	mapping_region_class
-;target		:vector_region/demo/{region_id} a :Region .
-;source		SELECT region_id from sample_regions_of_interest
-
-;mappingId	mapping_region_name
-;target		:vector_region/demo/{region_id} rdfs:label {region_name}^^xsd:string .
-;source		SELECT region_id, name_2 AS region_name from sample_regions_of_interest
-
-;mappingId	mapping_region_geometry
-;target		:vector_region/demo/{region_id} geo:asWKT {geometry_wkt}^^geo:wktLiteral .
-;source		SELECT region_id,
-;                        CASE
-;                              WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
-;                              ELSE ST_AsText(geom)
-;                        END AS geometry_wkt
-;            FROM sample_regions_of_interest
-
 ; ---------------- Mapping for All Regions in Sweden -----------------
 
 mappingId	Get_region_class_table_sweden
