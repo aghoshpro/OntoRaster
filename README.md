@@ -77,16 +77,16 @@ with a set of example RasSPARQL queries.
 <img src="diagrams/RasterOntology.png"/>
 
 
-## 3. Dataset (***D***)
+## 5. Dataset (***D***)
 
-### 3.1 Relational Data (including Vector Data)
+### 5.1 Relational Data (including Vector Data)
 * In this demo we used municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as vector data consists a total of approx. 500 unique regions with different geometries and other attributes downloaded from [GADM data](https://gadm.org/download_country.html).
 
 * Stored in **PostgreSQL** with spatial extension PostGIS.
   
 * Ideally any user-specific vector data for any region of interest will work.   
 
-### 3.2 Raster Data 
+### 5.2 Raster Data 
 * Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
   
 * [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
@@ -96,7 +96,7 @@ with a set of example RasSPARQL queries.
 * Demo data are in `rasdaman\data\`. Ideally any n-D gridded raster data of geospatial domain should work.
 
 
-## 5. Mapping (***M***)
+## 6. Mapping (***M***)
 
 Mappings design is the most crusial user-centric step in generating Virtual Knowledge Graph (VKG).
 A mapping consist of three main parts: a mapping id, a source and a target. 
@@ -109,7 +109,7 @@ Here we have provided the actual mappings for the demo dataset (D). We simply su
 
 **User can add their own vector data by writing their own mappings in similar fashion shown below.**
 
-***M1 `Vector Data` - Region Class***
+### ***M1 `Vector Data` - Region Class***
 
 Region includes municipalities, provinces, country, administrative boundaries or any usecase specific custom geometrical vector data. 
 
@@ -122,7 +122,7 @@ Region includes municipalities, provinces, country, administrative boundaries or
 SELECT gid AS regionId FROM region_sweden
 ```
 
-***M2 `Vector Data` - Region Name***
+### ***M2 `Vector Data` - Region Name***
 
 - Target
 ```sparql
@@ -133,7 +133,7 @@ vector_region/demo/{regionId} rdfs:label {regionName}^^xsd:string .
 SELECT gid AS regionId, name_2 AS region_name FROM region_sweden
 ```
 
-***M3 `Vector Data` - Region Geometry***
+### ***M3 `Vector Data` - Region Geometry***
 
 - Target
 ```sparql
@@ -149,7 +149,7 @@ SELECT regionId,
 FROM region_sweden
 ```
 
-***R1 `Raster Metadata` - Raster Class***
+### ***R1 `Raster Metadata` - Raster Class***
 - Target
 ```sparql
 :raster/{rasterId} a :Raster .
@@ -159,7 +159,7 @@ FROM region_sweden
 SELECT rasterId FROM sample_lookup
 ```
 
-***R2 `Raster Metadata` - Raster Name***
+### ***R2 `Raster Metadata` - Raster Name***
 - Target
 ```sparql
 :raster/{rasterId} rasdb:rasterName {rasterName}^^xsd:string .
@@ -169,7 +169,7 @@ SELECT rasterId FROM sample_lookup
 SELECT raster_id AS rasterId, raster_name AS rasterName FROM sample_lookup
 ```
 
-## 6. More details
+## 7. More details
 
 Please visit the official website of Ontop https://ontop-vkg.org for more details on Virtual Knowledge Graphs 
 and https://doc.rasdaman.org/index.html for more details on array databases.
