@@ -57,9 +57,8 @@ with a set of example RasSPARQL queries.
 <img src="diagrams/OntopSolution.gif"/>
 
 ## 3. Queries (***Q***)
-| | |
-| ------------- | ------------- |
 | ***Q1*** | What is the dimension of the input raster dataset?  |
+| ------------- | ------------- |
 | ***Q2*** | Perform element-wise operation over cells of an array of an input raster dataset at a particular timestamp with the user-specific operator and operator.  |
 | ***Q3*** | Find spatial average value from the raster dataset over a user-specific vector region at a specific timestamp|
 | ***Q4*** | Find spatial maximum value from the raster dataset over a user-specific vector region at a specific timestamp|
