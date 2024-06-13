@@ -1,5 +1,5 @@
 # OntoRaster
-Raster Extension of Ontop, a Virtual Knowledge Graph (VKG) system to query over **multidimensional gridded data** or **raster data** or **coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
+Raster Extension of Ontop, a Virtual Knowledge Graph (VKG) system to query over **multidimensional raster data** or **OGC gridded coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
 We are also working on our methodology which will enable **OntoRaster** to query over generic **raster data** and **vector data** of any domain under the VKG paradigm. 
 
@@ -83,17 +83,21 @@ with a set of example RasSPARQL queries.
 * In this demo we used municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as vector data consists a total of approx. 500 unique regions with different geometries and other attributes downloaded from [GADM data](https://gadm.org/download_country.html).
 
 * Stored in **PostgreSQL** with spatial extension PostGIS.
+
+* Demo data can be found in `db_pgsql\data\`. 
   
 * Ideally any user-specific vector data for any region of interest will work.   
 
 ### 5.2 Raster Data 
 * Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
-  
-* [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
-* [South Tyrol Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
-* [Bavaria Surface Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 
-* Demo data are in `rasdaman\data\`. Ideally any n-D gridded raster data of geospatial domain should work.
+* Demo data can be found in `rasdaman\data\`. 
+
+    * [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
+    * [South Tyrol Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
+    * [Bavaria Surface Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
+
+* Ideally any n-D gridded raster data of geospatial domain should work as long they are ingested in rasdaman.
 
 
 ## 6. Mapping (***M***)
@@ -105,7 +109,9 @@ A mapping consist of three main parts: a mapping id, a source and a target.
 - **Source** refers to a regular SQL query expressed over a relational database fetching the data from the table using the chosen column name.
 - **Target** is RDF triple pattern that uses the answer variables from preceding SQL query as placeholders and described using [Turtle syntax](https://github.com/ontop/ontop/wiki/TurtleSyntax) 
 
-Here we have provided the actual mappings for the demo dataset (D). We simply substituted the table name `sample_regions_of_interest` with real table names kept in RDBMS including `region_sweden`, `region_bavaria`, `region_south_tyrol` displaying vector data for municipalities of Sweden, Bavaria (Germany) and South Tyrol (Italy) respectively.
+Here we have provided the actual mappings for the demo vector and raster dataset (D). 
+
+For vector data we simply substituted the table name `sample_regions_of_interest` with actual table names kept in RDBMS including `region_sweden`, `region_bavaria`, `region_south_tyrol` displaying vector data (**500+ unique regions**) for municipalities of Sweden, Bavaria (Germany) and South Tyrol (Italy) respectively.
 
 **User can add their own vector data by writing their own mappings in similar fashion shown below.**
 
@@ -171,8 +177,7 @@ SELECT raster_id AS rasterId, raster_name AS rasterName FROM sample_lookup
 
 ## 7. More details
 
-Please visit the official website of Ontop https://ontop-vkg.org for more details on Virtual Knowledge Graphs 
-and https://doc.rasdaman.org/index.html for more details on array databases.
+Please visit the official website of Ontop https://ontop-vkg.org for more details on Virtual Knowledge Graphs and https://doc.rasdaman.org/index.html for more details on array databases.
 
 
 

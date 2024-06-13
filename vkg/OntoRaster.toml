@@ -12,8 +12,8 @@ query="""
 #### Query 1. Find the dimension of user-specific Raster dataset ####
 #####################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX :	<http://www.arkaghosh.io/OntoRaster/>
+PREFIX rasdb:	<http://www.arkaghosh.io/RasterDataCube/>
 
 SELECT ?answer {
 ?gridCoverage a :Raster .
