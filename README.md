@@ -1,3 +1,10 @@
+```
+           ██████  ███    ██ ████████  ██████  ██████   █████  ███████ ████████ ███████ ██████  
+          ██    ██ ████   ██    ██    ██    ██ ██   ██ ██   ██ ██         ██    ██      ██   ███ 
+          ██    ██ ██ ██  ██    ██    ██    ██ ██████  ███████ ███████    ██    █████   ██████  
+          ██    ██ ██  ██ ██    ██    ██    ██ ██   ██ ██   ██      ██    ██    ██      ██   ██ 
+           ██████  ██   ████    ██     ██████  ██   ██ ██   ██ ███████    ██    ███████ ██   ██ 
+```
 # OntoRaster
 Raster Extension of Ontop, a Virtual Knowledge Graph (VKG) system to query over **multidimensional raster data** or **OGC gridded coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
