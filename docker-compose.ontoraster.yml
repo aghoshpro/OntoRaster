@@ -69,7 +69,7 @@ services:
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/OntoRaster.owx
       ONTOP_XML_CATALOG_FILE: /opt/ontop/input/catalog-v001.xml
-      ONTOP_MAPPING_FILE: /opt/ontop/input/OntoRaster.obda
+      ONTOP_MAPPING_FILE: /opt/ontop/input/OntoRaster_Test.obda
       ONTOP_PROPERTIES_FILE: /opt/ontop/input/OntoRaster.properties
       ONTOP_PORTAL_FILE: /opt/ontop/input/OntoRaster.toml
       ONTOP_CORS_ALLOWED_ORIGINS: "*"
