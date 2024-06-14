@@ -5,9 +5,10 @@
 </picture>
 
 #
-Raster Extension of Ontop, a Virtual Knowledge Graph (VKG) system to query over **multidimensional raster data** or **OGC gridded coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
-We are also working on our methodology which will enable **OntoRaster** to query over generic **raster data** and **vector data** of any domain under the VKG paradigm. 
+Raster Extension of VKG system Ontop to query over **multidimensional raster** data or **OGC gridded coverage** data combined with **relational data** including geometrical **vector data** of the geospatial domain.
+
+We are constantly working on our methodology which will enable **OntoRaster** to query over generic **raster data** and **vector data** of any domain under the VKG paradigm. 
 
 ## Table of Contents
 1. [Framework](#1-framework)
@@ -86,7 +87,7 @@ with a set of example RasSPARQL queries.
 ## 5. Dataset (***D***)
 
 ### 5.1 Relational Data (including Vector Data)
-* In this demo we used municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as vector data consists a total of approx. 500 unique regions with different geometries and other attributes downloaded from [GADM data](https://gadm.org/download_country.html).
+* This demo utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as ***Regions*** or regions of interest (ROI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, downloaded from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
 
 * Stored in **PostgreSQL** with spatial extension PostGIS.
 
