@@ -1,10 +1,9 @@
-```
-           ██████  ███    ██ ████████  ██████  ██████   █████  ███████ ████████ ███████ ██████  
-          ██    ██ ████   ██    ██    ██    ██ ██   ██ ██   ██ ██         ██    ██      ██   ███ 
-          ██    ██ ██ ██  ██    ██    ██    ██ ██████  ███████ ███████    ██    █████   ██████  
-          ██    ██ ██  ██ ██    ██    ██    ██ ██   ██ ██   ██      ██    ██    ██      ██   ██ 
-           ██████  ██   ████    ██     ██████  ██   ██ ██   ██ ███████    ██    ███████ ██   ██ 
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/aghoshpro/OntoRaster/assets/71174892/7ee4aeba-12f5-4358-802b-bc5cadb7c156">
+  <source media="(prefers-color-scheme: light)" srcset="https://github.com/aghoshpro/OntoRaster/assets/71174892/a93cd5f8-cb1b-441b-acaf-415deb089d3b">
+  <img alt=OntoRaster Logo" src="https://github.com/aghoshpro/OntoRaster/assets/71174892/a93cd5f8-cb1b-441b-acaf-415deb089d3b" style="width:auto;">
+</picture>
+
 # OntoRaster
 Raster Extension of Ontop, a Virtual Knowledge Graph (VKG) system to query over **multidimensional raster data** or **OGC gridded coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
