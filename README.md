@@ -4,7 +4,7 @@
   <img alt=OntoRaster Logo" src="https://github.com/aghoshpro/OntoRaster/assets/71174892/a93cd5f8-cb1b-441b-acaf-415deb089d3b" style="width:auto;">
 </picture>
 
-# OntoRaster
+#
 Raster Extension of Ontop, a Virtual Knowledge Graph (VKG) system to query over **multidimensional raster data** or **OGC gridded coverage** combined with **relational data** including geometrical **vector data** of the geospatial domain.
 
 We are also working on our methodology which will enable **OntoRaster** to query over generic **raster data** and **vector data** of any domain under the VKG paradigm. 
