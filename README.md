@@ -10,14 +10,14 @@ Raster Extension of VKG system Ontop to query over **multidimensional raster** d
 
 We are constantly working on our methodology which will enable **OntoRaster** to query over generic **raster data** and **vector data** of any domain under the VKG paradigm. 
 
-## Table of Contents
+## Table of Contents :bookmark_tabs:
 1. [Framework](#1-framework)
 2. [Demo](#2-demo)
 3. [Queries](#3-queries-q)
 4. [Ontology](#4-ontology-o)
 5. [Dataset](#5-dataset-d)
 6. [Mapping](#6-mapping-m)
-7. [More details](#7-more-details)
+7. [More details](#7-more-details) 
 
 ## 1. Framework
 
