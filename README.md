@@ -97,7 +97,7 @@ with a set of example RasSPARQL queries.
 * `region_south_tyrol` <img src="diagrams/region_tyrol.png">
 
   
-* Ideally any user-specific vector data for any region of interest will work.   
+* Ideally any user-specific vector data for any region of interest will work by adding relevant mappings.   
 
 ### 5.2 Raster Data (***D<sup>arr</sup>***)
 * Stored in array DBMS [**RasDaMan**](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
@@ -111,7 +111,7 @@ with a set of example RasSPARQL queries.
 * Metadata are stored in `raster_lookup` table as shown below.
 * `raster_lookup` <img src="diagrams/raster_lookup.png">
 
-* Ideally any n-D gridded raster data of geospatial domain should work.
+* Ideally any 3-D gridded raster data of geospatial domain should work with the addition of relevant mappings.
 
 
 
