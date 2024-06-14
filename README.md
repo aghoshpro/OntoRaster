@@ -89,22 +89,31 @@ with a set of example RasSPARQL queries.
 ### 5.1 Relational Data (including Vector Data)
 * This demo utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as ***Regions*** or regions of interest (ROI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, taken from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
 
-* Stored in **PostgreSQL** with spatial extension PostGIS.
+*  Stored among three separate tables such as `region_sweden`, `region_bavaria`, `region_south_tyrol` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshot of every table is displayed below,
 
-* Demo data can be found in `db_pgsql\data\`. 
+* `region_sweden` <img src="diagrams/region_sweden.png">
+
+* `region_bavaria` <img src="diagrams/region_bavaria.png">
+
+* `region_south_tyrol` <img src="diagrams/region_tyrol.png">
+
   
 * Ideally any user-specific vector data for any region of interest will work.   
 
-### 5.2 Raster Data 
-* Stored in array DBMS [RasDaMan](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
+### 5.2 Raster Data (***D<sup>arr</sup>***)
+* Stored in array DBMS [**RasDaMan**](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
+  
+  * [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
+  * [South Tyrol Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
+  * [Bavaria Surface Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
 
-* Demo data can be found in `rasdaman\data\`. 
+  * Demo data are in `rasdaman\data\`. 
 
-    * [Sweden Land Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
-    * [South Tyrol Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
-    * [Bavaria Surface Temperature](https://lpdaac.usgs.gov/products/mod11a1v061/)
+* Metadata are stored in `raster_lookup` table as shown below.
+* `raster_lookup` <img src="diagrams/raster_lookup.png">
 
-* Ideally any n-D gridded raster data of geospatial domain should work as long they are ingested in rasdaman.
+* Ideally any n-D gridded raster data of geospatial domain should work.
+
 
 
 ## 6. Mapping (***M***)
@@ -124,63 +133,63 @@ For vector data we simply substituted the table name `sample_regions_of_interest
 
 ### ***M1 `Vector Data` - Region Class***
 
-Region includes municipalities, provinces, country, administrative boundaries or any usecase specific custom geometrical vector data. 
+The ***Region*** class includes any usecase-specific ***regions of interest (ROI)***, such as municipalities, provinces, countries, administrative boundaries, and so on, together with their geometries and other features. 
 
 - Target
-```sparql
-:vector_region/sweden/{gid} a :Region .
-```
+  ```sparql
+  :region/sweden/{gid} a :Region .
+  ```
 - Source
-```sql
-SELECT gid AS regionId FROM region_sweden
-```
+  ```sql
+  SELECT gid AS regionId FROM region_sweden
+  ```
 
 ### ***M2 `Vector Data` - Region Name***
 
 - Target
-```sparql
-vector_region/demo/{regionId} rdfs:label {regionName}^^xsd:string .
-```
+  ```sparql
+  :region/demo/{regionId} rdfs:label {regionName}^^xsd:string .
+  ```
 - Source
-```sql
-SELECT gid AS regionId, name_2 AS region_name FROM region_sweden
-```
+  ```sql
+  SELECT gid AS regionId, name_2 AS region_name FROM region_sweden
+  ```
 
 ### ***M3 `Vector Data` - Region Geometry***
 
-- Target
-```sparql
-:vector_region/demo/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
-```
-- Source
-```sql
-SELECT regionId,
-             CASE
-                 WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
-                 ELSE ST_AsText(geom)
-             END AS regionWkt
-FROM region_sweden
-```
+- **Target**
+  ```sparql
+  :region/demo/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
+  ```
+- **Source**
+  ```sql
+  SELECT regionId,
+              CASE
+                  WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
+                  ELSE ST_AsText(geom)
+              END AS regionWkt
+  FROM region_sweden
+  ```
 
 ### ***R1 `Raster Metadata` - Raster Class***
-- Target
-```sparql
-:raster/{rasterId} a :Raster .
-```
-- Source
-```sql
-SELECT rasterId FROM sample_lookup
-```
+- **Target**
+  ```sparql
+  :raster/{rasterId} a :Raster .
+  ```
+- **Source**
+  ```sql
+  SELECT raster_id AS rasterId FROM raster_lookup
+  ```
 
 ### ***R2 `Raster Metadata` - Raster Name***
-- Target
-```sparql
-:raster/{rasterId} rasdb:rasterName {rasterName}^^xsd:string .
-```
-- Source
-```sql
-SELECT raster_id AS rasterId, raster_name AS rasterName FROM sample_lookup
-```
+- **Target**
+  ```sparql
+  :raster/{rasterId} rasdb:rasterName {rasterName}^^xsd:string .
+  ```
+- **Source**
+  ```sql
+  SELECT raster_id AS rasterId, raster_name AS rasterName FROM raster_lookup
+  ```
 
 ## 7. More details
 
