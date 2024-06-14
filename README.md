@@ -7,7 +7,7 @@
 
 <!-- Raster extension of VKG system Ontop to query over **multidimensional raster** data combined with **relational data**. Current version of OntoRaster supports regular gridded 3-D **raster** data and geometrical **vector data** in geospatial domain. We are constantly improving the extension with new features which will enable the end user to query over raster data and vector data of any domain under the VKG paradigm in future. -->
 
-Raster extension of VKG system Ontop to query over to enable querying over **multidimensional raster** data in combination with **relational data**. Current version of OntoRaster is designed to handle regular gridded 3-D **raster** data or OGC coverage data and **vector** data (relational data with geometrical features) in the geospatial domain. We're constantly working on making the extension even better with new features that will allow the end users to query raster and vector data from any domain within the VKG paradigm in the future.
+Raster extension of VKG system Ontop to query over **multidimensional raster** data in combination with **relational data**. Current version of OntoRaster is designed to handle regular gridded 3-D **raster** data or OGC coverage data and **vector** data (relational data with geometrical features) in the geospatial domain. We're constantly working on making the extension even better with new features that will allow the end users to query raster and vector data from any domain under the VKG paradigm in the future.
 
 ## Table of Contents
 1. [Framework](#1-framework)
