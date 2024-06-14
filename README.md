@@ -87,7 +87,7 @@ with a set of example RasSPARQL queries.
 ## 5. Dataset (***D***)
 
 ### 5.1 Relational Data (including Vector Data)
-* This demo utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as ***Regions*** or regions of interest (ROI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, downloaded from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
+* This demo utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as ***Regions*** or regions of interest (ROI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, taken from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
 
 * Stored in **PostgreSQL** with spatial extension PostGIS.
 
