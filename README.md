@@ -54,11 +54,12 @@ docker-compose -f docker-compose.ontoraster.yml up
 * This Docker-compose file uses the mapping `vkg/OntoRaster.obda` and ontology `vkg/OntoRaster.owl`.
 
 * Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ 
-with a set of example RasSPARQL queries.
+with a set of all RasSPARQL queries.
 
-* RasSPARQL queries are available at `vkg/OntoRaster.toml`.
+* RasSPARQL queries are also available at `vkg/OntoRaster.toml`.
 
-### 2.4  Demo Endpoint
+### 2.4  Ontop SPARQL Endpoint
+After successful execution of `docker-compose` command please check http://localhost:8082/ to see the follwing,
 
 <img src="diagrams/OntopSolution.gif"/>
 
