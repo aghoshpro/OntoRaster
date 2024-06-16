@@ -12,8 +12,8 @@ query="""
 #### Query 1. Find the dimension of user-specific Raster dataset ####
 #####################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?gridCoverage a :Raster .
@@ -31,8 +31,8 @@ query="""
 #### Query 2. Perform element-wise operation over raster array cells with user-specific operator and operand ####
 #################################################################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?raster rasdb:rasterName ?rasterName .
@@ -52,10 +52,10 @@ query="""
 #### Query 3. Find spatial average value over a user-specific vector Region and Raster dataset ####
 ###################################################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?region a :Region .
@@ -78,10 +78,10 @@ query="""
 #### Query 4. Find spatial maximum value over a user-specific vector Region and Raster dataset ####
 ###################################################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?region a :Region .
@@ -104,10 +104,10 @@ query="""
 #### Query 5. Find spatial minimum value over a user-specific vector Region and Raster dataset ####
 ###################################################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?region a :Region .
@@ -130,10 +130,10 @@ query="""
 #### Query 6. Find temporal average value over a user-specific vector Region and Raster dataset between two timestamps ####
 ###########################################################################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?region a :Region .
@@ -157,10 +157,10 @@ query="""
 #### Query 7. Find temporal maximum value over a user-specific vector Region and Raster dataset between two timestamps ####
 ###########################################################################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?region a :Region .
@@ -184,10 +184,10 @@ query="""
 #### Query 8. Find temporal minimum value over a user-specific vector Region and Raster dataset between two timestamps ####
 ###########################################################################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?region a :Region .
@@ -211,10 +211,10 @@ query="""
 #### Query 9. Clip a portion of the raster based on the shape of vector Region over user-specific raster dataset ####
 #####################################################################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?region a :Region .
@@ -237,10 +237,10 @@ query="""
 #### Query 10. Clip a portion of the raster based on the shape of the custom vector Region over user-specific raster dataset ####
 #################################################################################################################################
 
-PREFIX :	<http://www.semanticweb.org/arkaghosh/OntoRaster/>
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<http://www.semanticweb.org/RasterDataCube/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?answer {
 ?gridCoverage a :Raster .

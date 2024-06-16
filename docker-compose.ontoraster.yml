@@ -64,7 +64,7 @@ services:
 
   ontop:
     container_name: ontop
-    image: aghoshpro/ontoraster:v1
+    image: aghoshpro/ontoraster:v1.1
     env_file: .env
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/OntoRaster.owx

@@ -9,7 +9,7 @@
         <uri id="Automatically generated entry, Timestamp=1704986029146" name="http://www.opengis.net/ont/geosparql" uri="ontologies/geosparql.owl"/>
         <uri id="Automatically generated entry, Timestamp=1704986029146" name="http://www.opengis.net/ont/gml" uri="ontologies/gml.owl"/>
         <uri id="Automatically generated entry, Timestamp=1704986029146" name="http://www.opengis.net/ont/sf" uri="ontologies/sf.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1704986029146" name="http://www.semanticweb.org/arkaghosh/OntoRaster/" uri="OntoRaster.owx"/>
+        <uri id="Automatically generated entry, Timestamp=1704986029146" name="https://github.com/aghoshpro/OntoRaster/" uri="OntoRaster.owx"/>
         <uri id="Automatically generated entry, Timestamp=1704986029146" name="http://www.w3.org/2004/02/skos/core" uri="ontologies/core.owl"/>
         <uri id="Automatically generated entry, Timestamp=1704986029146" name="http://www.w3.org/ns/sosa/" uri="ontologies/sosa.owl"/>
         <uri id="Automatically generated entry, Timestamp=1704986029146" name="http://www.w3.org/ns/ssn/" uri="ontologies/ssn.owl"/>
