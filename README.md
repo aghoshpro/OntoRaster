@@ -42,6 +42,8 @@ git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
 git clone https://github.com/aghoshpro/OntoRaster
 ```
 
+* **Note**: Our demo data is quite large and github doesnt support storing than 100 MB insise repo. We have used githyb lfs to store that data in the repo but sometines github failes to clone them. In this case please download the data from the [google drive](https://drive.google.com/drive/folders/1yCSmmok3Iz7J2lZ-uleCg_q87GZsHfI7?usp=sharing) and paste them in `\OntoRaster\rasdaman\data\` folder.
+
 ### 2.2 Setup Docker
 * Go to https://docs.docker.com/desktop/ and install docker on your favourite OS.
 
@@ -60,12 +62,12 @@ docker-compose -f docker-compose.ontoraster.yml up
 * This Docker-compose file uses the mapping `vkg/OntoRaster.obda` and ontology `vkg/OntoRaster.owl`.
 
 * Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ 
-with a set of all RasSPARQL queries.
+with all of RasSPARQL queries for users to try.
 
 * RasSPARQL queries are also available at `vkg/OntoRaster.toml`.
 
 ### 2.4  Ontop SPARQL Endpoint
-After successful execution of `docker-compose` command please check http://localhost:8082/ to see the follwing,
+After successful execution of `docker-compose` command please check http://localhost:8082/ to see the following,
 
 <img src="diagrams/Ontop-Endpoint.gif"/>
 
