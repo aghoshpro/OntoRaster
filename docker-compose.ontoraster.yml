@@ -1,0 +1,95 @@
+version: "3.8"
+
+services:
+  rasdatabase:
+    container_name: rasdatabase
+    build:
+      context: rasdatabase
+    environment:
+      POSTGRES_USER: petauser
+      POSTGRES_PASSWORD: petapasswd
+      # petascopedb is the default database name for rasdaman
+      # vectordb will store other geospatial vector data
+      POSTGRES_DB: petascopedb
+      POSTGRES_MULTIPLE_DATABASES: petascopedb, vectordb
+    ports:
+      - "${MAPPED_POSTGRES_PORT}:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h rasdatabase" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rasdaman-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  rasdaman:
+    container_name: rasdaman
+    build:
+      context: rasdaman
+    # TODO: Must find a good way to do this for an arbitrary file
+    healthcheck:
+      #"http://host.docker.internal:8080/rasdaman/ows" can be reached before the file is loaded, not a good test
+      test: [ "CMD", "curl", "-f", "http://host.docker.internal:8080/rasdaman/ows" ]
+      #currently failing
+      #test: ["CMD-SHELL", "docker logs rasdaman | grep -q \"Recipe at '/data/Bavaria_Temp.json' executed successfully\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      # Provide ample time for the rasdaman server to start
+      start_period: 45s
+    ports:
+      - "${RASDAMAN_SERVER_PORT}:8080"
+      - "7001:7001"   # Rasdaman server client connections
+      - "7002:7002"   # Rasdaman server inter-server communication
+      - "7003:7003"   # Rasdaman server internal communication
+    depends_on:
+      rasdatabase:
+        condition: service_healthy
+    networks:
+      - rasdaman-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db_edit:
+    build:
+      context: db_pgsql
+    container_name: db_edit
+    depends_on:
+      rasdaman:
+        condition: service_healthy
+    networks:
+      - rasdaman-network
+
+  ontop:
+    container_name: ontop
+    image: aghoshpro/ontoraster:v1.1
+    env_file: .env
+    environment:
+      ONTOP_ONTOLOGY_FILE: /opt/ontop/input/OntoRaster.owx
+      ONTOP_XML_CATALOG_FILE: /opt/ontop/input/catalog-v001.xml
+      ONTOP_MAPPING_FILE: /opt/ontop/input/OntoRaster.obda
+      ONTOP_PROPERTIES_FILE: /opt/ontop/input/OntoRaster.properties
+      ONTOP_PORTAL_FILE: /opt/ontop/input/OntoRaster.toml
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      ONTOP_DEV_MODE: "true"
+      ONTOP_LOG_LEVEL: "debug"
+    volumes:
+      - ./vkg:/opt/ontop/input
+      - ./jdbc:/opt/ontop/jdbc
+    depends_on:
+      db_edit:
+        condition: service_completed_successfully
+    ports:
+      - "${ONTOP_SERVER_PORT}:8080"
+    networks:
+      - rasdaman-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+networks:
+  rasdaman-network:
+    name: rasdaman-network
+
