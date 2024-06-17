@@ -1,7 +1,13 @@
-<picture>
+<!-- <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/aghoshpro/OntoRaster/assets/71174892/21fee824-3011-4a80-9225-77fc92f3a153">
   <source media="(prefers-color-scheme: light)" srcset="https://github.com/aghoshpro/OntoRaster/assets/71174892/a93cd5f8-cb1b-441b-acaf-415deb089d3b">
   <img alt=OntoRaster Logo" src="https://github.com/aghoshpro/OntoRaster/assets/71174892/a93cd5f8-cb1b-441b-acaf-415deb089d3b" style="width:auto;">
+</picture> -->
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="diagrams/OntoRaster-Dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="diagrams/OntoRaster-Light.png">
+  <img alt=OntoRaster Logo" src="diagrams/OntoRaster-Light.png" style="width:auto;">
 </picture>
 
 
@@ -102,7 +108,7 @@ After successful execution of `docker-compose` command please check http://local
 
 ### 5.2 Raster Data (***D<sup>arr</sup>***)
 * Stored in array DBMS [**RasDaMan**](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
-* Information about the Raster data can be at NASA's [Earth Science Data Systems (ESDS)](https://lpdaac.usgs.gov/products/mod11a1v061/)
+* Information about the Raster data can be found at NASA's [Earth Science Data Systems (ESDS)](https://lpdaac.usgs.gov/products/mod11a1v061/)
   * Demo data used for Sweden, Bavaria and South Tyrol can be downloaded direclty from [Google Drive](https://drive.google.com/drive/folders/1yCSmmok3Iz7J2lZ-uleCg_q87GZsHfI7?usp=sharing)
   * Demo data also available in `rasdaman\data\` but sometime github causes issue for storing large datafile in repo. In that case download from above link.
 
