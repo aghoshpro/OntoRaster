@@ -13,7 +13,7 @@
 
 <!-- Raster extension of VKG system Ontop to query over **multidimensional raster** data combined with **relational data**. Current version of OntoRaster supports regular gridded 3-D **raster** data and geometrical **vector data** in geospatial domain. We are constantly improving the extension with new features which will enable the end user to query over raster data and vector data of any domain under the VKG paradigm in future. -->
 
-Raster extension of VKG system Ontop to query over **multidimensional raster** data in combination with **relational data**. Current version of OntoRaster is designed to handle regular gridded spatial-temporal 3-D **raster** data or OGC coverage data and **vector** data (relational data with geometrical features). We're constantly working on making the extension even better with new features that will allow the end users to query raster and vector data from any domain under the VKG paradigm in the future.
+Raster extension of VKG system Ontop to query over **multidimensional raster** data in combination with **relational data**. Currently it handles regular gridded spatial-temporal **raster** data (3D) or OGC coverage data and **vector** data (relational data with geometrical features). We're constantly working on making the extension even better with new features that will allow the end users to query raster and vector data from any domain under the VKG paradigm in the future.
 
 ## Table of Contents
 1. [Framework](#1-framework)
@@ -67,7 +67,7 @@ with a set of all RasSPARQL queries.
 ### 2.4  Ontop SPARQL Endpoint
 After successful execution of `docker-compose` command please check http://localhost:8082/ to see the follwing,
 
-<img src="diagrams/OntopSolution.gif"/>
+<img src="diagrams/Ontop-Endpoint.gif"/>
 
 ## 3. Queries (***Q***)
 | | |
@@ -110,7 +110,8 @@ After successful execution of `docker-compose` command please check http://local
 * Stored in array DBMS [**RasDaMan**](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
 * Information about the Raster data can be found at NASA's [Earth Science Data Systems (ESDS)](https://lpdaac.usgs.gov/products/mod11a1v061/)
   * Demo data used for Sweden, Bavaria and South Tyrol can be downloaded direclty from [Google Drive](https://drive.google.com/drive/folders/1yCSmmok3Iz7J2lZ-uleCg_q87GZsHfI7?usp=sharing)
-  * Demo data also available in `rasdaman\data\` but sometime github causes issue for storing large datafile in repo. In that case download from above link.
+
+  <!-- * Demo data also available in `rasdaman\data\` but sometime github causes issue for storing large datafile in repo. In that case download from above link. -->
 
 * Metadata are stored in `raster_lookup` table as shown below.
 * `raster_lookup` <img src="diagrams/raster_lookup.png">

@@ -35,32 +35,37 @@ AS remote_table(raster_id text, raster_name text, axis_label text, domain_lower_
 
 
 
--- 4. Build sample_lookup
+-- 4. Build raster_lookup
 
-CREATE OR REPLACE VIEW sample_lookup AS
+CREATE OR REPLACE VIEW raster_lookup_view AS
 SELECT 
     raster_id,
     raster_name,
     MAX(CASE WHEN axis_label = 'Long' THEN min_long END) AS min_lon,
     MAX(CASE WHEN axis_label = 'Long' THEN max_long END) AS max_lon,
-	  MAX(CASE WHEN axis_label = 'Long' THEN grid_lower_bound END) AS min_lon_grid,
+	MAX(CASE WHEN axis_label = 'Long' THEN grid_lower_bound END) AS min_lon_grid,
     MAX(CASE WHEN axis_label = 'Long' THEN grid_upper_bound END) AS max_lon_grid,
-	  MAX(CASE WHEN axis_label = 'Long' THEN resolution END) AS res_lon,
+	MAX(CASE WHEN axis_label = 'Long' THEN resolution END) AS res_lon,
     MAX(CASE WHEN axis_label = 'Lat' THEN min_lat END) AS min_lat,
     MAX(CASE WHEN axis_label = 'Lat' THEN max_lat END) AS max_lat,
-	  MAX(CASE WHEN axis_label = 'Lat' THEN grid_lower_bound END) AS min_lat_grid,
+	MAX(CASE WHEN axis_label = 'Lat' THEN grid_lower_bound END) AS min_lat_grid,
     MAX(CASE WHEN axis_label = 'Lat' THEN grid_upper_bound END) AS max_lat_grid,
-	  MAX(CASE WHEN axis_label = 'Lat' THEN resolution END) AS res_lat,
-	  MAX(CASE WHEN axis_label = 'ansi' THEN domain_lower_bound END) AS start_time,
+	MAX(CASE WHEN axis_label = 'Lat' THEN resolution END) AS res_lat,
+	MAX(CASE WHEN axis_label = 'ansi' THEN domain_lower_bound END) AS start_time,
     MAX(CASE WHEN axis_label = 'ansi' THEN domain_upper_bound END) AS end_time,
-	  MAX(CASE WHEN axis_label = 'ansi' THEN grid_lower_bound END) AS start_time_grid,
+	MAX(CASE WHEN axis_label = 'ansi' THEN grid_lower_bound END) AS start_time_grid,
     MAX(CASE WHEN axis_label = 'ansi' THEN grid_upper_bound END) AS end_time_grid,
-	  MAX(CASE WHEN axis_label = 'ansi' THEN resolution END) AS res_time
+	MAX(CASE WHEN axis_label = 'ansi' THEN resolution END) AS res_time
 FROM lookup_unstructured
 GROUP BY raster_id, raster_name;
 
 
---select * from sample_lookup -- Build mappings with this table in VectorDB
+-- 5. Convert view to table with a primary key
+
+CREATE TABLE raster_lookup AS SELECT * FROM raster_lookup_view;
+
+ALTER TABLE raster_lookup ADD PRIMARY KEY (raster_id);
+
 
 
 -- ##########################
@@ -80,7 +85,7 @@ DECLARE
 example_date_grid_val INTEGER;
 BEGIN
 SELECT start_time_grid + EXTRACT(DAY FROM (input_time::TIMESTAMP - start_time::TIMESTAMP))INTO example_date_grid_val
-FROM sample_lookup
+FROM raster_lookup
 WHERE start_time::TIMESTAMP <= input_time::TIMESTAMP AND end_time::TIMESTAMP >= input_time::TIMESTAMP AND raster_name = input_raster;
 
 RETURN example_date_grid_val;
@@ -98,7 +103,7 @@ CREATE OR REPLACE FUNCTION rasdaman_op.get_min_longitude(
     COST 100
     VOLATILE PARALLEL UNSAFE
 AS $BODY$
-SELECT min_lon FROM sample_lookup WHERE raster_name = input_raster
+SELECT min_lon FROM raster_lookup WHERE raster_name = input_raster
     $BODY$;
 
 -- FUNCTION: rasdaman_op.get_res_lon(text)
@@ -111,7 +116,7 @@ CREATE OR REPLACE FUNCTION rasdaman_op.get_res_lon(
     COST 100
     VOLATILE PARALLEL UNSAFE
 AS $BODY$
-SELECT res_lon FROM sample_lookup WHERE raster_name = input_raster
+SELECT res_lon FROM raster_lookup WHERE raster_name = input_raster
     $BODY$;
 
 -- FUNCTION: rasdaman_op.get_max_latitude(text)
@@ -124,7 +129,7 @@ CREATE OR REPLACE FUNCTION rasdaman_op.get_max_latitude(
     COST 100
     VOLATILE PARALLEL UNSAFE
 AS $BODY$
-SELECT max_lat FROM sample_lookup WHERE raster_name = input_raster
+SELECT max_lat FROM raster_lookup WHERE raster_name = input_raster
     $BODY$;
 
 -- FUNCTION: rasdaman_op.get_res_lat(text)
@@ -137,5 +142,5 @@ CREATE OR REPLACE FUNCTION rasdaman_op.get_res_lat(
     COST 100
     VOLATILE PARALLEL UNSAFE
 AS $BODY$
-SELECT res_lat FROM sample_lookup WHERE raster_name = input_raster
+SELECT res_lat FROM raster_lookup WHERE raster_name = input_raster
     $BODY$;

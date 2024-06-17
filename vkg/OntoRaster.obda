@@ -76,12 +76,12 @@ source		SELECT gid,
 
 mappingId	mapping_rasterid_lookup
 target		:raster/{raster_id} a :Raster .
-source		SELECT raster_id FROM sample_lookup
+source		SELECT raster_id FROM raster_lookup
 
 ;mappingId	Get_raster_name_based_on_region_name_lookup
 ;target		:raster/{raster_id} rasdb:rasterName {raster_name}^^xsd:string .
 ;source		SELECT raster_id, raster_name
-;            FROM sample_lookup
+;            FROM raster_lookup
 ;            WHERE max_lat > (SELECT  ST_YMax(ST_GeomFromText(ST_AsText((ST_Dump(m.geom)).geom))) FROM sample_regions_of_interest as m WHERE   m.name_2 = 'Stockholm')
 ;              AND min_lat < (SELECT  ST_YMin(ST_GeomFromText(ST_AsText((ST_Dump(m.geom)).geom))) FROM sample_regions_of_interest as m WHERE   m.name_2 = 'Stockholm')
 ;              AND max_lon > (SELECT  ST_XMax(ST_GeomFromText(ST_AsText((ST_Dump(m.geom)).geom))) FROM sample_regions_of_interest as m WHERE   m.name_2 = 'Stockholm')
@@ -90,17 +90,17 @@ source		SELECT raster_id FROM sample_lookup
 
 mappingId	mapping_raster_name_lookup
 target		:raster/{raster_id} rasdb:rasterName {raster_name}^^xsd:string .
-source		SELECT raster_id, raster_name FROM sample_lookup
+source		SELECT raster_id, raster_name FROM raster_lookup
 
 mappingId	mapping_get_temporal_dimension_lookup
 target		:raster/{raster_id} rasdb:hasStartTime {start_time}^^xsd:string ; rasdb:hasEndTime {end_time}^^xsd:string ; rasdb:hasStartTimeGrid {start_time_grid}^^xsd:integer ; rasdb:hasEndTimeGrid {end_time_grid}^^xsd:integer ; rasdb:hasTemporalResolution {res_time}^^xsd:double .
-source		SELECT raster_id, raster_name, start_time, end_time, start_time_grid, end_time_grid, res_time FROM sample_lookup
+source		SELECT raster_id, raster_name, start_time, end_time, start_time_grid, end_time_grid, res_time FROM raster_lookup
 
 mappingId	Get_spatial_dimension_(X)_from_lookup_for_domain_raster
 target		:raster/{raster_id} rasdb:hasMinLongitude {min_lon}^^xsd:double ; rasdb:hasMaxLongitude {max_lon}^^xsd:double ; rasdb:hasSpatialResolution_lon {res_lon}^^xsd:double .
-source		SELECT raster_id, raster_name, min_lon, max_lon, res_lon FROM sample_lookup
+source		SELECT raster_id, raster_name, min_lon, max_lon, res_lon FROM raster_lookup
 
 mappingId	Get_spatial_dimension_(Y)_from_lookup_for_domain_raster
 target		:raster/{raster_id} rasdb:hasMinLatitude {min_lat}^^xsd:double ; rasdb:hasMaxLatitude {max_lat}^^xsd:double ; rasdb:hasSpatialResolution_lat {res_lat}^^xsd:double .
-source		SELECT raster_id, raster_name, min_lat, max_lat, res_lat FROM sample_lookup
+source		SELECT raster_id, raster_name, min_lat, max_lat, res_lat FROM raster_lookup
 ]]
