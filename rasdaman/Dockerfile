@@ -2,7 +2,6 @@
 FROM albulenpano/rasdaman:10.2.1
 
 RUN apt-get update && apt-get install -y curl
-RUN apt-get install toilet figlet
 # Copy the ingredient and netcdf file into the container
 COPY data /data
 
@@ -17,7 +16,6 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 RUN echo "starting entrypoint"
-RUN toilet -f slant -F gay "OntoRaster"
 RUN apt-get update && apt-get install -y dos2unix
 RUN dos2unix entrypoint.sh
 

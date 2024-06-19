@@ -59,18 +59,15 @@ docker-compose -f docker-compose.ontoraster.yml up
 
 * This Docker-compose file uses the mapping `vkg/OntoRaster.obda` and ontology `vkg/OntoRaster.owl`.
 
-* Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ 
-with all of RasSPARQL queries for users to try.
-
-* RasSPARQL queries are also available at `vkg/OntoRaster.toml`.
-
 ### 2.4  Ontop SPARQL Endpoint
-After successful execution of `docker-compose` command please check http://localhost:8082/ to see the following,
+After successful execution of `docker-compose` (ETC 5 min), the Ontop SPARQL endpoint becomes available at http://localhost:8082/ for users to try the RasSPARQL queries as shown below,
 
 <img src="diagrams/Ontop-Endpoint.gif"/>
 
 ## 3. Queries (***Q***)
-| | |
+All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml`.
+
+| ***Q<sub>i</sub>***| Description|
 | ------------- | ------------- |
 | ***Q1*** | What is the dimension of the input raster dataset?  |
 | ***Q2*** | Perform element-wise operation over cells of an array of an input raster dataset at a particular timestamp with the user-specific operator and operator.  |
@@ -111,7 +108,6 @@ After successful execution of `docker-compose` command please check http://local
 * Information about the Raster data can be found at NASA's [Earth Science Data Systems (ESDS)](https://lpdaac.usgs.gov/products/mod11a1v061/)
   * Demo data used for Sweden, Bavaria and South Tyrol can be downloaded direclty from [Google Drive](https://drive.google.com/drive/folders/1yCSmmok3Iz7J2lZ-uleCg_q87GZsHfI7?usp=sharing)
 
-  <!-- * Demo data also available in `rasdaman\data\` but sometime github causes issue for storing large datafile in repo. In that case download from above link. -->
 
 * Metadata are stored in `raster_lookup` table as shown below.
 * `raster_lookup` <img src="diagrams/raster_lookup.png">
