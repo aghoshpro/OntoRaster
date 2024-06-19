@@ -42,8 +42,6 @@ git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
 git clone https://github.com/aghoshpro/OntoRaster
 ```
 
-* **Note**: Our demo data are quite large and github doesn't support storing large data (>= 100 MB) inside repo. We have used github's `lfs` to store large data in the repo but sometimes github fails to clone them. In this case please download the data from the [google drive](https://drive.google.com/drive/folders/1yCSmmok3Iz7J2lZ-uleCg_q87GZsHfI7?usp=sharing) and paste them directly in `\OntoRaster\rasdaman\data\` folder.
-
 ### 2.2 Setup Docker
 * Go to https://docs.docker.com/desktop/ and install docker on your favourite OS.
 

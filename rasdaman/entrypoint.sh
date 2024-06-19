@@ -1,4 +1,15 @@
 #!/bin/bash
+# File id of the large file on Google Drive
+fid01="1GmQcjPDGjYLV8wk95kQ52em16wF1CSII"
+dir01="/data/Sweden_MOD11A1.061_1km_aid0001.nc"
+
+echo "Wait large raster data is being fetched from Google Drive"
+sleep 40
+# Download the file using wget or curl
+echo "Raster for Sweden"
+# wget --no-check-certificate "https://drive.google.com/uc?export=download&id=${FILE_ID}" -O ${DESTINATION}
+curl -L "https://drive.usercontent.google.com/download?id=${fid01}&confirm=yes" -o ${dir01}
+
 # Start rasdaman
 /opt/rasdaman/bin/start_rasdaman.sh --allow-root &
 
