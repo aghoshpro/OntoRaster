@@ -63,7 +63,7 @@ SELECT ?answer {
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'München') # also try with Daggendorf, Bayreuth, Würzburg etc.         
+FILTER (?regionName = 'München') # also try with Deggendorf, Bayreuth, Würzburg etc.         
 FILTER (CONTAINS(?rasterName, 'Bavaria'))
 BIND ('2023-09-04T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialAverage(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
