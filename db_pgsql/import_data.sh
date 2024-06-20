@@ -11,13 +11,13 @@ echo "Set password"
 export PGPASSWORD="petapasswd"
 
 # shp2pgsql scripts
-echo "Load Bavaria2"
+echo "Loading vector data for Region of Interest (ROI) Bavaria"
 shp2pgsql -s 4326 /data/Bavaria_1.shp region_Bavaria | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 5
-echo "Load Sweden"
+echo "Loading vector data for Region of Interest (ROI) Sweden"
 shp2pgsql -s 4326 /data/gadm41_SWE_2.shp region_Sweden | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 5
-echo "Load South Tyrol"
+echo "Loading vector data for Region of Interest (ROI) South Tyrol"
 shp2pgsql -s 4326 /data/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 10
 
