@@ -46,7 +46,7 @@ git clone https://github.com/aghoshpro/OntoRaster
 * Go to https://docs.docker.com/desktop/ and install docker on your favourite OS.
 
 ### 2.3 Run the demo
-* For this demo, we assume that the ports `7777`, `7001-7010, 8080` (used for the RDBMS and Array DBMS) and `8082` (used by Ontop) are free. If you need to use different ports, please edit the file `.env`.
+* For this demo, we assume that the ports `7777`, `7001-7010` (used for the RDBMS),`8080` (for Array DBMS), `8082` (used by Ontop), `6060` (prompt success msg and endpoint) are free. If you need to use different ports, please edit the file `.env`.
 
 * Open `terminal` or `cmd` and navigate to the `OntoRaster` repository
   
@@ -81,8 +81,8 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 | ***Q10***| Clip a portion of user-specific raster data based on the shape of custom vector region at a particular time and return filtered arrays|
 
 ## 4. Ontology (***O***)
-* Here we have provided **Raster** ontology that describe meta-level information of generic raster data of any domain such as medical, cosmological, geospatial etc.
-* We also provided ontology for geospatial raster data a.k.a **grid coverage** a prominent subclass of generic raster data conforming to [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) standard. 
+* Here we have provided **Raster Ontology** ontology that describe meta-level information of $n$-dimensional generic raster data or coverage based on the [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html). As of now it only describes only regular gridded coverage or geospatial raster data. The *RegularGridDomain* and *RangeType* classes capture all the information about the domains and ranges of a grid coverage. 
+
 
 <img src="diagrams/RasterOntology.png"/>
 
