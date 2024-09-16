@@ -30,7 +30,7 @@ Raster extension of VKG system Ontop to query over **multidimensional raster** d
 
 ### 1.1. For more check out the publication
 
-> **Ghosh, A**., Pano, A., Xiao, G., Calvanese, D. (**2024**). OntoRaster: Extending VKGs with Raster Data. _International Joint Conference on Rules and Reasoning. RuleML+RR 2024. Lecture Notes in Computer Science, vol 15183. Springer_. https://doi.org/10.1007/978-3-031-72407-7_9
+> **Ghosh, A**., Pano, A., Xiao, G., Calvanese, D. [**OntoRaster: Extending VKGs with Raster Data**](https://doi.org/10.1007/978-3-031-72407-7_9). _International Joint Conference on Rules and Reasoning. RuleML+RR 2024. Lecture Notes in Computer Science (LNCS), vol 15183. Springer_, **2024**.
 
 ## 2. Demo
 
