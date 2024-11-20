@@ -100,7 +100,9 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 
 ## 5. Dataset (**_D_**)
 
-### 5.1 Relational Data (including Vector Data)
+### 5.1 Relational Data
+
+#### 5.1.1. Vector Data
 
 - This demo utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **_Regions_** or regions of interest (ROI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, taken from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
 
@@ -113,10 +115,65 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 - `region_south_tyrol` <img src="diagrams/region_tyrol.png">
 - Ideally any user-specific vector data for any region of interest will work by adding relevant mappings.
 
-### 5.1.1 CityGML Data (**_D<sup>City3D</sup>_**)
+### 5.1.2. CityGML Data (**_D<sup>City3D</sup>_**)
+
+#### Installing 3DCityDB
+
+- Check Java version 11 or higher
+
+- Follow the [instructions](https://3dcitydb-docs.readthedocs.io/en/latest/first-steps/install-impexp.html) to install **3DCityDB** schema that will contain **CityGML** data in RDBMS
+
+- Go to [3DCityDB](https://www.3dcitydb.org/3dcitydb/downloads/) and download the [Importer/Exporter](https://3dcitydb-docs.readthedocs.io/en/latest/first-steps/setup-3dcitydb.html#installation-steps-on-postgresql) installer `.jar` file
+
+- Set up **3DCityDB** schema for PostgreSQL as per the instructions [here](https://3dcitydb-docs.readthedocs.io/en/latest/first-steps/setup-3dcitydb.html#installation-steps-on-postgresql)
+
+- Launching Importer/Exporter [link](https://3dcitydb-docs.readthedocs.io/en/latest/impexp/launching.html#launching-the-importer-exporter)
+
+- Start the #DCityDB GUI Wizard
+
+  > $ chmod u+x 3DCityDB-Importer-Exporter && ./3DCityDB-Importer-Exporter
+
+#### Get Data
+
+ - Area of Interest : **Munich Metropolitan Area** 
+ 
+ - Run the following shell script to download files (**109** `.gml` files ~ **6 GB** in our study)
+
+    ```sh
+    #!/bin/bash
+
+    for LONG in `seq 674 2 680`
+    do
+      for LAT in `seq 5332 2 5342`
+      do
+        wget "https://download1.bayernwolke.de/a/lod2/citygml/${LONG}_${LAT}.gml"
+      done
+    done
+    ```
+
+#### View CityGML Data as CityJSON
 - 
 
-### 5.1.2 OSM Data (**_D<sup>osm</sup>_**)
+### 5.1.3. OSM Data (**_D<sup>osm</sup>_**)
+
+#### Direct Download
+
+- [GeoFabrik OpenStreetMap Data Extracts](https://download.geofabrik.de) : Select your area of interest (AOI) and download OSM data in various formats such as `.osm`, `.pfb`, `.shp`. 
+
+- You can also use CLI tools such as `wget` pr `curl` if you prefer.
+#### Small AOI
+```
+$ wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
+```
+
+
+#### LARGER AOI (>300 MB)
+
+```
+$ wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
+```
+
+ - **BBOX** - [11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]
 
 ### 5.2 Raster Data (**_D<sup>arr</sup>_**)
 
