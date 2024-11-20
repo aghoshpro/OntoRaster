@@ -20,17 +20,22 @@ Raster extension of VKG system Ontop to query over **multidimensional raster** d
 2. [Demo](#2-demo)
 3. [Queries](#3-queries-q)
 4. [Ontology (_O_)](#4-ontology-o)
+
 4.1. [Raster Ontology](#41-raster-ontology)
 4.2. [GeoSPARQL Ontology v1.1](#42-geosparql-v11-ontology)
 4.3. [CityGML v2.0](#43-citygml-v20-ontology)
 4.4. [Quantities, Units, Dimensions and Types (QUDT) Ontology](#44-quantities-units-dimensions-and-types-qudt)
 4.5. [OpenStreetMap (OSM) Ontology](#45-open-street-map-osm-ontology)
+
 5. [Heterogenous Data Sources (_D_)](#5-dataset-d)
+
 5.1. [Relational Data (**_D<sup>rel</sup>_**)](#51-relational-data)
   5.1.1. [Vector Data](#511-vector-data)
   5.1.2. [3DCityGML Data](#512-citygml-data-dcity3d)
   5.1.2. [OSM Data](#513-osm-data-dosm)
+
 5.2. [Raster Data (**_D<sup>arr</sup>_**)](#52-raster-data-darr)
+
 6. [Mappings (_M_)](#6-mapping-m)
 7. [More details](#7-more-details)
 
@@ -134,7 +139,7 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 ### 5.1 Relational Data
 
-#### 5.1.1. Vector Data
+### 5.1.1. Vector Data
 
 - This demo utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **_Regions_** or regions of interest (ROI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, taken from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
 
