@@ -94,9 +94,21 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 
 ## 4. Ontology (**_O_**)
 
-- Here we have provided **Raster Ontology** ontology that describe meta-level information of $n$-dimensional generic raster data or coverage based on the [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html). As of now it only describes only regular gridded coverage or geospatial raster data. The _RegularGridDomain_ and _RangeType_ classes capture all the information about the domains and ranges of a grid coverage.
+### 4.1. GeoSPARQL v1.1 Ontology   
+
+For vector data we are using [GeoSPARQL v1.1 Ontology](https://opengeospatial.github.io/ogc-geosparql/geosparql11/index.html) introduces classes likes features, geometries, and their representation using Geography Markup Language (GML) and Well-Known Text (WKT) literals, and includes topological relationship vocabularies. GeoSPARQL also provides an extension of the standard SPARQL query interface, supporting a set of topological functions for quantitative reasoning.
+
+### 4.2. Raster Ontology 
+
+- Here we have provided **Raster Ontology** ontology that describe meta-level information of $n$-dimensional generic raster data or coverage based on the [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) and the paper [Andrejev et al.](https://www2.it.uu.se/research/group/udbl/publ/DSDIS2015.pdf). As of now it only describes only regular gridded coverage or geospatial raster data. The _RegularGridDomain_ and _RangeType_ classes capture all the information about the domains and ranges of a grid coverage.
 
 <img src="diagrams/RasterOntology.png"/>
+
+### 4.3. CityGML v2.0 Ontology 
+
+- We are also using [CityGML v2.0 Ontology](https://cui.unige.ch/isi/ke/ontologies) developed by the University of Geneva for the ontology component of the KG construction phase and further modified by [L. Ding et al](https://doi.org/10.1080/10095020.2024.2337360) by adding further classes on addresses (including xAL) and removing object properties with the same IRI as data properties.
+
+
 
 ## 5. Dataset (**_D_**)
 
@@ -136,8 +148,16 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 #### Get Data
 
  - Area of Interest : **Munich Metropolitan Area** 
+
+ - To check how many LOD2 gml files are needed to cover the aforementioned AOI one may go to [OpenData](https://geodaten.bayern.de/opengeodata/OpenDataDetail.html?pn=lod2&active=MASSENDOWNLOAD) and upload text file containing geometry of the AOI in `EWKT` format.
+
+ - It will give something like below. One can also download the file `./diagrams/lod2.meta4` which contains all LONGs and LATs for the entire dataset with respective links.
+
+ <div align="center">
+   <img src="./diagrams/CityGML.PNG" width=500>
+ </div>
  
- - Run the following shell script to download files (**109** `.gml` files ~ **6 GB** in our study)
+ - Run the following shell script (or gitbash in Windows) to download files (**110** `.gml` files ~ **6.4 GB** in our study)
 
     ```sh
     #!/bin/bash
@@ -151,8 +171,16 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
     done
     ```
 
-#### View CityGML Data as CityJSON
-- 
+#### Visualise CityGML Data as CityJSON
+- [CityJSON](https://www.cityjson.org) is a JSON-based encoding for storing 3D city models.
+- CityGML 2 CityJSON Conversion [here](https://www.cityjson.org/tutorials/conversion/)
+- Drop the converted `.json` file in the CityJSON official online viewer called [ninja](https://www.cityjson.org/tutorials/getting-started/#visualise-it).
+
+
+#### Manipulate CityJSON files using CityJSON/io (cjio)
+- [clio](https://www.cityjson.org/tutorials/getting-started/#manipulate-and-edit-it-with-cjio) is a command-line interface program used  to edit, marge and validate CityJSON files.
+
+- Python (version >3.7) is required and using pip `pip install cjio`.
 
 ### 5.1.3. OSM Data (**_D<sup>osm</sup>_**)
 
@@ -160,7 +188,9 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 
 - [GeoFabrik OpenStreetMap Data Extracts](https://download.geofabrik.de) : Select your area of interest (AOI) and download OSM data in various formats such as `.osm`, `.pfb`, `.shp`. 
 
-- You can also use CLI tools such as `wget` pr `curl` if you prefer.
+- You can also use CLI tools such as `wget` pr `curl` if you have the Bounding Box (BBOX) of AOI
+  - **BBOX** : [11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]
+
 #### Small AOI
 ```
 $ wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
@@ -172,8 +202,6 @@ $ wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.
 ```
 $ wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
 ```
-
- - **BBOX** - [11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]
 
 ### 5.2 Raster Data (**_D<sup>arr</sup>_**)
 
