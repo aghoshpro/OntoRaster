@@ -113,6 +113,11 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 - `region_south_tyrol` <img src="diagrams/region_tyrol.png">
 - Ideally any user-specific vector data for any region of interest will work by adding relevant mappings.
 
+### 5.1.1 CityGML Data (**_D<sup>City3D</sup>_**)
+- 
+
+### 5.1.2 OSM Data (**_D<sup>osm</sup>_**)
+
 ### 5.2 Raster Data (**_D<sup>arr</sup>_**)
 
 - Stored in array DBMS [**RasDaMan**](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
