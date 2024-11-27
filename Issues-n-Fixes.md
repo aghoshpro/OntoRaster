@@ -1,5 +1,5 @@
 # Technical Issues and how to fix them
-## Install Java and set `JAVA_HOME` in Ubuntu
+## Install Java and set `JAVA_HOME` in Ubuntu [1,2,3,4]
 ```sh
 $ apt search openjdk
 
@@ -23,3 +23,9 @@ $ echo $JAVA_HOME
 echo $JAVA_HOME
 usr/lib/jvm/java-11-openjdk-amd64
 ```
+
+# StackOverflow
+1. https://askubuntu.com/questions/277806/how-to-set-java-home/1385764#1385764
+2. https://stackoverflow.com/questions/60065441/java-home-variable-issues
+3. https://stackoverflow.com/questions/14788345/how-to-install-the-jdk-on-ubuntu-linux
+4. https://stackoverflow.com/questions/21343529/all-my-java-applications-now-throw-a-java-awt-headlessexception

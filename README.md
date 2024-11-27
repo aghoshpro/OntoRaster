@@ -135,6 +135,8 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 - **OSMonto**: An ontology of OpenStreetMap tags, created with the purpose to ease maintenance and overview of existing tags and to allow enriching the semantics of tags by relating them to other ontologies. It has been developed as a research paper [Mihai et al 2011](https://www.inf.unibz.it/~okutz/resources/osmonto.pdf) at University Bremen and DFKI Bremen and was presented at State of the Map Europe [SotM-EU'2011](https://stateofthemap.eu/index.html) and . An [.owl](https://raw.githubusercontent.com/doroam/planning-do-roam/master/Ontology/tags.owl) file containing the OSMonto ontology can be viewed in Protégé.
 
+- [Open Street Map integration](https://documentation.researchspace.org/resource/Help:OpenStreetMap) : This integration creates a simple lookup service to federate againsts the Open Street Maps (OSM) API, allowing users to reference place names in their ResearchSpace instances. Users can lookup a street address, a city, a country etc. and be able to reference this in their data.
+
 ## 5. Heterogenous Data Sources (**_D_**)
 
 ### 5.1 Relational Data
@@ -166,7 +168,7 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 - Launching Importer/Exporter [link](https://3dcitydb-docs.readthedocs.io/en/latest/impexp/launching.html#launching-the-importer-exporter)
 
-- Start the #DCityDB GUI Wizard
+- Start the 3DCityDB GUI Wizard
 
   > $ chmod u+x 3DCityDB-Importer-Exporter && ./3DCityDB-Importer-Exporter
 
