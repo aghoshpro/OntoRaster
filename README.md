@@ -12,32 +12,44 @@
 
 <!-- Raster extension of VKG system Ontop to query over **multidimensional raster** data combined with **relational data**. Current version of OntoRaster supports regular gridded 3-D **raster** data and geometrical **vector data** in geospatial domain. We are constantly improving the extension with new features which will enable the end user to query over raster data and vector data of any domain under the VKG paradigm in future. -->
 
-Raster extension of VKG system Ontop to query over **multidimensional raster** data in combination with **relational data**. Currently it handles regular gridded spatial-temporal **raster** data (3D) or OGC coverage data and **vector** data (relational data with geometrical features). We're constantly working on making the extension even better with new features that will allow the end users to query raster and vector data from any domain under the VKG paradigm in the future.
+Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over **multidimensional raster** data in combination with **relational data**. Currently it integrate and query regular gridded spatial-temporal **raster** data (3D) or OGC coverage data together with relational data including **vector** geometrical data, **OpenStreetMap (OSM)** data and **3DCityGML** data. We're constantly working on making the extension even better with new features that will allow the end users to query raster and vector data from any domain under the VKG paradigm in the future.
 
 ## Table of Contents
 
+0. [Motivation](#0-motivation)
 1. [Framework](#1-framework)
 2. [Demo](#2-demo)
 3. [Queries](#3-queries-q)
-4. [Ontology (_O_)](#4-ontology-o)
+4. [Ontology (**_O_**)](#4-ontology-o)
 
-4.1. [Raster Ontology](#41-raster-ontology)
-4.2. [GeoSPARQL Ontology v1.1](#42-geosparql-v11-ontology)
-4.3. [CityGML v2.0](#43-citygml-v20-ontology)
-4.4. [Quantities, Units, Dimensions and Types (QUDT) Ontology](#44-quantities-units-dimensions-and-types-qudt)
-4.5. [OpenStreetMap (OSM) Ontology](#45-open-street-map-osm-ontology)
+- 4.1. [Raster Ontology](#41-raster-ontology)
+- 4.2. [GeoSPARQL Ontology v1.1](#42-geosparql-v11-ontology)
+- 4.3. [CityGML v2.0](#43-citygml-v20-ontology)
+- 4.4. [Quantities, Units, Dimensions and Types (QUDT) Ontology](#44-quantities-units-dimensions-and-types-qudt)
+- 4.5. [OpenStreetMap (OSM) Ontology](#45-open-street-map-osm-ontology)
 
-5. [Heterogenous Data Sources (_D_)](#5-dataset-d)
+5. [Heterogenous Data Sources (**_D_**)](#5-heterogenous-data-sources-d)
 
-5.1. [Relational Data (**_D<sup>rel</sup>_**)](#51-relational-data)
-  5.1.1. [Vector Data](#511-vector-data)
-  5.1.2. [3DCityGML Data](#512-citygml-data-dcity3d)
-  5.1.2. [OSM Data](#513-osm-data-dosm)
+- 5.1. [Relational Data (**_D<sup>rel</sup>_**)](#51-relational-data)
 
-5.2. [Raster Data (**_D<sup>arr</sup>_**)](#52-raster-data-darr)
+  - 5.1.1. [Vector Data (**_D<sup>Vector</sup>_**)](#511-vector-data)
+  - 5.1.2. [3DCityGML Data (**_D<sup>City3D</sup>_**)](#512-citygml-data-dcity3d)
+  - 5.1.2. [OSM Data (**_D<sup>OSM</sup>_**)](#513-osm-data-dosm)
 
-6. [Mappings (_M_)](#6-mapping-m)
+- 5.2. [Raster Data (**_D<sup>arr</sup>_**)](#52-raster-data-darr)
+
+6. [Mappings (**_M_**)](#6-mapping-m)
 7. [More details](#7-more-details)
+
+## 0. Motivation
+
+- **Query** - _List all the 30 meters tall residentials in Munich where average terrain elevation less than 550 meters and average land surface temperature is over 16 degC, given the following data_.
+
+  <img src="diagrams/AOIMunich.PNG">
+
+  How to find an answer to this query when one may not have any domain knowledge or expertise regarding to handling these many types of spatial data and their respective metadata.
+
+  😃 **You need **OntoRaster** to solve this.** 😃
 
 ## 1. Framework
 
@@ -86,9 +98,15 @@ docker-compose -f docker-compose.ontoraster.yml up
 
 ### 2.4 Ontop SPARQL Endpoint
 
-Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ after successful execution of `docker-compose` (ETC 5 min). End users can try out the RasSPARQL queries as shown below,
+Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ under `success` in docker desktop (ETC 5 min). Click the link and try out the RasSPARQL queries as shown below,
 
-<img src="diagrams/Ontop-Endpoint.gif"/>
+<img src="diagrams/Success.PNG"/>
+
+#### 2.4.1 Visualization
+
+<!-- <img src="diagrams/Ontop-Endpoint.gif"/> -->
+
+<img src="diagrams/Munich.gif"/>
 
 ## 3. Queries (**_Q_**)
 
@@ -109,28 +127,26 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 
 ## 4. Ontology (**_O_**)
 
-### 4.1. Raster Ontology 
+### 4.1. Raster Ontology
 
 We have provided **Raster Ontology** ontology that describe meta-level information of $n$-dimensional generic raster data or coverage based on the [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) and the paper [Andrejev et al., 2015](https://www2.it.uu.se/research/group/udbl/publ/DSDIS2015.pdf). As of now it only describes only regular gridded coverage or geospatial raster data. The _RegularGridDomain_ and _RangeType_ classes capture all the information about the domains and ranges of a grid coverage.
 
 <img src="diagrams/RasterOntology.png"/>
 
-
-### 4.2. GeoSPARQL v1.1 Ontology   
+### 4.2. GeoSPARQL v1.1 Ontology
 
 For vector data we are using [GeoSPARQL v1.1 Ontology](https://opengeospatial.github.io/ogc-geosparql/geosparql11/index.html) introduces classes likes features, geometries, and their representation using Geography Markup Language (GML) and Well-Known Text (WKT) literals, and includes topological relationship vocabularies. GeoSPARQL also provides an extension of the standard SPARQL query interface, supporting a set of topological functions for quantitative reasoning.
 
-
-### 4.3. CityGML v2.0 Ontology 
+### 4.3. CityGML v2.0 Ontology
 
 We are also using [CityGML v2.0 Ontology](https://cui.unige.ch/isi/ke/ontologies) developed by the University of Geneva for the ontology component of the KG construction phase and further modified by [Ding et al., 2024](https://doi.org/10.1080/10095020.2024.2337360) by adding further classes on addresses (including xAL) and removing object properties with the same IRI as data properties.
-
 
 ### 4.4. Quantities, Units, Dimensions and Types (QUDT)
 
 The [QUDT](https://qudt.org) provides set of vocabularies representing the base classes properties, and restrictions used for modeling physical quantities, measurement units, and their dimensions in various measurement systems originally developed for the NASA Exploration Initiatives Ontology Models ([NExIOM](https://step.nasa.gov/pde2009/slides/20090506145822/PDE2009-NExIOM-TQ_v2.0-aRH-sFINAL.pdf)) project and now it forms the basis of the [NASA QUDT Handbook](http://ontolog.cim3.net/file/work/OntologyBasedStandards/2013-10-10_Case-for-QUOMOS/NASA-QUDT-Handbook-v10--RalphHodgson_20131010.pdf). QUDT aims to improve interoperability of data and the specification of information structures through industry standards for `Units of Measure (UoM)`, Quantity Kinds, Dimensions and Data Types as pointed out by [Ray et al., 2011](https://doi.org/10.25504/FAIRsharing.d3pqw7). This OWL schema is a foundation for a basic treatment of units which is considered for `Unit of Measurement (UoM)` in this work.
 
 ### 4.5. Open Street Map (OSM) ontology
+
 - Defines classes of objects appearing on maps: roads, railways, water ways, amenities, emergency infrastructure, public transport, shops, tourist attractions, etc. This large ontology contains about 660 classes, which were identified based on the published set of OSM tags and their values. It was developed by Ontology Engineering Group ([link](https://smartcity.linkeddata.es/ontologies/mapserv.kt.agh.edu.plontologiesosm.owl.html)).
 
 - **OSMonto**: An ontology of OpenStreetMap tags, created with the purpose to ease maintenance and overview of existing tags and to allow enriching the semantics of tags by relating them to other ontologies. It has been developed as a research paper [Mihai et al 2011](https://www.inf.unibz.it/~okutz/resources/osmonto.pdf) at University Bremen and DFKI Bremen and was presented at State of the Map Europe [SotM-EU'2011](https://stateofthemap.eu/index.html) and . An [.owl](https://raw.githubusercontent.com/doroam/planning-do-roam/master/Ontology/tags.owl) file containing the OSMonto ontology can be viewed in Protégé.
@@ -139,19 +155,30 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 ## 5. Heterogenous Data Sources (**_D_**)
 
+<img src="diagrams/AOIMunich.PNG">
+
+Our area of interest (AOI) encompasses the city and the surrounding metropolitan area of Munich, the capital and largest city of Bavaria State, Germany, which comprises an approximate area of 5504 $km^2$. This area is densely populated and hence features numerous structures encompassing residential and commercial zones
+
 ### 5.1 Relational Data
 
 ### 5.1.1. Vector Data
 
-- This demo utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **_Regions_** or regions of interest (ROI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, taken from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
+- This demo utilised 25 districts and 105 sub-districts of Munich as our vector data, downlaoded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b).
 
-- Stored among three separate tables such as `region_sweden`, `region_bavaria`, `region_south_tyrol` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshot of every table is displayed below,
+- This demo also utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **_Regions_** or Areas of Interest (AOI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, taken from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
 
-- `region_sweden` <img src="diagrams/region_sweden.png">
+- Stored in three separate tables such as `dist_25`, `dist_105`, `region_bavaria`, `region_sweden`, `region_south_tyrol` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshot of first three tablse are displayed below,
+
+- `dist_25` <img src="diagrams/region_sweden.png">
+
+- `dist_105` <img src="diagrams/region_sweden.png">
 
 - `region_bavaria` <img src="diagrams/region_bavaria.png">
 
-- `region_south_tyrol` <img src="diagrams/region_tyrol.png">
+- Same goes for `region_sweden` and `region_south_tyrol`.
+
+<!-- - `region_south_tyrol` <img src="diagrams/region_tyrol.png"> -->
+
 - Ideally any user-specific vector data for any region of interest will work by adding relevant mappings.
 
 ### 5.1.2. CityGML Data (**_D<sup>City3D</sup>_**)
@@ -174,11 +201,11 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 #### Get Data
 
- - Area of Interest : **Munich Metropolitan Area** 
+- Area of Interest : **Munich Metropolitan Area**
 
- - To check how many LOD2 gml files are needed to cover the aforementioned AOI one may go to [OpenData](https://geodaten.bayern.de/opengeodata/OpenDataDetail.html?pn=lod2&active=MASSENDOWNLOAD) and upload text file containing geometry of the AOI in `EWKT` format.
+- To check how many LOD2 gml files are needed to cover the aforementioned AOI one may go to [OpenData](https://geodaten.bayern.de/opengeodata/OpenDataDetail.html?pn=lod2&active=MASSENDOWNLOAD) and upload text file containing geometry of the AOI in `EWKT` format.
 
- - It will give something like below. One can also download the file `./diagrams/lod2.meta4` which contains all LONGs and LATs for the entire dataset with respective links.
+- It will give something like below. One can also download the file `./diagrams/lod2.meta4` which contains all LONGs and LATs for the entire dataset with respective links.
 
  <div align="center">
    <img src="./diagrams/CityGML.PNG" width=500>
@@ -199,13 +226,14 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
     ```
 
 #### Visualise CityGML Data as CityJSON
+
 - [CityJSON](https://www.cityjson.org) is a JSON-based encoding for storing 3D city models.
 - CityGML 2 CityJSON Conversion [here](https://www.cityjson.org/tutorials/conversion/)
 - Drop the converted `.json` file in the CityJSON official online viewer called [ninja](https://www.cityjson.org/tutorials/getting-started/#visualise-it).
 
-
 #### Manipulate CityJSON files using CityJSON/io (cjio)
-- [clio](https://www.cityjson.org/tutorials/getting-started/#manipulate-and-edit-it-with-cjio) is a command-line interface program used  to edit, marge and validate CityJSON files.
+
+- [clio](https://www.cityjson.org/tutorials/getting-started/#manipulate-and-edit-it-with-cjio) is a command-line interface program used to edit, marge and validate CityJSON files.
 
 - Python (version >3.7) is required and using pip `pip install cjio`.
 
@@ -213,16 +241,16 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 #### Direct Download
 
-- [GeoFabrik OpenStreetMap Data Extracts](https://download.geofabrik.de) : Select your area of interest (AOI) and download OSM data in various formats such as `.osm`, `.pfb`, `.shp`. 
+- [GeoFabrik OpenStreetMap Data Extracts](https://download.geofabrik.de) : Select your area of interest (AOI) and download OSM data in various formats such as `.osm`, `.pfb`, `.shp`.
 
 - You can also use CLI tools such as `wget` pr `curl` if you have the Bounding Box (BBOX) of AOI
   - **BBOX** : [11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]
 
 #### Small AOI
+
 ```
 $ wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
 ```
-
 
 #### LARGER AOI (>300 MB)
 
