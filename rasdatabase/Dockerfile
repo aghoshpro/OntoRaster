@@ -12,7 +12,11 @@ RUN apt-get update && apt-get install -y \
 # Install the necessary packages to get the gdal working in Python
 
 RUN apt-get update && apt-get install -y \
-    binutils libproj-dev gdal-bin libgdal-dev
+    binutils \
+    libproj-dev \
+    gdal-bin \
+    libgdal-dev \
+    python3-gdal 
 
 # Set environment variables for GDAL
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal

@@ -273,6 +273,7 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
+## Variation 01
 SELECT ?distName ?elevation {
 ?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
 ?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
@@ -282,12 +283,26 @@ BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
 FILTER(?elevation > 515)
 } 
 
+## Variation 02
+#SELECT ?distName ?elevation ?distWkt ?distWktColor {
+#?region a :District .
+#?region rdfs:label ?distName .
+#?region geo:asWKT ?distWkt .
+#BIND('#008AFFF0' AS ?distWktColor)
+#?gridCoverage a :Raster .
+#?gridCoverage rasdb:rasterName ?rasterName .
+#FILTER (CONTAINS(?rasterName, 'Elevation'))
+#BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+#BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+#FILTER(?elevation > 515)
+#} 
+
+# Variation 03
 #SELECT ?distName ?elevation ?distWkt ?distWktColor {
 #?region a :District .
 #?region rdfs:label ?distName .
 #?region geo:asWKT ?distWkt .
 ##BIND(?distName AS ?distWktLabel)
-##BIND('#008AFFF0' AS ?distWktColor)
 #?gridCoverage a :Raster .
 #?gridCoverage rasdb:rasterName ?rasterName .
 #FILTER (CONTAINS(?rasterName, 'Elevation'))
@@ -322,19 +337,40 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?subDistName ?elevation ?subDistWkt ?subDistWktColor {
+SELECT ?distName ?elevation ?distWkt ?distWktColor ?distWktLabel {
 ?region a :SubDistrict .
-?region rdfs:label ?subDistName .
-?region geo:asWKT ?subDistWkt .
-BIND('#008AFFF0' AS ?subDistWktColor)
+?region rdfs:label ?distName .
+?region geo:asWKT ?distWkt .
+BIND(?distName AS ?distWktLabel)
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?rasterName, 'Elevation'))
 BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-BIND (rasdb:rasSpatialAverage(?timeStamp, ?subDistWkt, ?rasterName) AS ?elevation)
-FILTER(?elevation > 510 && ?elevation < 520)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+FILTER(?elevation > 515) .
+  BIND( 
+    IF(?elevation < 525, "blue" , 
+    IF(?elevation < 535, "#008AFF",
+    IF(?elevation < 545, "magenta",
+    IF(?elevation < 555, "red",
+    IF(?elevation < 565, "#C60000",
+    "black")))))
+    AS ?distWktColor).
 } 
+GROUP BY ?distName ?elevation ?distWkt ?distWktColor ?distWktLabel
 
+#SELECT ?distName ?elevation ?distWkt ?distWktColor {
+#?region a :SubDistrict .
+#?region rdfs:label ?distName .
+#?region geo:asWKT ?distWkt .
+#BIND('#008AFFF0' AS ?distWktColor)
+#?gridCoverage a :Raster .
+#?gridCoverage rasdb:rasterName ?rasterName .
+#FILTER (CONTAINS(?rasterName, 'Elevation'))
+#BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+#BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+#FILTER(?elevation > 510 && ?elevation < 520)
+#} 
 """
 
 [[tabGroups.tabs]]
@@ -372,7 +408,7 @@ FILTER(?elevation < 520)
 
 [[tabGroups.tabs]]
 
-name="Q14. Get Churches (in 7.665 sec)"
+name="Q14. View Churches (in 7.665 sec)"
 query="""
 ###########################################################################################
 #### Query 14. List all the churches in Munich where elevation is more than 500 meters
@@ -387,7 +423,7 @@ PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?bldgName ?distName ?elevation ?bldgLat ?bldgLon ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
 ?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
-?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
+?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt . # School, Parking, Hospital, Hotel
 BIND('#008AFF5C' AS ?distWktColor)
 BIND('red' AS ?bldgWktColor)
 #BIND(geof:latitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLat)
@@ -428,11 +464,11 @@ PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?bldgName ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
-?region a :District . # SubDistrict
+?region a :District . 
 ?region rdfs:label ?distName .
 ?region geo:asWKT ?distWkt .
 BIND('#008AFF5C' AS ?distWktColor)
-?building a lgdo:University .
+?building a lgdo:University .   # School, Parking, Hospital, Hotel
 ?building rdfs:label ?bldgName .
 ?building geo:asWKT ?bldgWkt .
 ?bldg geo:asWKT ?bldgWkt .
@@ -463,21 +499,21 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?subDistName ?elevation ?subDistWkt ?subDistWktColor ?bldgWkt ?bldgWktColor { # bldgName
+SELECT ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor { # bldgName
 ?region a :SubDistrict . 
-?region rdfs:label ?subDistName .
-?region geo:asWKT ?subDistWkt .
-BIND('#008AFF5C' AS ?subDistWktColor)
+?region rdfs:label ?distName .
+?region geo:asWKT ?distWkt .
+BIND('#008AFF5C' AS ?distWktColor)
 ?building a lgdo:Residential .
 #?building rdfs:label ?bldgName . ## ISSUE - if included some OSM null values are omitted 
 ?building geo:asWKT ?bldgWkt .
 BIND('red' AS ?bldgWktColor)
-FILTER (geof:sfWithin(?bldgWkt, ?subDistWkt))
+FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?rasterName, 'Elevation'))
 BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-BIND (rasdb:rasSpatialAverage(?timeStamp, ?subDistWkt, ?rasterName) AS ?elevation)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
 FILTER(?elevation > 520)
 } 
 
@@ -521,7 +557,7 @@ FILTER(?temp > 13850.0) # 277 K
 
 [[tabGroups.tabs]]
 
-name="Q18. Clip Raster Custom Region (in 10.34 sec)"
+name="Q18. Clip Raster (in 10.34 sec)"
 query="""
 ############################################################################################################################################
 #### Query 18. Clip and return a portion of the raster based on the shape of the custom vector Region over user-specific raster dataset ####
@@ -545,16 +581,11 @@ BIND (rasdb:rasClipRasterAnyGeom(?timeStamp, ?customRegionWkt, ?rasterName) AS ?
 
 [[tabGroups.tabs]]
 
-name="Q19. View Clipped Raster (in 10.34 sec)"
+name="Q19. View Clipped Raster (in 0.049 sec)"
 query="""
 ############################################################################################################################
 #### Query 19. Clip and view a portion of the raster based on the shape of the Region over user-specific raster dataset ####
 ############################################################################################################################
-
-PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
-PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
-PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -563,14 +594,14 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?subdistName ?elevation {
-?region a :SubDistrict ; rdfs:label ?subdistName ; geo:asWKT ?subdistWkt .
+SELECT ?distName ?geoTiff {
+?region a :SubDistrict ; rdfs:label ?distName ; geo:asWKT ?distWkt .
 ?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
-FILTER (?subdistName = 'Friedenheim')
+FILTER (?distName = 'Friedenheim') # Biederstein
 FILTER (CONTAINS(?rasterName, 'Elevation'))
 BIND (-32768 AS ?fillNAN)
 BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-BIND (rasdb:rasGeoTIFF(?timestamp, ?subdistWkt, ?rasterName, ?subdistName, ?fillNAN) AS ?elevation)
+BIND (rasdb:rasGeoTIFF(?timestamp, ?distWkt, ?rasterName, ?distName, ?fillNAN) AS ?geoTiff)
 } 
 """
 

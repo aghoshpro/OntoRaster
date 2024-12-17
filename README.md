@@ -98,7 +98,7 @@ docker-compose -f docker-compose.ontoraster.yml up
 
 ### 2.4 Ontop SPARQL Endpoint
 
-Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ under `success` in docker desktop (ETC 5 min). Click the link and try out the RasSPARQL queries as shown below,
+Becomes available at http://localhost:8082/ under `success` container in docker desktop (**ETC 6 min**). Click to try out the RasSPARQL queries as shown below,
 
 <img src="diagrams/Success.PNG"/>
 
@@ -272,10 +272,10 @@ $ wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3
 
 ## 6. Mapping (**_M_**)
 
-Mappings design is the most crusial user-centric step in generating Virtual Knowledge Graph (VKG).
+Mappings design is the most crucial user-centric step in generating Virtual Knowledge Graph (VKG).
 A mapping consist of three main parts: a mapping id, a source and a target.
 
-- **Mapping ID** is an arbitary but unique identifier
+- **Mapping ID** is an arbitrary but unique identifier
 - **Source** refers to a regular SQL query expressed over a relational database fetching the data from the table using the chosen column name.
 - **Target** is RDF triple pattern that uses the answer variables from preceding SQL query as placeholders and described using [Turtle syntax](https://github.com/ontop/ontop/wiki/TurtleSyntax)
 

@@ -2,8 +2,5 @@ rasdapy3
 protobuf==3.20.*
 affine
 shapely
-os
 rasterio
 folium
-gdal
-osgeo
