@@ -274,11 +274,8 @@ PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?distName ?elevation {
-?region a :District .
-?region rdfs:label ?distName .
-?region geo:asWKT ?distWkt .
-?gridCoverage a :Raster .
-?gridCoverage rasdb:rasterName ?rasterName .
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?rasterName, 'Elevation'))
 BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
@@ -289,6 +286,7 @@ FILTER(?elevation > 515)
 #?region a :District .
 #?region rdfs:label ?distName .
 #?region geo:asWKT ?distWkt .
+##BIND(?distName AS ?distWktLabel)
 ##BIND('#008AFFF0' AS ?distWktColor)
 #?gridCoverage a :Raster .
 #?gridCoverage rasdb:rasterName ?rasterName .
@@ -297,11 +295,11 @@ FILTER(?elevation > 515)
 #BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
 #FILTER(?elevation > 515) .
 #  BIND( 
-#    IF(?elevation < 520, "blue" , 
+#    IF(?elevation < 525, "blue" , 
 #    IF(?elevation < 535, "#008AFF",
 #    IF(?elevation < 545, "magenta",
 #    IF(?elevation < 555, "red",
-#    IF(?elevation < 560, "#C60000",
+#    IF(?elevation < 565, "#C60000",
 #    "black")))))
 #    AS ?distWktColor).
 #} 
@@ -411,23 +409,30 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?bldgName ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
-?region a :District .
-?region rdfs:label ?distName .
-?region geo:asWKT ?distWkt .
+SELECT ?bldgName ?distName ?elevation ?bldgLat ?bldgLon ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
+?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
 BIND('#008AFF5C' AS ?distWktColor)
-?building a lgdo:Church .
-?building rdfs:label ?bldgName .
-?building geo:asWKT ?bldgWkt .
 BIND('red' AS ?bldgWktColor)
+#BIND(geof:latitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLat)
+#BIND(geof:longitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLon)
 FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
-?gridCoverage a :Raster .
-?gridCoverage rasdb:rasterName ?rasterName .
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?rasterName, 'Elevation'))
 BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
-FILTER(?elevation > 500)
+FILTER(?elevation < 520)
 } 
+
+#SELECT ?bldgName ?bldgLat ?bldgLong WHERE {
+#  ?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
+#  
+#  # Calculate centroid and extract latitude/longitude
+#  BIND(geo:hasCentroid(?bldgWkt) AS ?centroidWkt)
+#  BIND(geof:latitude(?centroidWkt) AS ?bldgLat)
+#  BIND(geof:longitude(?centroidWkt) AS ?bldgLong)
+#}
+#
 
 """
 
@@ -533,7 +538,7 @@ FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
 FILTER (CONTAINS(?rasterName, 'Munich_MODIS_Temperature_1km')) 
 BIND ('2022-01-01T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?temp)
-FILTER(?temp > 13850.0) # 276 K
+FILTER(?temp > 13850.0) # 277 K
 } 
 
 """

@@ -12,7 +12,7 @@
 
 <!-- Raster extension of VKG system Ontop to query over **multidimensional raster** data combined with **relational data**. Current version of OntoRaster supports regular gridded 3-D **raster** data and geometrical **vector data** in geospatial domain. We are constantly improving the extension with new features which will enable the end user to query over raster data and vector data of any domain under the VKG paradigm in future. -->
 
-Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over **multidimensional raster** data in combination with **relational data**. Currently it integrate and query regular gridded spatial-temporal **raster** data (3D) or OGC coverage data together with relational data including **vector** geometrical data, **OpenStreetMap (OSM)** data and **3DCityGML** data. We're constantly working on making the extension even better with new features that will allow the end users to query raster and vector data from any domain under the VKG paradigm in the future.
+Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over **multidimensional raster** data in conjunction with **relational data** in arbitrary domains. Currently it integrates and queries regular gridded (geo) spatial-temporal **raster** data [OGC Coverage] together with relational data including **vector** geometrical data, **OpenStreetMap (OSM)** data and **3DCityGML** data. We're constantly working to enhance the extension with new robust features to allow the end users to query raster and vector data from any domain under the VKG paradigm in the future.
 
 ## Table of Contents
 
@@ -23,8 +23,8 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 4. [Ontology (**_O_**)](#4-ontology-o)
 
 - 4.1. [Raster Ontology](#41-raster-ontology)
-- 4.2. [GeoSPARQL Ontology v1.1](#42-geosparql-v11-ontology)
-- 4.3. [CityGML v2.0](#43-citygml-v20-ontology)
+- 4.2. [GeoSPARQL Ontology v1.1](#42-geosparql-v11)
+- 4.3. [CityGML v2.0](#43-citygml-v20)
 - 4.4. [Quantities, Units, Dimensions and Types (QUDT) Ontology](#44-quantities-units-dimensions-and-types-qudt)
 - 4.5. [OpenStreetMap (OSM) Ontology](#45-open-street-map-osm-ontology)
 
@@ -47,7 +47,7 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
   <img src="diagrams/AOIMunich.PNG">
 
-  How to find an answer to this query when one may not have any domain knowledge or expertise regarding to handling these many types of spatial data and their respective metadata.
+  How can someone find an answer to this question if they don't have the required domain knowledge or expertise regarding to handle these many types of spatial data and their respective metadata.
 
   😃 **You need **OntoRaster** to solve this.** 😃
 
@@ -129,15 +129,15 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 
 ### 4.1. Raster Ontology
 
-We have provided **Raster Ontology** ontology that describe meta-level information of $n$-dimensional generic raster data or coverage based on the [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) and the paper [Andrejev et al., 2015](https://www2.it.uu.se/research/group/udbl/publ/DSDIS2015.pdf). As of now it only describes only regular gridded coverage or geospatial raster data. The _RegularGridDomain_ and _RangeType_ classes capture all the information about the domains and ranges of a grid coverage.
+We have provided **Raster Ontology** ontology that describe meta-level information of $n-dimensional$ generic raster data or coverage based on the [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) and the paper [Andrejev et al., 2015](https://www2.it.uu.se/research/group/udbl/publ/DSDIS2015.pdf). As of now it only describes only regular gridded coverage or geospatial raster data. The _RegularGridDomain_ and _RangeType_ classes capture all the information about the domains and ranges of a grid coverage.
 
 <img src="diagrams/RasterOntology.png"/>
 
-### 4.2. GeoSPARQL v1.1 Ontology
+### 4.2. GeoSPARQL v1.1
 
 For vector data we are using [GeoSPARQL v1.1 Ontology](https://opengeospatial.github.io/ogc-geosparql/geosparql11/index.html) introduces classes likes features, geometries, and their representation using Geography Markup Language (GML) and Well-Known Text (WKT) literals, and includes topological relationship vocabularies. GeoSPARQL also provides an extension of the standard SPARQL query interface, supporting a set of topological functions for quantitative reasoning.
 
-### 4.3. CityGML v2.0 Ontology
+### 4.3. CityGML v2.0
 
 We are also using [CityGML v2.0 Ontology](https://cui.unige.ch/isi/ke/ontologies) developed by the University of Geneva for the ontology component of the KG construction phase and further modified by [Ding et al., 2024](https://doi.org/10.1080/10095020.2024.2337360) by adding further classes on addresses (including xAL) and removing object properties with the same IRI as data properties.
 
@@ -147,11 +147,11 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 ### 4.5. Open Street Map (OSM) ontology
 
-- Defines classes of objects appearing on maps: roads, railways, water ways, amenities, emergency infrastructure, public transport, shops, tourist attractions, etc. This large ontology contains about 660 classes, which were identified based on the published set of OSM tags and their values. It was developed by Ontology Engineering Group ([link](https://smartcity.linkeddata.es/ontologies/mapserv.kt.agh.edu.plontologiesosm.owl.html)).
+- Defines classes of objects appearing on maps: roads, railways, water ways, amenities, emergency infrastructure, public transport, shops, tourist attractions, etc. This extensive ontology comprises over 660 classes, delineated according to the established set of OSM tags and their corresponding values. It was developed by Ontology Engineering Group ([link](https://smartcity.linkeddata.es/ontologies/mapserv.kt.agh.edu.plontologiesosm.owl.html)).
 
 - **OSMonto**: An ontology of OpenStreetMap tags, created with the purpose to ease maintenance and overview of existing tags and to allow enriching the semantics of tags by relating them to other ontologies. It has been developed as a research paper [Mihai et al 2011](https://www.inf.unibz.it/~okutz/resources/osmonto.pdf) at University Bremen and DFKI Bremen and was presented at State of the Map Europe [SotM-EU'2011](https://stateofthemap.eu/index.html) and . An [.owl](https://raw.githubusercontent.com/doroam/planning-do-roam/master/Ontology/tags.owl) file containing the OSMonto ontology can be viewed in Protégé.
 
-- [Open Street Map integration](https://documentation.researchspace.org/resource/Help:OpenStreetMap) : This integration creates a simple lookup service to federate againsts the Open Street Maps (OSM) API, allowing users to reference place names in their ResearchSpace instances. Users can lookup a street address, a city, a country etc. and be able to reference this in their data.
+- [Open Street Map integration](https://documentation.researchspace.org/resource/Help:OpenStreetMap) : This integration creates a simple lookup service to federate against the Open Street Maps (OSM) API, allowing users to reference place names in their ResearchSpace instances. Users can lookup a street address, a city, a country etc. and be able to reference this in their data.
 
 ## 5. Heterogenous Data Sources (**_D_**)
 
@@ -163,7 +163,7 @@ Our area of interest (AOI) encompasses the city and the surrounding metropolitan
 
 ### 5.1.1. Vector Data
 
-- This demo utilised 25 districts and 105 sub-districts of Munich as our vector data, downlaoded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b).
+- This demo utilised 25 districts and 105 sub-districts of Munich as our vector data, downloaded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b).
 
 - This demo also utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **_Regions_** or Areas of Interest (AOI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, taken from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
 
