@@ -339,34 +339,10 @@ FILTER(?elevation > 510 && ?elevation < 520)
 
 [[tabGroups.tabs]]
 
-name="Q13. Clip Raster Custom Region (in 10.34 sec)"
-query="""
-############################################################################################################################################
-#### Query 13. Clip and return a portion of the raster based on the shape of the custom vector Region over user-specific raster dataset ####
-############################################################################################################################################
-
-PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
-PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
-PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
-
-SELECT ?clipped ?customRegionWkt {
-?gridCoverage a :Raster .
-?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (CONTAINS(?rasterName, 'Munich_MODIS_Temperature_1km')) 
-BIND ('POLYGON((11.548455354852285 48.14904359943597,11.627292392870094 48.147177113486606,11.58380485801181 48.11696471831948,11.546675164347198 48.119171832113835,11.548455354852285 48.14904359943597))' AS ?customRegionWkt)
-BIND ('2022-01-01T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-BIND (rasdb:rasClipRasterAnyGeom(?timeStamp, ?customRegionWkt, ?rasterName) AS ?clipped) 
-}
-
-"""
-
-[[tabGroups.tabs]]
-
-name="Q14. Get Churches (in 5.687 sec)"
+name="Q13. Get Churches (in 5.687 sec)"
 query="""
 ###########################################################################################
-#### Query 14. List all the churches in Munich where elevation is less than 520 meters ####
+#### Query 13. List all the churches in Munich where elevation is less than 520 meters ####
 ###########################################################################################
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
@@ -396,10 +372,10 @@ FILTER(?elevation < 520)
 
 [[tabGroups.tabs]]
 
-name="Q15. Get Churches (in 7.665 sec)"
+name="Q14. Get Churches (in 7.665 sec)"
 query="""
 ###########################################################################################
-#### Query 15. List all the churches in Munich where elevation is more than 500 meters
+#### Query 14. List all the churches in Munich where elevation is more than 500 meters
 ###########################################################################################
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
@@ -438,10 +414,10 @@ FILTER(?elevation < 520)
 
 [[tabGroups.tabs]]
 
-name="Q16. Get Universities (in 6.82 sec)"
+name="Q15. Get Universities (in 6.82 sec)"
 query="""
 ###############################################################################################
-#### Query 16. List all the universities in Munich where elevation is more than 500 meters ####
+#### Query 15. List all the universities in Munich where elevation is more than 500 meters ####
 ###############################################################################################
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
@@ -474,10 +450,10 @@ FILTER(?elevation > 500)
 
 [[tabGroups.tabs]]
 
-name="Q17. Get Residential (in 135.8 sec)"
+name="Q16. Get Residential (in 135.8 sec)"
 query="""
 ##########################################################################################################################
-#### Query 17. List all the residential and respective subdistricts in Munich where elevation is more than 520 meters ####
+#### Query 16. List all the residential and respective subdistricts in Munich where elevation is more than 520 meters ####
 ##########################################################################################################################
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
@@ -509,10 +485,10 @@ FILTER(?elevation > 520)
 
 [[tabGroups.tabs]]
 
-name="Q18. Get Residential (in 35.9 sec)"
+name="Q17. Get Residential (in 35.9 sec)"
 query="""
 ########################################################################################################
-#### Query 18. List all the residential in Munich where average temperature is more than 276 Kelvin ####
+#### Query 17. List all the residential in Munich where average temperature is more than 276 Kelvin ####
 ########################################################################################################
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
@@ -545,11 +521,40 @@ FILTER(?temp > 13850.0) # 277 K
 
 [[tabGroups.tabs]]
 
-name="Q19. Get 3D buildings**"
+name="Q18. Clip Raster Custom Region (in 10.34 sec)"
 query="""
-##################################################################################################################################
-#### Query 19. List all the buildings in Munich where building height is 30 meters and average elevation less than 510 meters ####
-##################################################################################################################################
+############################################################################################################################################
+#### Query 18. Clip and return a portion of the raster based on the shape of the custom vector Region over user-specific raster dataset ####
+############################################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?clipped ?customRegionWkt {
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Munich_MODIS_Temperature_1km')) 
+BIND ('POLYGON((11.548455354852285 48.14904359943597,11.627292392870094 48.147177113486606,11.58380485801181 48.11696471831948,11.546675164347198 48.119171832113835,11.548455354852285 48.14904359943597))' AS ?customRegionWkt)
+BIND ('2022-01-01T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasClipRasterAnyGeom(?timeStamp, ?customRegionWkt, ?rasterName) AS ?clipped) 
+}
+
+"""
+
+[[tabGroups.tabs]]
+
+name="Q19. View Clipped Raster (in 10.34 sec)"
+query="""
+############################################################################################################################
+#### Query 19. Clip and view a portion of the raster based on the shape of the Region over user-specific raster dataset ####
+############################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -558,17 +563,24 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
-
-
+SELECT ?subdistName ?elevation {
+?region a :SubDistrict ; rdfs:label ?subdistName ; geo:asWKT ?subdistWkt .
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+FILTER (?subdistName = 'Friedenheim')
+FILTER (CONTAINS(?rasterName, 'Elevation'))
+BIND (-32768 AS ?fillNAN)
+BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasGeoTIFF(?timestamp, ?subdistWkt, ?rasterName, ?subdistName, ?fillNAN) AS ?elevation)
+} 
 """
 
 [[tabGroups.tabs]]
 
 name="Q20. Get 3D buildings**"
 query="""
-##############
-#### Query 20. 
-##############
+##################################################################################################################################
+#### Query 20. List all the buildings in Munich where building height is 30 meters and average elevation less than 510 meters ####
+##################################################################################################################################
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -580,5 +592,3 @@ PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
 
 """
-
-
