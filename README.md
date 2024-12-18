@@ -45,7 +45,7 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 - **Query** - _List all the 30 meters tall residentials in Munich where average terrain elevation less than 550 meters and average land surface temperature is over 16 degC, given the following data_.
 
-  <img src="diagrams/AOIMunich.PNG">
+  <img src="diagrams/AOIMunich02.PNG">
 
   How can someone find an answer to this question if they don't have the required domain knowledge or expertise regarding to handle these many types of spatial data and their respective metadata.
 

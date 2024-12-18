@@ -248,7 +248,7 @@ $BODY$;
 
 CREATE OR REPLACE FUNCTION rasdaman_op.query2geotiff(
 	query text,
-	geomm text,
+	regionWkt text,
 	filename text,
 	fill_val double precision,
 	OUT folium text)
@@ -282,7 +282,7 @@ def getGeoTransform(extent, nlines, ncols):
     resy = (extent[3] - extent[1]) / nlines
     return [extent[0], resx, 0, extent[3] , 0, -resy]
 	
-def query2folium(query, region, filename, fill_val):
+def query2folium(query, regionWkt, filename, fill_val):
     result = query_executor.execute_read(query) 
     numpy_array = result.to_array()
     if fill_val is not None:
@@ -292,17 +292,15 @@ def query2folium(query, region, filename, fill_val):
     driver = gdal.GetDriverByName('GTiff')  
     nrows = numpy_array.shape[0]
     ncols = numpy_array.shape[1]
-    nbands = len(numpy_array.shape)
     data_type = gdal.GDT_Float32
     grid_data = driver.Create('grid_data', ncols, nrows, 1, data_type)
     grid_data.GetRasterBand(1).WriteArray(numpy_array)
     srs = osr.SpatialReference()
     srs.ImportFromProj4('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
     grid_data.SetProjection(srs.ExportToWkt())
-    region = wkt.loads(region)
-    extent = get_polygon_extent(region)
+    regionWkt = wkt.loads(regionWkt)
+    extent = get_polygon_extent(regionWkt)
     grid_data.SetGeoTransform(getGeoTransform(extent, nrows, ncols))	
-    
     file_name = str(filename)+'.tif'
     driver.CreateCopy(file_name, grid_data, 0)  
     driver = None
@@ -338,7 +336,7 @@ query_executor = QueryExecutor(db_connector)
 db_connector.open()
 
 try:
-   folium= query2folium(query, geomm, None, None)
+   folium= query2folium(query, regionWkt, None, None)
    return folium
 finally:
    db_connector.close()	
