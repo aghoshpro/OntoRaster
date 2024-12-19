@@ -162,8 +162,11 @@ $BODY$;
 
 -- FUNCTION: rasdaman_op.query2array(text)
 
-CREATE OR REPLACE FUNCTION rasdaman_op.query2array(
+-- FUNCTION: rasdaman_op.query2array_fillna(text, double precision)
+
+CREATE OR REPLACE FUNCTION rasdaman_op.query2array_fillna(
 	query text,
+	fill_na double precision DEFAULT 0,
 	OUT data_array double precision[])
     RETURNS double precision[]
     LANGUAGE 'plpython3u'
@@ -173,21 +176,25 @@ AS $BODY$
 from rasdapy.db_connector import DBConnector
 from rasdapy.query_executor import QueryExecutor
 
-def query2array(query):
-    result = query_executor.execute_read(query)
+def query2array(query, fill_na):
+    result = query_executor.execute_read(query) 
     numpy_array = result.to_array()
-    return numpy_array.tolist()
-
-db_connector = DBConnector("host.docker.internal", 7001, "rasadmin", "rasadmin")
+    numpy_array = numpy_array.astype('float')
+    numpy_array[numpy_array == fill_na] = 'nan'
+    return numpy_array.tolist()  
+	
+db_connector = DBConnector("localhost", 7001, "rasadmin", "rasadmin")
 query_executor = QueryExecutor(db_connector)
 db_connector.open()
 
 try:
-   data_array= query2array(query)
+   data_array= query2array(query, fill_na)
    return data_array
 finally:
    db_connector.close()
 $BODY$;
+
+
 
 -- FUNCTION: rasdaman_op.query2numeric(text)
 
@@ -212,7 +219,7 @@ query_executor = QueryExecutor(db_connector)
 db_connector.open()
 
 try:
-   return float("{:.3f}".format(query2result(query)))
+   return float("{:.2f}".format(query2result(query)))
 finally:
    db_connector.close()
 $BODY$;

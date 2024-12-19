@@ -190,4 +190,8 @@ source		SELECT raster_id FROM public.raster_lookup
 mappingId	raster_name_lookup
 target		:raster/{raster_id} rasdb:rasterName {raster_name}^^xsd:string .
 source		SELECT raster_id, raster_name FROM public.raster_lookup
+
+mappingId	raster_scalefactor
+target		:raster/{raster_id} rasdb:hasScaleFactor {scale_factor}^^xsd:string .
+source		SELECT raster_id, scale_factor FROM public.raster_lookup
 ]]

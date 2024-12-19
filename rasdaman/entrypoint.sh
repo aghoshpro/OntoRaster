@@ -21,5 +21,6 @@ echo "Run wcst_import.sh"
 /opt/rasdaman/bin/wcst_import.sh /data/munich_nc_DEMx.json
 /opt/rasdaman/bin/wcst_import.sh /data/munich_nc_TEMPx.json
 /opt/rasdaman/bin/wcst_import.sh /data/munich_nc_NDVI.json
+/opt/rasdaman/bin/wcst_import.sh /data/munich_nc_SNOW.json
 # Keep the container running
 tail -f /dev/null
