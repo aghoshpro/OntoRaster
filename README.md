@@ -98,7 +98,7 @@ docker-compose -f docker-compose.ontoraster.yml up
 
 ### 2.4 Ontop SPARQL Endpoint
 
-Becomes available at http://localhost:8082/ under `success` container in docker desktop (**ETC 6 min**). Click to try out the RasSPARQL queries as shown below,
+Click http://localhost:8082/ in `success` container in docker desktop (**ETC 6 min**) to try out the RasSPARQL queries as shown below,
 
 <img src="diagrams/Success.PNG"/>
 
@@ -106,7 +106,7 @@ Becomes available at http://localhost:8082/ under `success` container in docker 
 
 <!-- <img src="diagrams/Ontop-Endpoint.gif"/> -->
 
-<img src="diagrams/Munich.gif"/>
+<img src="diagrams/Munich02.gif"/>
 
 ## 3. Queries (**_Q_**)
 

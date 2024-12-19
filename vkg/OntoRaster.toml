@@ -430,8 +430,8 @@ BIND('red' AS ?bldgWktColor)
 #BIND(geof:longitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLon)
 FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
 ?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
-FILTER (CONTAINS(?rasterName, 'Elevation'))
-BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+FILTER (CONTAINS(?rasterName, 'Elevation')) # NDVI, Snow, SoilMoisture
+BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp) # 2021-12-20T00:00:00+00:00
 BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
 FILTER(?elevation < 520)
 } 
@@ -445,6 +445,38 @@ FILTER(?elevation < 520)
 #  BIND(geof:longitude(?centroidWkt) AS ?bldgLong)
 #}
 #
+
+"""
+
+[[tabGroups.tabs]]
+
+name="Q14.1. View Hotels (in 7.665 sec)"
+query="""
+###########################################################################################
+#### Query 14. List all the churches in Munich where elevation is more than 500 meters
+###########################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?bldgName ?distName ?ndvi ?bldgLat ?bldgLon ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
+?building a lgdo:Hotel ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt . # School, Parking, Hospital, Hotel
+BIND('#008AFF5C' AS ?distWktColor)
+BIND('red' AS ?bldgWktColor)
+#BIND(geof:latitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLat)
+#BIND(geof:longitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLon)
+FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'NDVI'))
+BIND ('2021-12-20T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?ndvi) 
+FILTER(?ndvi > 500)
+} 
 
 """
 
