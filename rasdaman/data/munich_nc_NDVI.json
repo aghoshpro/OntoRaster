@@ -29,7 +29,7 @@
 							"description": "6 days avg NDVI over Baveria from 19th Dec, 2022 to 16th Oct, 2023",
 							"identifier": "_250m_16_days_NDVI",
 							"nilvalue": "-3000",
-                            "uomCode":"0.0001"
+							"uomCode": "0.0001"
 						}
 					],
 					"axes": {

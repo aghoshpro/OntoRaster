@@ -8,7 +8,7 @@ CREATE EXTENSION IF NOT EXISTS dblink;
 
 -- 1. lookup_temp (to get min max values as double)
 CREATE OR REPLACE VIEW lookup_temp AS
-		SELECT coverage.id, coverage.coverage_id, field.field_id, field.name AS field_name, nil_value.null_value AS fill_nan, uom.code AS scale_factor, wgs84_bounding_box.max_lat, wgs84_bounding_box.min_lat, wgs84_bounding_box.max_long, wgs84_bounding_box.min_long 	
+		SELECT coverage.id, coverage.coverage_id, field.field_id, field.name, nil_value.null_value, uom.code, wgs84_bounding_box.max_lat, wgs84_bounding_box.min_lat, wgs84_bounding_box.max_long, wgs84_bounding_box.min_long 	
 		FROM public.coverage
 		JOIN public.envelope ON coverage.envelope_id = envelope.envelope_id
 		JOIN public.range_type ON coverage.range_type_id = range_type.range_type_id 
@@ -17,24 +17,24 @@ CREATE OR REPLACE VIEW lookup_temp AS
 		JOIN public.wgs84_bounding_box ON envelope_by_axis.wgs84_bounding_box_id = wgs84_bounding_box.wgs84_bounding_box_id
 		JOIN public.quantity ON field.quantity_id = quantity.quantity_id
 		JOIN public.nil_value ON nil_value.quantity_id = quantity.quantity_id
-		JOIN public.uom ON uom.uom_id = quantity.uom_id
+		JOIN public.uom ON uom.uom_id = quantity.uom_id;
 		
 
 -- 2. lookup_peta (build from selected tables from petascope and max min from lookup_temp).
 	
 CREATE OR REPLACE VIEW lookup_peta AS	
-		SELECT coverage.id, coverage.coverage_id, lookup_temp.field_id, lookup_temp.field_name,  lookup_temp.fill_nan,  lookup_temp.scale_factor, axis_extent.axis_label, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound,lookup_temp.max_lat, lookup_temp.min_lat, lookup_temp.max_long, lookup_temp.min_long, axis_extent.resolution
+		SELECT coverage.id, coverage.coverage_id, lookup_temp.field_id, lookup_temp.name,  lookup_temp.null_value,  lookup_temp.code, axis_extent.axis_label, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound,lookup_temp.max_lat, lookup_temp.min_lat, lookup_temp.max_long, lookup_temp.min_long, axis_extent.resolution
 		FROM public.coverage, public.envelope,  public.axis_extent, lookup_temp
 		WHERE coverage.envelope_id = envelope.envelope_id 
 		AND envelope.envelope_by_axis_id = axis_extent.envelope_by_axis_id 
-		AND coverage.id = lookup_temp.id
+		AND coverage.id = lookup_temp.id;
 
 -- 3. Switch to VectorDB and import lookup_peta as lookup_unstructured using dblink
 
 CREATE OR REPLACE VIEW lookup_unstructured AS		
 SELECT *
     FROM dblink('host=localhost dbname=vectordb user=petauser password=petapasswd options=-csearch_path=',
-	   'SELECT id, coverage_id, field_id, field_name, fill_nan, scale_factor, axis_label, lower_bound, upper_bound, grid_lower_bound, grid_upper_bound, resolution, min_long, max_long, min_lat, max_lat FROM public.lookup_peta')
+	   'SELECT id, coverage_id, field_id, name, null_value, code, axis_label, lower_bound, upper_bound, grid_lower_bound, grid_upper_bound, resolution, min_long, max_long, min_lat, max_lat FROM public.lookup_peta')
 AS remote_table(raster_id text, raster_name text, field_id text, field_name text, fill_nan float, scale_factor float, axis_label text, domain_lower_bound text, domain_upper_bound text, grid_lower_bound integer, grid_upper_bound integer, resolution float, min_long float, max_long float, min_lat float, max_lat float);
 
 
@@ -63,8 +63,8 @@ SELECT
 	MAX(CASE WHEN axis_label = 'ansi' THEN grid_lower_bound END) AS start_time_grid,
 	MAX(CASE WHEN axis_label = 'ansi' THEN grid_upper_bound END) AS end_time_grid,
 	MAX(CASE WHEN axis_label = 'ansi' THEN resolution END) AS res_time
-	FROM lookup_unstructured
-	GROUP BY raster_id, raster_name, field_id, field_name, fill_nan, scale_factor;
+FROM lookup_unstructured
+GROUP BY raster_id, raster_name, field_id, field_name, fill_nan, scale_factor;
 
 
 -- 5. Convert view to table with a primary key
@@ -163,7 +163,7 @@ CREATE OR REPLACE FUNCTION rasdaman_op.get_scalefactor(
     VOLATILE PARALLEL UNSAFE
 AS $BODY$
 SELECT scale_factor FROM raster_lookup WHERE raster_name = input_raster
-$BODY$;
+    $BODY$;
 
 
 -- FUNCTION: rasdaman_op.get_fillnan(text)
@@ -177,4 +177,4 @@ CREATE OR REPLACE FUNCTION rasdaman_op.get_fillnan(
     VOLATILE PARALLEL UNSAFE
 AS $BODY$
 SELECT fill_nan FROM raster_lookup WHERE raster_name = input_raster
-$BODY$;
+    $BODY$;
