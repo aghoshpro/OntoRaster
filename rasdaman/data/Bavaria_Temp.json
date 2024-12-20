@@ -29,7 +29,7 @@
 							"description": "Daily Temp over Baveria from 01 Jan 2023 to October 31, 2023",
 							"identifier": "LST_Night_1km",
 							"nilvalue": "0",
-							"uomCode": "1"
+							"uomCode": "0.02"
 						}
 					],
 					"axes": {
