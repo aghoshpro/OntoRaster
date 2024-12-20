@@ -167,7 +167,7 @@ $BODY$;
 CREATE OR REPLACE FUNCTION rasdaman_op.query2array_fillna(
 	query text,
 	fill_na double precision DEFAULT 0,
-	OUT data_array double precision[])
+	OUT cleaned_array double precision[])
     RETURNS double precision[]
     LANGUAGE 'plpython3u'
     COST 100
@@ -188,8 +188,8 @@ query_executor = QueryExecutor(db_connector)
 db_connector.open()
 
 try:
-   data_array= query2array(query, fill_na)
-   return data_array
+   cleaned_array= query2array(query, fill_na)
+   return cleaned_array
 finally:
    db_connector.close()
 $BODY$;

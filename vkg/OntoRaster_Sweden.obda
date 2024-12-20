@@ -17,22 +17,22 @@ rasdb:		https://github.com/aghoshpro/RasterDataCube/
 [MappingDeclaration] @collection [[
 ; ---------------- Mapping for All Regions in Sweden -----------------
 
-;mappingId	Get_region_class_table_sweden
-;target		:vector_region/sweden/{regionId} a :Region .
-;source		SELECT gid AS regionId FROM public.region_sweden
+mappingId	Get_region_class_table_sweden
+target		:vector_region/sweden/{regionId} a :Region .
+source		SELECT gid AS regionId FROM public.region_sweden
 
-;mappingId	mapping_regionName_sweden
-;target		:vector_region/sweden/{regionId} rdfs:label {regionName}^^xsd:string .
-;source		SELECT gid AS regionId, name_2 AS regionName FROM public.region_sweden
+mappingId	mapping_regionName_sweden
+target		:vector_region/sweden/{regionId} rdfs:label {regionName}^^xsd:string .
+source		SELECT gid AS regionId, name_2 AS regionName FROM public.region_sweden
 
-;mappingId	mapping_region_regionWkt_sweden
-;target		:vector_region/sweden/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
-;source		SELECT gid AS regionId,
-;                CASE
-;                    WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
-;                    ELSE ST_AsText(geom)
-;                END AS regionWkt
-;            FROM public.region_sweden
+mappingId	mapping_region_regionWkt_sweden
+target		:vector_region/sweden/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
+source		SELECT gid AS regionId,
+                CASE
+                    WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
+                    ELSE ST_AsText(geom)
+                END AS regionWkt
+            FROM public.region_sweden
 
 ; ---------------- Mapping for All Regions in Bavaria -----------------
 
@@ -163,31 +163,31 @@ source		SELECT gid AS buildingId,
 
 ; ---------------- Mapping for All Regions in South Tyrol -----------------
 
-;mappingId	Get_region_class_table_south_tyrol
-;target		:vector_region/tyrol/{regionId} a :Region .
-;source		SELECT gid AS regionId FROM public.region_south_tyrol
+mappingId	Get_region_class_table_south_tyrol
+target		:vector_region/tyrol/{regionId} a :Region .
+source		SELECT gid AS regionId FROM public.region_south_tyrol
 
-;mappingId	mapping_regionName_south_tyrol
-;target		:vector_region/tyrol/{regionId} rdfs:label {regionName}^^xsd:string .
-;source		SELECT gid AS regionId, name_3 AS regionName FROM public.region_south_tyrol
+mappingId	mapping_regionName_south_tyrol
+target		:vector_region/tyrol/{regionId} rdfs:label {regionName}^^xsd:string .
+source		SELECT gid AS regionId, name_3 AS regionName FROM public.region_south_tyrol
 
-;mappingId	mapping_region_regionWkt_south_tyrol
-;target		:vector_region/tyrol/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
-;source		SELECT gid AS regionId,
-;                   CASE
-;                       WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
-;                       ELSE ST_AsText(geom)
-;                   END AS regionWkt
-;            FROM public.region_south_tyrol
+mappingId	mapping_region_regionWkt_south_tyrol
+target		:vector_region/tyrol/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
+source		SELECT gid AS regionId,
+                   CASE
+                       WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
+                       ELSE ST_AsText(geom)
+                   END AS regionWkt
+            FROM public.region_south_tyrol
 
 
 ; ---------------- Mapping for Raster Metadata Lookup Table -----------------
 
 mappingId	rasterid_lookup
 target		:raster/{raster_id} a :Raster .
-source		SELECT raster_id FROM raster_lookup
+source		SELECT raster_id FROM public.raster_lookup
 
 mappingId	raster_name_lookup
 target		:raster/{raster_id} rasdb:rasterName {raster_name}^^xsd:string .
-source		SELECT raster_id, raster_name FROM raster_lookup
+source		SELECT raster_id, raster_name FROM public.raster_lookup
 ]]

@@ -8,26 +8,26 @@ CREATE EXTENSION IF NOT EXISTS dblink;
 
 -- 1. lookup_temp (to get min max values as double)
 CREATE OR REPLACE VIEW lookup_temp AS
-	SELECT coverage.id, coverage.coverage_id, field.field_id, field.name AS field_name, nil_value.null_value AS fill_nan, uom.code AS scale_factor, wgs84_bounding_box.max_lat, wgs84_bounding_box.min_lat, wgs84_bounding_box.max_long, wgs84_bounding_box.min_long 	
-	FROM public.coverage
-	JOIN public.envelope ON coverage.envelope_id = envelope.envelope_id
-	JOIN public.range_type ON coverage.range_type_id = range_type.range_type_id 
-	JOIN public.field ON field.data_record_id = range_type.data_record_id
-	JOIN public.envelope_by_axis ON  envelope.envelope_by_axis_id = envelope_by_axis.envelope_by_axis_id
-	JOIN public.wgs84_bounding_box ON envelope_by_axis.wgs84_bounding_box_id = wgs84_bounding_box.wgs84_bounding_box_id
-	JOIN public.quantity ON field.quantity_id = quantity.quantity_id
-	JOIN public.nil_value ON nil_value.quantity_id = quantity.quantity_id
-	JOIN public.uom ON uom.uom_id = quantity.uom_id
+		SELECT coverage.id, coverage.coverage_id, field.field_id, field.name AS field_name, nil_value.null_value AS fill_nan, uom.code AS scale_factor, wgs84_bounding_box.max_lat, wgs84_bounding_box.min_lat, wgs84_bounding_box.max_long, wgs84_bounding_box.min_long 	
+		FROM public.coverage
+		JOIN public.envelope ON coverage.envelope_id = envelope.envelope_id
+		JOIN public.range_type ON coverage.range_type_id = range_type.range_type_id 
+		JOIN public.field ON field.data_record_id = range_type.data_record_id
+		JOIN public.envelope_by_axis ON  envelope.envelope_by_axis_id = envelope_by_axis.envelope_by_axis_id
+		JOIN public.wgs84_bounding_box ON envelope_by_axis.wgs84_bounding_box_id = wgs84_bounding_box.wgs84_bounding_box_id
+		JOIN public.quantity ON field.quantity_id = quantity.quantity_id
+		JOIN public.nil_value ON nil_value.quantity_id = quantity.quantity_id
+		JOIN public.uom ON uom.uom_id = quantity.uom_id
 		
 
 -- 2. lookup_peta (build from selected tables from petascope and max min from lookup_temp).
 	
 CREATE OR REPLACE VIEW lookup_peta AS	
-	SELECT coverage.id, coverage.coverage_id, lookup_temp.field_id, lookup_temp.field_name,  lookup_temp.fill_nan,  lookup_temp.scale_factor, axis_extent.axis_label, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound,lookup_temp.max_lat, lookup_temp.min_lat, lookup_temp.max_long, lookup_temp.min_long, axis_extent.resolution
-	FROM public.coverage, public.envelope,  public.axis_extent, lookup_temp
-	WHERE coverage.envelope_id = envelope.envelope_id 
-	AND envelope.envelope_by_axis_id = axis_extent.envelope_by_axis_id 
-	AND coverage.id = lookup_temp.id
+		SELECT coverage.id, coverage.coverage_id, lookup_temp.field_id, lookup_temp.field_name,  lookup_temp.fill_nan,  lookup_temp.scale_factor, axis_extent.axis_label, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound,lookup_temp.max_lat, lookup_temp.min_lat, lookup_temp.max_long, lookup_temp.min_long, axis_extent.resolution
+		FROM public.coverage, public.envelope,  public.axis_extent, lookup_temp
+		WHERE coverage.envelope_id = envelope.envelope_id 
+		AND envelope.envelope_by_axis_id = axis_extent.envelope_by_axis_id 
+		AND coverage.id = lookup_temp.id
 
 -- 3. Switch to VectorDB and import lookup_peta as lookup_unstructured using dblink
 
@@ -38,10 +38,9 @@ SELECT *
 AS remote_table(raster_id text, raster_name text, field_id text, field_name text, fill_nan float, scale_factor float, axis_label text, domain_lower_bound text, domain_upper_bound text, grid_lower_bound integer, grid_upper_bound integer, resolution float, min_long float, max_long float, min_lat float, max_lat float);
 
 
-
 -- 4. Build raster_lookup
 
-CREATE OR REPLACE VIEW raster_lookup_view AS
+CREATE OR REPLACE VIEW lookup_structured AS
 SELECT 
 	raster_id,
 	raster_name,
@@ -70,7 +69,7 @@ SELECT
 
 -- 5. Convert view to table with a primary key
 
-CREATE TABLE raster_lookup AS SELECT * FROM raster_lookup_view;
+CREATE TABLE raster_lookup AS SELECT * FROM lookup_structured;
 
 ALTER TABLE raster_lookup ADD PRIMARY KEY (raster_id);
 
@@ -163,7 +162,7 @@ CREATE OR REPLACE FUNCTION rasdaman_op.get_scalefactor(
     COST 100
     VOLATILE PARALLEL UNSAFE
 AS $BODY$
-SELECT scale_factor FROM raster_lookup_live_GREEN WHERE raster_name = input_raster
+SELECT scale_factor FROM raster_lookup WHERE raster_name = input_raster
 $BODY$;
 
 
@@ -177,5 +176,5 @@ CREATE OR REPLACE FUNCTION rasdaman_op.get_fillnan(
     COST 100
     VOLATILE PARALLEL UNSAFE
 AS $BODY$
-SELECT fill_nan FROM raster_lookup_live_GREEN WHERE raster_name = input_raster
+SELECT fill_nan FROM raster_lookup WHERE raster_name = input_raster
 $BODY$;
