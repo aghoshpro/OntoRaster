@@ -112,6 +112,10 @@ Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ u
 
 All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml`.
 
+<!-- | **_Q<sub>i</sub>_**                 | Description                        |
+| ----------------------------------- | ---------------------------------- |
+| ```PREFIX :	<https://github.com/aghoshpro/OntoRaster/> PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>PREFIX geo:	<http://www.opengis.net/ont/geosparql#>PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>SELECT ?regionName ?answer ?regionWkt {?region a :Region .?region rdfs:label ?regionName .?region geo:asWKT ?regionWkt .?gridCoverage a :Raster .?gridCoverage rasdb:rasterName ?rasterName .FILTER (?regionName = 'Bolzano') # also try with Castelrotto, Sarentino, Fortezza  etc.FILTER (CONTAINS(?rasterName, 'Tyrol'))BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)BIND (rasdb:rasSpatialMinimum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)} | <img src="diagrams/Q1result.png"/> | -->
+
 | **_Q<sub>i</sub>_** | Description                                                                                                                                              |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **_Q1_**            | What is the dimension of the input raster dataset?                                                                                                       |

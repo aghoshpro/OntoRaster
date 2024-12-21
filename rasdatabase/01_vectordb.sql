@@ -27,31 +27,6 @@ CREATE EXTENSION plpython3u;
 CREATE SCHEMA IF NOT EXISTS rasdaman_op;
 
 
--- FUNCTION 02: rasdaman_op.get_geom_wkt(geometry)
-
-CREATE OR REPLACE FUNCTION rasdaman_op.get_geom_wkt(
-	geometry_wkt geometry)
-    RETURNS text
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE PARALLEL UNSAFE
-AS $BODY$
-DECLARE
-out_geom_wkt TEXT;
-BEGIN
-SELECT
-    CASE
-        WHEN ST_NumGeometries(geometry_wkt) = 1 THEN ST_AsText(ST_GeometryN(geometry_wkt, 1))
-        ELSE ST_AsText(geometry_wkt)
-        END AS geometry_wkt INTO out_geom_wkt;
-
-RETURN out_geom_wkt;
-END;
-
-$BODY$;
-
-
-
 -- FUNCTION: rasdaman_op.geo2grid_final(text, double precision, double precision, double precision, double precision)
 
 CREATE OR REPLACE FUNCTION rasdaman_op.geo2grid_final(
@@ -87,12 +62,6 @@ def geo2grid(lons, lats, xmin, ymax, x_scale, y_scale, xskew = 0.0, yskew = 0.0)
     xs = np.int64(xs)
     ys = np.int64(ys)
     return xs, ys
-
-def add_closing_coordinates(d):
-    i = re.search(r"\d", d).start()
-    j = re.search(r'(\d)[^\d]*$', d).start() + 1
-    c = d.index(',')
-    return d[:j] + ", " + d[i:c] + d[j:]
 
 def processPOLYGON(inputPOLYGON):
     if inputPOLYGON.area == 0:
