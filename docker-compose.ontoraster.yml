@@ -15,7 +15,7 @@ services:
     ports:
       - "${MAPPED_POSTGRES_PORT}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h rasdatabase"]
+      test: [ "CMD-SHELL", "pg_isready -h rasdatabase" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,8 +31,7 @@ services:
     # TODO: Must find a good way to do this for an arbitrary file
     healthcheck:
       #"http://host.docker.internal:8080/rasdaman/ows" can be reached before the file is loaded, not a good test
-      test:
-        ["CMD", "curl", "-f", "http://host.docker.internal:8080/rasdaman/ows"]
+      test: [ "CMD", "curl", "-f", "http://host.docker.internal:8080/rasdaman/ows" ]
       #currently failing
       #test: ["CMD-SHELL", "docker logs rasdaman | grep -q \"Recipe at '/data/Bavaria_Temp.json' executed successfully\""]
       interval: 30s
@@ -65,7 +64,7 @@ services:
 
   ontop:
     container_name: ontop
-    image: aghoshpro/ontoraster:v1.2
+    image: aghoshpro/ontoraster:v1.3
     env_file: .env
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/OntoRaster.owx

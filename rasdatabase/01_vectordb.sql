@@ -88,7 +88,7 @@ def processPOLYGON(inputPOLYGON):
 
         return gridPOLYGON_yx
 
-def geoPOLYGON_to_gridPOLYGON_03(inputREGION, min_lon, max_lat, resolution_lon, resolution_lat):
+def geoPOLYGON_to_gridPOLYGON(inputREGION, min_lon, max_lat, resolution_lon, resolution_lat):
     polygons_array1 = []
     polygons_array2 = []
     i = 0
@@ -122,10 +122,8 @@ def geoPOLYGON_to_gridPOLYGON_03(inputREGION, min_lon, max_lat, resolution_lon, 
         gridMULTI =  [wkt.loads(poly) for poly in polygons_array2]
         return unary_union(gridMULTI)
 
-gridPOLY = geoPOLYGON_to_gridPOLYGON_03(geoPOLY, min_lon, max_lat, resolution_lon, resolution_lat)
+gridPOLY = geoPOLYGON_to_gridPOLYGON(geoPOLY, min_lon, max_lat, resolution_lon, resolution_lat)
 return gridPOLY
-
-
 $BODY$;
 
 
