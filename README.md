@@ -12,7 +12,7 @@
 
 <!-- Raster extension of VKG system Ontop to query over **multidimensional raster** data combined with **relational data**. Current version of OntoRaster supports regular gridded 3-D **raster** data and geometrical **vector data** in geospatial domain. We are constantly improving the extension with new features which will enable the end user to query over raster data and vector data of any domain under the VKG paradigm in future. -->
 
-Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over **multidimensional raster** data in conjunction with **relational data** in arbitrary domains. Currently it integrates and queries regular gridded (geo) spatial-temporal **raster** data [OGC Coverage] together with relational data including **vector** geometrical data, **OpenStreetMap (OSM)** data and **3DCityGML** data. We're constantly working to enhance the extension with new robust features to allow the end users to query raster and vector data from any domain under the VKG paradigm in the future.
+Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over **multidimensional raster** data in conjunction with **relational data** in arbitrary domains. Currently it integrates and queries regular gridded (geo) spatial-temporal **raster** data [OGC Coverage] together with relational data including **vector** geometrical data, **OpenStreetMap (OSM)** data and **3DCityGML** data. We're constantly enhancing the extension with new robust features to allow the end users to semantically query integrated raster data with relational data of arbitrary domain under the VKG paradigm.
 
 ## Table of Contents
 
@@ -43,9 +43,9 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 ## 0. Motivation
 
-- **Query** - _List all the 30 meters tall residentials in Munich where average terrain elevation less than 550 meters and average land surface temperature is over 16 degC, given the following data_.
+- **Query** - _List all the 30 meters tall residentials in Munich where average terrain elevation less than **550 meters** and average land surface temperature is over **300K**, given the following data_.
 
-  <img src="diagrams/AOIMunich02.PNG">
+  <img src="diagrams/AOIMunich03.PNG">
 
   How can someone find an answer to this question if they don't have the required domain knowledge or expertise regarding to handle these many types of spatial data and their respective metadata.
 
@@ -63,17 +63,17 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 ### 2.1 Clone this repository
 
-- On Windows
+- Windows
 
-```sh
-git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
-```
+  ```sh
+  git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
+  ```
 
-- Otherwise, on MacOS and Linux:
+- MacOS and Linux:
 
-```sh
-git clone https://github.com/aghoshpro/OntoRaster
-```
+  ```sh
+  git clone https://github.com/aghoshpro/OntoRaster
+  ```
 
 ### 2.2 Setup Docker
 
@@ -86,9 +86,9 @@ git clone https://github.com/aghoshpro/OntoRaster
 - Open `terminal` or `cmd` and navigate to the `OntoRaster` repository
 - Run the following:
 
-```sh
-docker-compose -f docker-compose.ontoraster.yml up
-```
+  ```sh
+  docker-compose -f docker-compose.ontoraster.yml up
+  ```
 
 - This command starts and initializes the relational database **PostgreSQL** with the spatial extension **PostGIS**. Once the relational database is ready, the array database **Rasdaman** initiates and imports the raster data.
 
@@ -100,7 +100,7 @@ docker-compose -f docker-compose.ontoraster.yml up
 
 It becomes available at http://localhost:8082/ under `success` in docker desktop (ETC 5 min). Click the link and try out the RasSPARQL queries as shown below,
 
-<img src="diagrams/Success.PNG"/>
+<img src="diagrams/Success1.PNG"/>
 
 #### 2.4.1 RasSPARQL Query Editor
 
@@ -159,9 +159,11 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 ## 5. Heterogenous Data Sources (**_D_**)
 
-<img src="diagrams/AOIMunich.PNG">
+We selected Munich, the capital and largest city of Bavaria State, Germany as our area of interest (AOI) which comprises an approximate area of 5504 $km^2$ including the city and the surrounding metropolitan area. This area is densely populated and hence features numerous structures encompassing residential and commercial zones.
 
-Our area of interest (AOI) encompasses the city and the surrounding metropolitan area of Munich, the capital and largest city of Bavaria State, Germany, which comprises an approximate area of 5504 $km^2$. This area is densely populated and hence features numerous structures encompassing residential and commercial zones
+<img src="diagrams/AOIMunich04.PNG">
+
+\***\*NOTE** - Any other AOI with similar kinds of data can be used.
 
 ### 5.1 Relational Data
 
@@ -169,7 +171,7 @@ Our area of interest (AOI) encompasses the city and the surrounding metropolitan
 
 - This demo utilised 25 districts and 105 sub-districts of Munich as our vector data, downloaded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b).
 
-- This demo also utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **_Regions_** or Areas of Interest (AOI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, taken from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
+- This demo also utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **Areas of Interest (AOI)** which comprises approx 500 distinct regions with varying geometry features with other attributes. Check this [branch](https://github.com/aghoshpro/OntoRaster/tree/ontoraster/Paper%40RuleML'24) to find more details.
 
 - Stored in three separate tables such as `dist_25`, `dist_105`, `region_bavaria`, `region_sweden`, `region_south_tyrol` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshot of first three tablse are displayed below,
 
@@ -187,7 +189,7 @@ Our area of interest (AOI) encompasses the city and the surrounding metropolitan
 
 ### 5.1.2. CityGML Data (**_D<sup>City3D</sup>_**)
 
-#### Installing 3DCityDB
+#### 5.1.2.1. Installing 3DCityDB
 
 - Check Java version 11 or higher
 
@@ -203,7 +205,7 @@ Our area of interest (AOI) encompasses the city and the surrounding metropolitan
 
   > $ chmod u+x 3DCityDB-Importer-Exporter && ./3DCityDB-Importer-Exporter
 
-#### Get Data
+#### 5.1.2.2. Get Data
 
 - Area of Interest : **Munich Metropolitan Area**
 
@@ -229,13 +231,13 @@ Our area of interest (AOI) encompasses the city and the surrounding metropolitan
     done
     ```
 
-#### Visualise CityGML Data as CityJSON
+#### 5.1.2.3. Visualise CityGML Data as CityJSON
 
 - [CityJSON](https://www.cityjson.org) is a JSON-based encoding for storing 3D city models.
 - CityGML 2 CityJSON Conversion [here](https://www.cityjson.org/tutorials/conversion/)
 - Drop the converted `.json` file in the CityJSON official online viewer called [ninja](https://www.cityjson.org/tutorials/getting-started/#visualise-it).
 
-#### Manipulate CityJSON files using CityJSON/io (cjio)
+#### 5.1.2.4. Manipulate CityJSON files using CityJSON/io (cjio)
 
 - [clio](https://www.cityjson.org/tutorials/getting-started/#manipulate-and-edit-it-with-cjio) is a command-line interface program used to edit, marge and validate CityJSON files.
 
@@ -264,7 +266,10 @@ $ wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3
 
 ### 5.2 Raster Data (**_D<sup>arr</sup>_**)
 
+- Figure 1(e-i) displays the respective raster data over Munich which includes elevation, land surface temperature, vegetation, snow coer and soil moisture.
+
 - Stored in array DBMS [**RasDaMan**](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
+
 - Information about the Raster data can be found at NASA's [Earth Science Data Systems (ESDS)](https://lpdaac.usgs.gov/products/mod11a1v061/)
 
   - Demo data used for Sweden, Bavaria and South Tyrol can be downloaded direclty from [Google Drive](https://drive.google.com/drive/folders/1yCSmmok3Iz7J2lZ-uleCg_q87GZsHfI7?usp=sharing)

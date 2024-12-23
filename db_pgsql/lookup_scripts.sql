@@ -16,16 +16,16 @@ CREATE OR REPLACE VIEW lookup_temp AS
 		JOIN public.nil_value ON nil_value.quantity_id = quantity.quantity_id
 		JOIN public.uom ON uom.uom_id = quantity.uom_id;
 		
--- 1a. AxisExtent
+-- 1a. AxisExtent (for DATAGRIP)
 CREATE OR REPLACE VIEW lookup_axis AS		
 SELECT * FROM public.axis_extent;
 
--- 1b. GeoAxis
+-- 1b. GeoAxis (for DATAGRIP)
 CREATE OR REPLACE VIEW lookup_geo_axis AS	
 SELECT * FROM public.geo_axis;
 
 -- 2. lookup_peta (build from selected tables from petascope and max min from lookup_temp).
-	
+--[FIX: axis_extent.resolution = geo_axis.resolution but ISSUE with axis_extent.resolution being numeric instead od float]	
 CREATE OR REPLACE VIEW lookup_peta AS	
 		SELECT coverage.id, coverage.coverage_id, lookup_temp.field_id, lookup_temp.name, lookup_temp.null_value, lookup_temp.code, axis_extent.axis_label, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound,lookup_temp.max_lat, lookup_temp.min_lat, lookup_temp.max_long, lookup_temp.min_long, geo_axis.resolution
 		FROM public.coverage, public.envelope, public.axis_extent, public.geo_axis, lookup_temp
