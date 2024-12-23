@@ -45,7 +45,7 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 - **Query** - _List all the 30 meters tall residentials in Munich where average terrain elevation less than 550 meters and average land surface temperature is over 16 degC, given the following data_.
 
-  <img src="diagrams/AOIMunich.PNG">
+  <img src="diagrams/AOIMunich02.PNG">
 
   How can someone find an answer to this question if they don't have the required domain knowledge or expertise regarding to handle these many types of spatial data and their respective metadata.
 
@@ -98,15 +98,15 @@ docker-compose -f docker-compose.ontoraster.yml up
 
 ### 2.4 Ontop SPARQL Endpoint
 
-Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ under `success` in docker desktop (ETC 5 min). Click the link and try out the RasSPARQL queries as shown below,
+It becomes available at http://localhost:8082/ under `success` in docker desktop (ETC 5 min). Click the link and try out the RasSPARQL queries as shown below,
 
 <img src="diagrams/Success.PNG"/>
 
-#### 2.4.1 Visualization
+#### 2.4.1 RasSPARQL Query Editor
 
 <!-- <img src="diagrams/Ontop-Endpoint.gif"/> -->
 
-<img src="diagrams/Munich.gif"/>
+<img src="diagrams/Munich02.gif"/>
 
 ## 3. Queries (**_Q_**)
 

@@ -28,8 +28,8 @@
 							"variable": "_250m_16_days_NDVI",
 							"description": "6 days avg NDVI over Bavaria from 19th Dec, 2022 to 16th Oct, 2023",
 							"identifier": "_250m_16_days_NDVI",
-							"nilvalue": "-3000",
-							"uomCode": "0.0001"
+							"nilvalue": -3000,
+							"uomCode": 0.0001
 						}
 					],
 					"axes": {
