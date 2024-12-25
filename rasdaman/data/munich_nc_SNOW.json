@@ -41,7 +41,7 @@
 							"gridOrder": 0,
 							"type": "ansidate",
 							"resolution": 1,
-							"irregular": true
+							"irregular": false
 						},
 						"Long": {
 							"min": "${netcdf:variable:lon:min}",

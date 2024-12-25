@@ -125,14 +125,11 @@ return gridPOLY
 $BODY$;
 
 
--- FUNCTION: rasdaman_op.query2array(text)
+-- FUNCTION: rasdaman_op.query2array(text) -- v1.3 & v1.51
 
--- FUNCTION: rasdaman_op.query2array_fillna(text, double precision)
-
-CREATE OR REPLACE FUNCTION rasdaman_op.query2array_fillna(
+CREATE OR REPLACE FUNCTION rasdaman_op.query2array(
 	query text,
-	fill_na double precision DEFAULT 0,
-	OUT cleaned_array double precision[])
+	OUT data_array double precision[])
     RETURNS double precision[]
     LANGUAGE 'plpython3u'
     COST 100
@@ -141,24 +138,89 @@ AS $BODY$
 from rasdapy.db_connector import DBConnector
 from rasdapy.query_executor import QueryExecutor
 
-def query2array(query, fill_na):
-    result = query_executor.execute_read(query) 
+def query2array(query):
+    result = query_executor.execute_read(query)
     numpy_array = result.to_array()
-    numpy_array = numpy_array.astype('float')
-    numpy_array[numpy_array == fill_na] = 'nan'
-    return numpy_array.tolist()  
-	
-db_connector = DBConnector("localhost", 7001, "rasadmin", "rasadmin")
+    return numpy_array.tolist()
+
+db_connector = DBConnector("host.docker.internal", 7001, "rasadmin", "rasadmin")
 query_executor = QueryExecutor(db_connector)
 db_connector.open()
 
 try:
-   cleaned_array= query2array(query, fill_na)
-   return cleaned_array
+   data_array= query2array(query)
+   return data_array
 finally:
    db_connector.close()
 $BODY$;
 
+-- FUNCTION: rasdaman_op.query2array_fillna(text, double precision) -- v1.4
+
+-- CREATE OR REPLACE FUNCTION rasdaman_op.query2array_fillna(
+-- 	query text,
+-- 	fill_nan double precision DEFAULT 0,
+-- 	OUT cleaned_array double precision[])
+--     RETURNS double precision[]
+--     LANGUAGE 'plpython3u'
+--     COST 100
+--     VOLATILE PARALLEL UNSAFE
+-- AS $BODY$
+-- from rasdapy.db_connector import DBConnector
+-- from rasdapy.query_executor import QueryExecutor
+
+-- def query2array(query, fill_nan):
+--     result = query_executor.execute_read(query) 
+--     numpy_array = result.to_array()
+--     numpy_array = numpy_array.astype('float')
+--     numpy_array[numpy_array == fill_nan] = 'nan'
+--     return numpy_array.tolist()  
+	
+-- db_connector = DBConnector("localhost", 7001, "rasadmin", "rasadmin")
+-- query_executor = QueryExecutor(db_connector)
+-- db_connector.open()
+
+-- try:
+--    cleaned_array= query2array(query, fill_nan)
+--    return cleaned_array
+-- finally:
+--    db_connector.close()
+-- $BODY$;
+
+-- FUNCTION: rasdaman_op.query2array03(text, text)
+
+-- CREATE OR REPLACE FUNCTION rasdaman_op.query2array03( -- v1.5
+--     query text,
+--     input_raster text,
+--     OUT cleaned_array double precision[])
+--     RETURNS double precision[]
+--     LANGUAGE 'plpython3u'
+--     COST 100
+--     VOLATILE PARALLEL UNSAFE
+-- AS $BODY$
+-- from rasdapy.db_connector import DBConnector
+-- from rasdapy.query_executor import QueryExecutor
+
+-- fill_nan_query = f"SELECT fill_nan FROM raster_lookup WHERE raster_name = '{input_raster}'"
+-- plan = plpy.prepare(fill_nan_query)
+-- result = plpy.execute(plan)
+-- fill_nan = result[0]['fill_nan'] if result else 0
+
+-- def query2array(query, fill_nan):
+--     result = query_executor.execute_read(query) 
+--     numpy_array = result.to_array()
+--     numpy_array = numpy_array.astype('float')
+--     numpy_array[numpy_array == fill_nan] = 'nan'
+--     return numpy_array.tolist()  
+
+-- db_connector = DBConnector("localhost", 7001, "rasadmin", "rasadmin")
+-- query_executor = QueryExecutor(db_connector)
+-- db_connector.open()
+-- try:
+--     cleaned_array = query2array(query, fill_nan)
+--     return cleaned_array
+-- finally:
+--     db_connector.close()
+-- $BODY$;
 
 
 -- FUNCTION: rasdaman_op.query2numeric(text)

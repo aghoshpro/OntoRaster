@@ -3,7 +3,7 @@
 echo "Viewing the PostgreSQL Client Version"
 psql -Version
 
-echo "Give rasdaman time to finish importing files"
+echo "Give RasDaMan time to finish importing files"
 # TODO: Must remove in the future
 sleep 90
 
@@ -14,11 +14,11 @@ export PGPASSWORD="petapasswd"
 echo "Loading vector data for Area of Interest (AOI) Bavaria"
 shp2pgsql -s 4326 /data/Bavaria_1.shp region_Bavaria | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 5
-# echo "Loading vector data for Area of Interest (AOI) Sweden"
-# shp2pgsql -s 4326 /data/gadm41_SWE_2.shp region_Sweden | psql -h rasdatabase -p 5432 -U petauser -d vectordb
-# sleep 5
-# echo "Loading vector data for Area of Interest (AOI) South Tyrol"
-# shp2pgsql -s 4326 /data/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h rasdatabase -p 5432 -U petauser -d vectordb
+echo "Loading vector data for Area of Interest (AOI) Sweden"
+shp2pgsql -s 4326 /data/gadm41_SWE_2.shp region_Sweden | psql -h rasdatabase -p 5432 -U petauser -d vectordb
+sleep 5
+echo "Loading vector data for Area of Interest (AOI) South Tyrol"
+shp2pgsql -s 4326 /data/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 echo "Loading 25 Districts of Munich"
 shp2pgsql -s 4326 /data/Munich_25_Bezirke_Dissolved.shp public.munich_dist25 | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 5

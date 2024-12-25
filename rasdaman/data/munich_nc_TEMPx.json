@@ -24,7 +24,7 @@
 					"pixelIsPoint": true,
 					"bands": [
 						{
-							"name": "LandSurfaceTemperature",
+							"name": "LST_Night_1km",
 							"variable": "LST_Night_1km",
 							"description": "Daily Temp over Bavaria from 01 Jan 2023 to October 31, 2023",
 							"identifier": "LST_Night_1km",
@@ -41,7 +41,7 @@
 							"gridOrder": 0,
 							"type": "ansidate",
 							"resolution": 1,
-							"irregular": true
+							"irregular": false
 						},
 						"Long": {
 							"min": "${netcdf:variable:lon:min}",

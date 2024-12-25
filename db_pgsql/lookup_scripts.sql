@@ -4,9 +4,8 @@ CREATE EXTENSION IF NOT EXISTS dblink;
 -- ### LookUp Table Creation In Petacopedb ### **********************************************************************************************************************************************
 -- ###########################################
 
-
-
 -- 1. lookup_temp (to get min max values as double)
+
 CREATE OR REPLACE VIEW lookup_temp AS
 		SELECT coverage.id, coverage.coverage_id, field.field_id, field.name, nil_value.null_value, uom.code, wgs84_bounding_box.max_lat, wgs84_bounding_box.min_lat, wgs84_bounding_box.max_long, wgs84_bounding_box.min_long 	
 		FROM public.coverage
@@ -19,14 +18,15 @@ CREATE OR REPLACE VIEW lookup_temp AS
 		JOIN public.nil_value ON nil_value.quantity_id = quantity.quantity_id
 		JOIN public.uom ON uom.uom_id = quantity.uom_id;
 		
-
 -- 2. lookup_peta (build from selected tables from petascope and max min from lookup_temp).
-	
+--[FIX: axis_extent.resolution = geo_axis.resolution but ISSUE with axis_extent.resolution being numeric instead of float]	
+
 CREATE OR REPLACE VIEW lookup_peta AS	
-		SELECT coverage.id, coverage.coverage_id, lookup_temp.field_id, lookup_temp.name,  lookup_temp.null_value,  lookup_temp.code, axis_extent.axis_label, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound,lookup_temp.max_lat, lookup_temp.min_lat, lookup_temp.max_long, lookup_temp.min_long, axis_extent.resolution
-		FROM public.coverage, public.envelope,  public.axis_extent, lookup_temp
+		SELECT coverage.id, coverage.coverage_id, lookup_temp.field_id, lookup_temp.name, lookup_temp.null_value, lookup_temp.code, axis_extent.axis_label, axis_extent.lower_bound, axis_extent.grid_lower_bound, axis_extent.upper_bound, axis_extent.grid_upper_bound,lookup_temp.max_lat, lookup_temp.min_lat, lookup_temp.max_long, lookup_temp.min_long, geo_axis.resolution
+		FROM public.coverage, public.envelope, public.axis_extent, public.geo_axis, lookup_temp
 		WHERE coverage.envelope_id = envelope.envelope_id 
-		AND envelope.envelope_by_axis_id = axis_extent.envelope_by_axis_id 
+		AND envelope.envelope_by_axis_id = axis_extent.envelope_by_axis_id
+		AND axis_extent.upper_bound = geo_axis.upper_bound 
 		AND coverage.id = lookup_temp.id;
 
 -- 3. Switch to VectorDB and import lookup_peta as lookup_unstructured using dblink
@@ -168,13 +168,13 @@ SELECT scale_factor FROM raster_lookup WHERE raster_name = input_raster
 
 -- FUNCTION: rasdaman_op.get_fillnan(text)
 
-CREATE OR REPLACE FUNCTION rasdaman_op.get_fillnan(
-	input_raster text,
-	OUT fill_nan double precision)
-    RETURNS double precision
-    LANGUAGE 'sql'
-    COST 100
-    VOLATILE PARALLEL UNSAFE
-AS $BODY$
-SELECT fill_nan FROM raster_lookup WHERE raster_name = input_raster
-    $BODY$;
+-- CREATE OR REPLACE FUNCTION rasdaman_op.get_fillnan(
+-- 	input_raster text,
+-- 	OUT fill_nan double precision)
+--     RETURNS double precision
+--     LANGUAGE 'sql'
+--     COST 100
+--     VOLATILE PARALLEL UNSAFE
+-- AS $BODY$
+-- SELECT fill_nan FROM raster_lookup WHERE raster_name = input_raster
+--     $BODY$;

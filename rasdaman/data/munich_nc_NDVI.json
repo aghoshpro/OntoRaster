@@ -40,8 +40,8 @@
 							"directPositions": "[(datetime(2000,1,1,0,0,0) + timedelta(days=x)).strftime(\"%Y-%m-%dT%H:%M\") for x in ${netcdf:variable:time}]",
 							"gridOrder": 0,
 							"type": "ansidate",
-							"resolution": 1,
-							"irregular": true
+							"resolution": 16,
+							"irregular": false
 						},
 						"Long": {
 							"min": "${netcdf:variable:lon:min}",
