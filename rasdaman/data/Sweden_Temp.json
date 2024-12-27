@@ -28,8 +28,8 @@
 							"variable": "LST_Night_1km",
 							"description": "Daily Snow Cover over Sweden from April, 2022 to April, 2023",
 							"identifier": "LST_Night_1km",
-							"nilvalue": 0,
-							"uomCode": 0.02
+							"nilvalue": "0",
+							"uomCode": "0.02"
 						}
 					],
 					"axes": {

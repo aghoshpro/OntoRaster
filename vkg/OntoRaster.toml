@@ -89,7 +89,7 @@ SELECT ?regionName ?answer {
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Stockholm') # also try with Linköping, Uppsala, Göteborg, Stockholm etc.
+FILTER (?regionName = 'Stockholm') # also try with Linköping, Uppsala, Göteborg etc.
 FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
@@ -251,6 +251,32 @@ BIND ('2023-07-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasClipRasterAnyGeom(?timeStamp, ?customRegionWkt, ?rasterName) AS ?answer) 
 }
 """
+[[tabGroups.tabs]]
+
+name="Q10x. Get LatLongCentroid**"
+query="""
+################################################################################
+#### Query 10x. Find the minimum, maximum and centroid of a vector polygon  ####
+################################################################################
+
+### Only works if "image: albulenpano/geosparql_1.1:v5" included in docker-compose.yml [Ontop Version]
+
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+
+SELECT ?minX ?minY ?maxX ?maxY ?centroidXY {
+?region a :Region .
+?region rdfs:label ?regionName .
+?region geo:asWKT ?regionWkt .
+BIND('POLYGON((11.548455354852285 48.14904359943597,11.627292392870094 48.147177113486606,11.58380485801181 48.11696471831948,11.546675164347198 48.119171832113835,11.548455354852285 48.14904359943597))'^^geo:wktLiteral AS ?customRegionWkt)
+BIND(geof:minX(?customRegionWkt) AS ?minX)
+BIND(geof:maxX(?customRegionWkt) AS ?maxX)
+BIND(geof:minY(?customRegionWkt) AS ?minY)
+BIND(geof:maxY(?customRegionWkt) AS ?maxY)
+BIND(geof:centroid(?customRegionWkt) AS ?centroidXY)
+}
+"""
+
 
 [[tabGroups.tabs]]
 
@@ -484,10 +510,10 @@ FILTER(?elevation < 520)
 
 [[tabGroups.tabs]]
 
-name="Q14b. View Churches (in 6.5 sec)"
+name="Q14b. View Schools (in 6.5 sec)"
 query="""
 ############################################################################################################
-#### Query 14b. List all the churches and districts in Munich where grass (or vegetation) is more green ####
+#### Query 14b. List all the schools and districts in Munich where grass (or vegetation) is more green  ####
 ############################################################################################################
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
@@ -497,9 +523,9 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?bldgName ?distName ?ndvi ?bldgLat ?bldgLon ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
-?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
-?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt . # School, Parking, Hospital, Hotel
+SELECT ?bldgName ?distName ?ndvi ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor { # ?bldgLat ?bldgLon
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt . 
+?building a lgdo:School ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt . # Churches, Parking, Hospital, Hotel
 BIND('#008AFF5C' AS ?distWktColor)
 BIND('red' AS ?bldgWktColor)
 #BIND(geof:latitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLat)
@@ -509,7 +535,7 @@ FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
 FILTER (CONTAINS(?rasterName, 'NDVI')) 
 BIND ('2022-01-01T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp) 
 BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?ndvi)
-FILTER(?ndvi > 0.35) # NDVI Scale [0.1 (Desert) to >= 0.8 (Forest)]
+FILTER(?ndvi > 0.35) # NDVI Scale [0.1 (Desert) to >= 1.0 (Forest)]
 } 
 """
 
@@ -518,7 +544,7 @@ FILTER(?ndvi > 0.35) # NDVI Scale [0.1 (Desert) to >= 0.8 (Forest)]
 name="Q14c. View Hotels (in 7.665 sec)"
 query="""
 ###########################################################################################
-#### Query 14c. List all the hotesl in Munich where elevation is more than 500 meters  ####
+#### Query 14c. List all the hotels in Munich where elevation is more than 500 meters  ####
 ###########################################################################################
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
@@ -689,9 +715,9 @@ PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?distName ?geoTiff {
-?region a :SubDistrict ; rdfs:label ?distName ; geo:asWKT ?distWkt .
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
 ?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
-FILTER (?distName = 'Friedenheim') # Biederstein
+#FILTER (?distName = 'Friedenheim') # Biederstein
 FILTER (CONTAINS(?rasterName, 'Elevation'))
 BIND (-32768 AS ?fillNAN)
 BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
@@ -767,6 +793,34 @@ BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
 } # LIMIT 1 
 """
+
+[[tabGroups.tabs]]
+
+name="Q22. Temporal Maximum"
+query="""
+############################################################################################################################
+#### Query 22. Find temporal maximum value over a user-specific vector Region and Raster dataset between two timestamps ####
+############################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?regionName ?answer {
+?region a :Region .
+?region rdfs:label ?regionName .
+?region geo:asWKT ?regionWkt .
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (?regionName = 'Linköping') 
+FILTER (CONTAINS(?rasterName, 'Sweden'))
+BIND ('2022-04-05T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
+BIND ('2022-06-19T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
+BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
+}
+"""
+
 
 [[tabGroups.tabs]]
 name="READ ME"

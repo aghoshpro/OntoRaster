@@ -28,8 +28,8 @@
 							"variable": "SRTMGL1_DEM",
 							"description": "30 meter Digital Model Elevation (DEM) or Munich",
 							"identifier": "SRTMGL1_DEM",
-							"nilvalue": -32767,
-							"uomCode": 1
+							"nilvalue": "-32767",
+							"uomCode": "1"
 						}
 					],
 					"axes": {

@@ -28,8 +28,8 @@
 							"variable": "NDSI_Snow_Cover",
 							"description": "Daily Snow Cover over Munich till November, 2024",
 							"identifier": "NDSI_Snow_Cover",
-							"nilvalue": 255,
-							"uomCode": 1
+							"nilvalue": "255",
+							"uomCode": "1"
 						}
 					],
 					"axes": {

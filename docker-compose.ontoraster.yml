@@ -64,7 +64,7 @@ services:
 
   ontop:
     container_name: ontop
-    image: aghoshpro/ontoraster:v1.51
+    image: aghoshpro/ontoraster:v1.51 # OR albulenpano/geosparql_1.1:v5 for geof:centroid
     env_file: .env
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/OntoRaster.owx

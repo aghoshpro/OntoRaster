@@ -28,8 +28,8 @@
 							"variable": "LST_Night_1km",
 							"description": "Daily Temp over Bavaria from 01 Jan 2023 to October 31, 2023",
 							"identifier": "LST_Night_1km",
-							"nilvalue": 0,
-							"uomCode": 0.02
+							"nilvalue": "0",
+							"uomCode": "0.02"
 						}
 					],
 					"axes": {
