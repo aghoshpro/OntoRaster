@@ -7,7 +7,7 @@
 		"track_files": false
 	},
 	"input": {
-		"coverage_id": "Munich_SRTM_NC_Elevation",
+		"coverage_id": "Munich_SRTM_Elevation_30m",
 		"paths": ["/data/SRTMGL1_NC.003_30m_aid0001.nc"]
 	},
 	"recipe": {

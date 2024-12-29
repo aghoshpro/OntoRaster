@@ -7,7 +7,7 @@
 		"track_files": false
 	},
 	"input": {
-		"coverage_id": "Munich_MODIS_NDVI",
+		"coverage_id": "Munich_MODIS_NDVI_250m",
 		"paths": ["/data/MOD13Q1.061_250m_aid0001.nc"]
 	},
 	"recipe": {

@@ -265,9 +265,9 @@ PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 
 SELECT ?minX ?minY ?maxX ?maxY ?centroidXY {
-?region a :Region .
-?region rdfs:label ?regionName .
-?region geo:asWKT ?regionWkt .
+#?region a :Region .
+#?region rdfs:label ?regionName .
+#?region geo:asWKT ?regionWkt .
 BIND('POLYGON((11.548455354852285 48.14904359943597,11.627292392870094 48.147177113486606,11.58380485801181 48.11696471831948,11.546675164347198 48.119171832113835,11.548455354852285 48.14904359943597))'^^geo:wktLiteral AS ?customRegionWkt)
 BIND(geof:minX(?customRegionWkt) AS ?minX)
 BIND(geof:maxX(?customRegionWkt) AS ?maxX)
@@ -495,17 +495,6 @@ BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp) # 2021-12-20T00:0
 BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
 FILTER(?elevation < 520)
 } 
-
-#SELECT ?bldgName ?bldgLat ?bldgLong WHERE {
-#  ?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
-#  
-#  # Calculate centroid and extract latitude/longitude
-#  BIND(geo:hasCentroid(?bldgWkt) AS ?centroidWkt)
-#  BIND(geof:latitude(?centroidWkt) AS ?bldgLat)
-#  BIND(geof:longitude(?centroidWkt) AS ?bldgLong)
-#}
-#
-
 """
 
 [[tabGroups.tabs]]

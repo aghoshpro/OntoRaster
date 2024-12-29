@@ -7,7 +7,7 @@
 		"track_files": false
 	},
 	"input": {
-		"coverage_id": "Munich_MODIS_SnowCover",
+		"coverage_id": "Munich_MODIS_SnowCover_500m",
 		"paths": ["/data/MOD10A1.061_500m_aid0001.nc"]
 	},
 	"recipe": {

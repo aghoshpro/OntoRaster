@@ -11,7 +11,7 @@ sleep 20
 # Start rasdaman
 /opt/rasdaman/bin/start_rasdaman.sh --allow-root &
 
-echo "Wait for rasdaman to start"
+echo "Wait for RasDaMan to start"
 sleep 60
 
 echo "Run wcst_import.sh"
@@ -22,6 +22,7 @@ echo "Run wcst_import.sh"
 /opt/rasdaman/bin/wcst_import.sh /data/munich_nc_TEMPx.json
 /opt/rasdaman/bin/wcst_import.sh /data/munich_nc_NDVI.json
 /opt/rasdaman/bin/wcst_import.sh /data/munich_nc_SNOW.json
+/opt/rasdaman/bin/wcst_import.sh /data/munich_nc_SoilMoisture.json
 
 # Keep the container running
 tail -f /dev/null
