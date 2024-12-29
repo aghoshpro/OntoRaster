@@ -1,8 +1,8 @@
-title="OntoRaster Demonstration"
+title="OntoRaster v2024 Demonstration"
 
 [[tabGroups]]
 
-name="RasSPARQL Queries"
+name="RasSPARQL Functions"
 
 [[tabGroups.tabs]]
 
@@ -15,11 +15,11 @@ query="""
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?rasterName ?dimension {
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (CONTAINS(?rasterName, 'Bavaria'))
-BIND (rasdb:rasDimension(?rasterName) AS ?answer)
+FILTER (CONTAINS(?rasterName, '')) # Also try 'Munich', 'Sweden', 'Bavaria', 'Tyrol'
+BIND (rasdb:rasDimension(?rasterName) AS ?dimension)
 }
 """
 
@@ -57,7 +57,7 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?regionName ?answer {
 ?region a :Region .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
@@ -83,17 +83,17 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?regionName ?answer {
 ?region a :Region .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Göteborg') # also try with Linköping, Uppsala, Göteborg, Stockholm etc.
+FILTER (?regionName = 'Stockholm') # also try with Linköping, Uppsala, Göteborg etc.
 FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
-} 
+} # LIMIT 1 
 """
 
 [[tabGroups.tabs]]
@@ -109,7 +109,7 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?regionName ?answer {
 ?region a :Region .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
@@ -135,18 +135,18 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?regionName ?answer {
 ?region a :Region .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Cham')
+FILTER (?regionName = 'Würzburg') 
 FILTER (CONTAINS(?rasterName, 'Bavaria'))
 BIND ('2023-06-15T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
 BIND ('2023-07-21T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
 BIND (rasdb:rasTemporalAverage(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
-} 
+} # LIMIT 1 
 """
 
 [[tabGroups.tabs]]
@@ -162,18 +162,18 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?regionName ?answer {
 ?region a :Region .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Göteborg') 
+FILTER (?regionName = 'Linköping') 
 FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-04-05T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
 BIND ('2022-06-19T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
 BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
-} 
+} LIMIT 1 
 """
 
 [[tabGroups.tabs]]
@@ -189,7 +189,7 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?regionName ?answer {
 ?region a :Region .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
@@ -216,7 +216,7 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?regionName ?answer {
 ?region a :Region .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
@@ -242,7 +242,7 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?regionName ?answer {
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
 FILTER (CONTAINS(?rasterName, 'Bavaria')) 
@@ -250,4 +250,650 @@ BIND ('POLYGON((11.324157714843748 48.29050321714061,11.911926269531248 48.27953
 BIND ('2023-07-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasClipRasterAnyGeom(?timeStamp, ?customRegionWkt, ?rasterName) AS ?answer) 
 }
+"""
+[[tabGroups.tabs]]
+
+name="Q10x. Get LatLongCentroid**"
+query="""
+################################################################################
+#### Query 10x. Find the minimum, maximum and centroid of a vector polygon  ####
+################################################################################
+
+### Only works if "image: albulenpano/geosparql_1.1:v5" included in docker-compose.yml [Ontop Version]
+
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+
+SELECT ?minX ?minY ?maxX ?maxY ?centroidXY {
+#?region a :Region .
+#?region rdfs:label ?regionName .
+#?region geo:asWKT ?regionWkt .
+BIND('POLYGON((11.548455354852285 48.14904359943597,11.627292392870094 48.147177113486606,11.58380485801181 48.11696471831948,11.546675164347198 48.119171832113835,11.548455354852285 48.14904359943597))'^^geo:wktLiteral AS ?customRegionWkt)
+BIND(geof:minX(?customRegionWkt) AS ?minX)
+BIND(geof:maxX(?customRegionWkt) AS ?maxX)
+BIND(geof:minY(?customRegionWkt) AS ?minY)
+BIND(geof:maxY(?customRegionWkt) AS ?maxY)
+BIND(geof:centroid(?customRegionWkt) AS ?centroidXY)
+}
+"""
+
+
+[[tabGroups.tabs]]
+
+name="READ ME"
+query="""
+##########################################
+#### Welcome to OntoRaster v2024 Demo ####
+##########################################
+
+### This contain all the supported spatial-temporal SPARQL queries loaded with developed raster functions (hence RasSPARQL), that integrates different raster and vector data semantically.
+
+#### rasGetDimension | rasCellOperation | rasSpatialAverage | rasSpatialMinimum | rasSpatialMaximum | rasTemporalAverage | rasTemporalMinimum | rasTemporalMaximum | rasClipRaster | rasClipRasterAnyGeom | MORE COMING SOON
+
+### Some Area Of Interests (AOIs) with the relevant heterogeneous data are listed here to showcase. You can always add your own AOI provided that it has at least one relational data and a raster data but not limited to. 
+
+### To visualize the query results check "Geo" tab
+"""
+
+[[tabGroups]]
+
+name="AOI - Munich, Germany (D2G2)"
+
+[[tabGroups.tabs]]
+
+name="QX. Check Rasters"
+query="""
+########################################################
+#### Query 10. Find All Raster datasets over Munich ####
+########################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?rasterName ?dimension {
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Munich')) 
+BIND (rasdb:rasDimension(?rasterName) AS ?dimension)
+}
+"""
+
+[[tabGroups.tabs]]
+
+name="Q11. Get Districts (in 2.5 sec)"
+query="""
+###########################################################################################
+#### Query 11. Find all districts of Munich where elevation is more than 515 meters    ####
+###########################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+## Variation 01
+SELECT ?distName ?elevation {
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Elevation'))
+BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+FILTER(?elevation > 515)
+} 
+
+## Variation 02
+#SELECT ?distName ?elevation ?distWkt ?distWktColor {
+#?region a :District .
+#?region rdfs:label ?distName .
+#?region geo:asWKT ?distWkt .
+#BIND('#008AFFF0' AS ?distWktColor)
+#?gridCoverage a :Raster .
+#?gridCoverage rasdb:rasterName ?rasterName .
+#FILTER (CONTAINS(?rasterName, 'Elevation'))
+#BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+#BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+#FILTER(?elevation > 515)
+#} 
+
+# Variation 03
+#SELECT ?distName ?elevation ?distWkt ?distWktColor {
+#?region a :District .
+#?region rdfs:label ?distName .
+#?region geo:asWKT ?distWkt .
+##BIND(?distName AS ?distWktLabel)
+#?gridCoverage a :Raster .
+#?gridCoverage rasdb:rasterName ?rasterName .
+#FILTER (CONTAINS(?rasterName, 'Elevation'))
+#BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+#BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+#FILTER(?elevation > 515) .
+#  BIND( 
+#    IF(?elevation < 525, "blue" , 
+#    IF(?elevation < 535, "#008AFF",
+#    IF(?elevation < 545, "magenta",
+#    IF(?elevation < 555, "red",
+#    IF(?elevation < 565, "#C60000",
+#    "black")))))
+#    AS ?distWktColor).
+#} 
+#GROUP BY ?distName ?elevation ?distWkt ?distWktColor
+
+"""
+
+[[tabGroups.tabs]]
+
+name="Q12. Get SubDistricts (in 16.34 sec)"
+query="""
+##############################################################################################
+#### Query 12. Find all sub-districts of Munich where elevation is between 510-520 meters ####
+##############################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?distName ?elevation ?distWkt ?distWktColor ?distWktLabel {
+?region a :SubDistrict .
+?region rdfs:label ?distName .
+?region geo:asWKT ?distWkt .
+BIND(?distName AS ?distWktLabel)
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Elevation'))
+BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+FILTER(?elevation > 515) .
+  BIND( 
+    IF(?elevation < 525, "blue" , 
+    IF(?elevation < 535, "#008AFF",
+    IF(?elevation < 545, "magenta",
+    IF(?elevation < 555, "red",
+    IF(?elevation < 565, "#C60000",
+    "black")))))
+    AS ?distWktColor).
+} 
+GROUP BY ?distName ?elevation ?distWkt ?distWktColor ?distWktLabel
+
+#SELECT ?distName ?elevation ?distWkt ?distWktColor {
+#?region a :SubDistrict .
+#?region rdfs:label ?distName .
+#?region geo:asWKT ?distWkt .
+#BIND('#008AFFF0' AS ?distWktColor)
+#?gridCoverage a :Raster .
+#?gridCoverage rasdb:rasterName ?rasterName .
+#FILTER (CONTAINS(?rasterName, 'Elevation'))
+#BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+#BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+#FILTER(?elevation > 510 && ?elevation < 520)
+#} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q13. Get Churches (in 3.1 sec)"
+query="""
+###########################################################################################
+#### Query 13. List all the churches in Munich where elevation is less than 520 meters ####
+###########################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?bldgName ?distName ?elevation {
+?region a :District .
+?region rdfs:label ?distName .
+?region geo:asWKT ?distWkt .
+?building a lgdo:Church .
+?building rdfs:label ?bldgName .
+?building geo:asWKT ?bldgWkt .
+FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Elevation'))
+BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+FILTER(?elevation < 520)
+} 
+
+"""
+
+[[tabGroups.tabs]]
+
+name="Q14a. View Churches (in 6.5 sec)"
+query="""
+###########################################################################################
+#### Query 14a. List all the churches in Munich where elevation is more than 500 meters
+###########################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?bldgName ?distName ?elevation ?bldgLat ?bldgLon ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
+?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt . # School, Parking, Hospital, Hotel
+BIND('#008AFF5C' AS ?distWktColor)
+BIND('red' AS ?bldgWktColor)
+#BIND(geof:latitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLat)
+#BIND(geof:longitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLon)
+FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Elevation')) # NDVI, Snow, SoilMoisture
+BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp) # 2021-12-20T00:00:00+00:00
+BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+FILTER(?elevation < 520)
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q14b. View Schools (in 6.5 sec)"
+query="""
+############################################################################################################
+#### Query 14b. List all the schools and districts in Munich where grass (or vegetation) is more green  ####
+############################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?bldgName ?distName ?ndvi ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor { # ?bldgLat ?bldgLon
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt . 
+?building a lgdo:School ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt . # Churches, Parking, Hospital, Hotel
+BIND('#008AFF5C' AS ?distWktColor)
+BIND('red' AS ?bldgWktColor)
+#BIND(geof:latitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLat)
+#BIND(geof:longitude("?bldgWkt"^^geo:wktLiteral) AS ?bldgLon)
+FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'NDVI')) 
+BIND ('2022-01-01T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp) 
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?ndvi)
+FILTER(?ndvi > 0.35) # NDVI Scale [0.1 (Desert) to >= 1.0 (Forest)]
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q14c. View Hotels (in 7.665 sec)"
+query="""
+###########################################################################################
+#### Query 14c. List all the hotels in Munich where elevation is more than 500 meters  ####
+###########################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?bldgName ?distName ?snowCover ?bldgLat ?bldgLon ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
+?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt . # School, Parking, Hospital, Hotel
+BIND('#008AFF5C' AS ?distWktColor)
+BIND('red' AS ?bldgWktColor)
+FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Snow'))
+BIND ('2023-12-20T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?snowCover) 
+FILTER(?snowCover > 5 && ?snowCover < 100)
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q15. View Universities (in 27.5 sec)"
+query="""
+###############################################################################################
+#### Query 15. List all the universities in Munich where elevation is more than 500 meters ####
+###############################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?bldgName ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
+?region a :District . 
+?region rdfs:label ?distName .
+?region geo:asWKT ?distWkt .
+BIND('#008AFF5C' AS ?distWktColor)
+?building a lgdo:University .   # School, Parking, Hospital, Hotel
+?building rdfs:label ?bldgName .
+?building geo:asWKT ?bldgWkt .
+?bldg geo:asWKT ?bldgWkt .
+BIND('red' AS ?bldgWktColor)
+FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Elevation'))
+BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+FILTER(?elevation > 500)
+} 
+
+"""
+
+[[tabGroups.tabs]]
+
+name="Q16. View Residential (in 100.12 sec)"
+query="""
+##########################################################################################################################
+#### Query 16. List all the residential and respective subdistricts in Munich where elevation is more than 520 meters ####
+##########################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor { # bldgName
+?region a :SubDistrict . 
+?region rdfs:label ?distName .
+?region geo:asWKT ?distWkt .
+BIND('#008AFF5C' AS ?distWktColor)
+?building a lgdo:Residential .
+#?building rdfs:label ?bldgName . ## ISSUE - if included some OSM null values are omitted 
+?building geo:asWKT ?bldgWkt .
+BIND('red' AS ?bldgWktColor)
+FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Elevation'))
+BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+FILTER(?elevation > 520)
+} 
+
+"""
+
+[[tabGroups.tabs]]
+
+name="Q17. View Residential (in 21.84 sec)"
+query="""
+########################################################################################################
+#### Query 17. List all the residential in Munich where average temperature is more than 275 Kelvin ####
+########################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?distName ?temp ?distWkt ?distWktColor ?distWktLabel ?bldgWkt ?bldgWktColor { # bldgName
+?region a :District .
+?region rdfs:label ?distName .
+?region geo:asWKT ?distWkt .
+BIND(?distName AS ?distWktLabel)
+BIND('#008AFF5C' AS ?distWktColor)
+?building a lgdo:Residential .
+#?building rdfs:label ?bldgName . ## ISSUE - if included some OSM null values are omitted 
+?building geo:asWKT ?bldgWkt .
+BIND('red' AS ?bldgWktColor)
+FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Munich_MODIS_Temperature_1km')) 
+BIND ('2022-01-01T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?temp)
+FILTER(?temp > 275)  # Kelvin
+} 
+
+"""
+
+[[tabGroups.tabs]]
+
+name="Q18. Clip Raster (in 0.05 sec)"
+query="""
+############################################################################################################################################
+#### Query 18. Clip and return a portion of the raster based on the shape of the custom vector Region over user-specific raster dataset ####
+############################################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?clipped ?customRegionWkt {
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?rasterName, 'Munich_MODIS_Temperature_1km')) 
+BIND ('POLYGON((11.548455354852285 48.14904359943597,11.627292392870094 48.147177113486606,11.58380485801181 48.11696471831948,11.546675164347198 48.119171832113835,11.548455354852285 48.14904359943597))' AS ?customRegionWkt)
+BIND ('2022-01-01T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasClipRasterAnyGeom(?timeStamp, ?customRegionWkt, ?rasterName) AS ?clipped) 
+}
+
+"""
+
+[[tabGroups.tabs]]
+
+name="Q19. View Clipped Raster**"
+query="""
+############################################################################################################################
+#### Query 19. Clip and view a portion of the raster based on the shape of the Region over user-specific raster dataset ####
+############################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?distName ?geoTiff {
+?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+#FILTER (?distName = 'Friedenheim') # Biederstein
+FILTER (CONTAINS(?rasterName, 'Elevation'))
+BIND (-32768 AS ?fillNAN)
+BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasGeoTIFF(?timestamp, ?distWkt, ?rasterName, ?distName, ?fillNAN) AS ?geoTiff)
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q20. Get 3D buildings**"
+query="""
+##################################################################################################################################
+#### Query 20. List all the buildings in Munich where building height is 30 meters and average elevation less than 510 meters ####
+##################################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX lgdo: <http://linkedgeodata.org/ontology/>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+"""
+
+[[tabGroups.tabs]]
+name="READ ME"
+query="""
+##########################
+#### Relational Data  ####
+##########################
+## Vector data (Boundaries of Districts and Sub-District)
+## OpenStreetMap (OSM) Data (Types of Buildings)
+## 3D CityGML Data (Building) 
+
+######################
+#### Raster Data  ####
+######################
+## MODIS Temperature
+## SRTM Terrain Elevation (DEM)
+## MODIS Vegetation (NDVI)
+## NDSI Snow Cover
+## ECO Soil Moisture(SM)
+
+## Q19 and Q20 are in **WORK IN PROGRESS
+"""
+
+[[tabGroups]]
+
+name="AOI - Sweden (WASP)"
+
+[[tabGroups.tabs]]
+
+name="Q21. Spatial Maximum"
+query="""
+###################################################################################################
+#### Query 4. Find spatial maximum value over a user-specific vector Region and Raster dataset ####
+###################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?answer {
+?region a :Region .
+?region rdfs:label ?regionName .
+?region geo:asWKT ?regionWkt .
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (?regionName = 'Stockholm') # also try with Linköping, Uppsala, Göteborg, Stockholm etc.
+FILTER (CONTAINS(?rasterName, 'Sweden'))
+BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
+} # LIMIT 1 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q22. Temporal Maximum"
+query="""
+############################################################################################################################
+#### Query 22. Find temporal maximum value over a user-specific vector Region and Raster dataset between two timestamps ####
+############################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?regionName ?answer {
+?region a :Region .
+?region rdfs:label ?regionName .
+?region geo:asWKT ?regionWkt .
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (?regionName = 'Linköping') 
+FILTER (CONTAINS(?rasterName, 'Sweden'))
+BIND ('2022-04-05T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
+BIND ('2022-06-19T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
+BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
+}
+"""
+
+
+[[tabGroups.tabs]]
+name="READ ME"
+query="""
+##########################
+#### Relational Data  ####
+##########################
+## Vector data (Boundaries of Districts and Sub-District) [POLYGONS and MULTIPOLYGONS]
+
+######################
+#### Raster Data  ####
+######################
+## MODIS Temperature
+"""
+
+[[tabGroups]]
+
+name="AOI - South Tyrol, Italy"
+
+[[tabGroups.tabs]]
+
+name="Q25. Spatial Minimum"
+query="""
+###################################################################################################
+#### Query 25. Find spatial minimum value over a user-specific vector Region and Raster dataset ####
+###################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?regionName ?tempK ?regionWkt ?regionWktLabel { #?regiontWktColor 
+?region a :Region .
+?region rdfs:label ?regionName .
+?region geo:asWKT ?regionWkt .
+BIND (?regionName AS ?regionWktLabel)
+#BIND('#008AFFF0' AS ?regiontWktColor)
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (?regionName = 'Sarentino') # also try with Castelrotto, Sarentino, Fortezza  etc.
+FILTER (CONTAINS(?rasterName, 'Tyrol'))
+BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialMinimum(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q26. Clip Raster"
+query="""
+#####################################################################################################################
+#### Query 26. Clip a portion of the raster based on the shape of vector Region over user-specific raster dataset ####
+#####################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?regionName ?answer {
+?region a :Region .
+?region rdfs:label ?regionName .
+?region geo:asWKT ?regionWkt .
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (?regionName = 'Castelrotto') 
+FILTER (CONTAINS(?rasterName, 'Tyrol')) 
+BIND ('2023-09-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasClipRaster(?timeStamp, ?regionWkt, ?rasterName) AS ?answer) 
+}
+"""
+
+[[tabGroups.tabs]]
+name="READ ME"
+query="""
+##########################
+#### Relational Data  ####
+##########################
+## Vector data (Boundaries of Districts and Sub-District) [POLYGONS and MULTI-POLYGONS]
+
+######################
+#### Raster Data  ####
+######################
+## MODIS Temperature
+
 """

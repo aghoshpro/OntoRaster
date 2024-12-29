@@ -12,17 +12,44 @@
 
 <!-- Raster extension of VKG system Ontop to query over **multidimensional raster** data combined with **relational data**. Current version of OntoRaster supports regular gridded 3-D **raster** data and geometrical **vector data** in geospatial domain. We are constantly improving the extension with new features which will enable the end user to query over raster data and vector data of any domain under the VKG paradigm in future. -->
 
-Raster extension of VKG system Ontop to query over **multidimensional raster** data in combination with **relational data**. Currently it handles regular gridded spatial-temporal **raster** data (3D) or OGC coverage data and **vector** data (relational data with geometrical features). We're constantly working on making the extension even better with new features that will allow the end users to query raster and vector data from any domain under the VKG paradigm in the future.
+Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over **multidimensional raster** data in conjunction with **relational data** in arbitrary domains. Currently it integrates and queries regular gridded (geo) spatial-temporal **raster** data [OGC Coverage] together with relational data including **vector** geometrical data, **OpenStreetMap (OSM)** data and **3DCityGML** data. We're constantly enhancing the extension with new robust features to allow the end users to semantically query integrated raster data with relational data of arbitrary domain under the VKG paradigm.
 
 ## Table of Contents
 
+0. [Motivation](#0-motivation)
 1. [Framework](#1-framework)
 2. [Demo](#2-demo)
 3. [Queries](#3-queries-q)
-4. [Ontology](#4-ontology-o)
-5. [Dataset](#5-dataset-d)
-6. [Mapping](#6-mapping-m)
+4. [Ontology (**_O_**)](#4-ontology-o)
+
+- 4.1. [Raster Ontology](#41-raster-ontology)
+- 4.2. [GeoSPARQL Ontology v1.1](#42-geosparql-v11)
+- 4.3. [CityGML v2.0](#43-citygml-v20)
+- 4.4. [Quantities, Units, Dimensions and Types (QUDT) Ontology](#44-quantities-units-dimensions-and-types-qudt)
+- 4.5. [OpenStreetMap (OSM) Ontology](#45-open-street-map-osm-ontology)
+
+5. [Heterogenous Data Sources (**_D_**)](#5-heterogenous-data-sources-d)
+
+- 5.1. [Relational Data (**_D<sup>rel</sup>_**)](#51-relational-data)
+
+  - 5.1.1. [Vector Data (**_D<sup>Vector</sup>_**)](#511-vector-data)
+  - 5.1.2. [3DCityGML Data (**_D<sup>City3D</sup>_**)](#512-citygml-data-dcity3d)
+  - 5.1.2. [OSM Data (**_D<sup>OSM</sup>_**)](#513-osm-data-dosm)
+
+- 5.2. [Raster Data (**_D<sup>arr</sup>_**)](#52-raster-data-darr)
+
+6. [Mappings (**_M_**)](#6-mapping-m)
 7. [More details](#7-more-details)
+
+## 0. Motivation
+
+- **Query** - _List all the 30 meters tall residentials in Munich where average terrain elevation less than **550 meters** and average land surface temperature is over **300K**, given the following data_.
+
+  <img src="diagrams/AOIMunich03.PNG">
+
+  How can someone find an answer to this question if they don't have the required domain knowledge or expertise regarding to handle these many types of spatial data and their respective metadata.
+
+  😃 **You need **OntoRaster** to solve this.** 😃
 
 ## 1. Framework
 
@@ -36,17 +63,17 @@ Raster extension of VKG system Ontop to query over **multidimensional raster** d
 
 ### 2.1 Clone this repository
 
-- On Windows
+- Windows
 
-```sh
-git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
-```
+  ```sh
+  git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
+  ```
 
-- Otherwise, on MacOS and Linux:
+- MacOS and Linux:
 
-```sh
-git clone https://github.com/aghoshpro/OntoRaster
-```
+  ```sh
+  git clone https://github.com/aghoshpro/OntoRaster
+  ```
 
 ### 2.2 Setup Docker
 
@@ -59,9 +86,9 @@ git clone https://github.com/aghoshpro/OntoRaster
 - Open `terminal` or `cmd` and navigate to the `OntoRaster` repository
 - Run the following:
 
-```sh
-docker-compose -f docker-compose.ontoraster.yml up
-```
+  ```sh
+  docker-compose -f docker-compose.ontoraster.yml up
+  ```
 
 - This command starts and initializes the relational database **PostgreSQL** with the spatial extension **PostGIS**. Once the relational database is ready, the array database **Rasdaman** initiates and imports the raster data.
 
@@ -71,13 +98,23 @@ docker-compose -f docker-compose.ontoraster.yml up
 
 ### 2.4 Ontop SPARQL Endpoint
 
-Finally, the Ontop SPARQL endpoint becomes available at http://localhost:8082/ after successful execution of `docker-compose` (ETC 5 min). End users can try out the RasSPARQL queries as shown below,
+It becomes available at http://localhost:8082/ under `success` in docker desktop (ETC 5 min). Click the link and try out the RasSPARQL queries as shown below,
 
-<img src="diagrams/Ontop-Endpoint.gif"/>
+<img src="diagrams/Success1.PNG"/>
+
+#### 2.4.1 RasSPARQL Query Editor
+
+<!-- <img src="diagrams/Ontop-Endpoint.gif"/> -->
+
+<img src="diagrams/Munich02.gif"/>
 
 ## 3. Queries (**_Q_**)
 
 All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml`.
+
+<!-- | **_Q<sub>i</sub>_**                 | Description                        |
+| ----------------------------------- | ---------------------------------- |
+| ```PREFIX :	<https://github.com/aghoshpro/OntoRaster/> PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>PREFIX geo:	<http://www.opengis.net/ont/geosparql#>PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>SELECT ?regionName ?answer ?regionWkt {?region a :Region .?region rdfs:label ?regionName .?region geo:asWKT ?regionWkt .?gridCoverage a :Raster .?gridCoverage rasdb:rasterName ?rasterName .FILTER (?regionName = 'Bolzano') # also try with Castelrotto, Sarentino, Fortezza  etc.FILTER (CONTAINS(?rasterName, 'Tyrol'))BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)BIND (rasdb:rasSpatialMinimum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)} | <img src="diagrams/Q1result.png"/> | -->
 
 | **_Q<sub>i</sub>_** | Description                                                                                                                                              |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -94,28 +131,145 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 
 ## 4. Ontology (**_O_**)
 
-- Here we have provided **Raster Ontology** ontology that describe meta-level information of $n$-dimensional generic raster data or coverage based on the [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html). As of now it only describes only regular gridded coverage or geospatial raster data. The _RegularGridDomain_ and _RangeType_ classes capture all the information about the domains and ranges of a grid coverage.
+### 4.1. Raster Ontology
+
+We have provided **Raster Ontology** ontology that describe meta-level information of $n-dimensional$ generic raster data or coverage based on the [OGC Coverage Implementation Schema (CIS)](https://docs.ogc.org/is/09-146r8/09-146r8.html) and the paper [Andrejev et al., 2015](https://www2.it.uu.se/research/group/udbl/publ/DSDIS2015.pdf). As of now it only describes only regular gridded coverage or geospatial raster data. The _RegularGridDomain_ and _RangeType_ classes capture all the information about the domains and ranges of a grid coverage.
 
 <img src="diagrams/RasterOntology.png"/>
 
-## 5. Dataset (**_D_**)
+### 4.2. GeoSPARQL v1.1
 
-### 5.1 Relational Data (including Vector Data)
+For vector data we are using [GeoSPARQL v1.1 Ontology](https://opengeospatial.github.io/ogc-geosparql/geosparql11/index.html) introduces classes likes features, geometries, and their representation using Geography Markup Language (GML) and Well-Known Text (WKT) literals, and includes topological relationship vocabularies. GeoSPARQL also provides an extension of the standard SPARQL query interface, supporting a set of topological functions for quantitative reasoning.
 
-- This demo utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **_Regions_** or regions of interest (ROI). The vector data comprises approx 500 distinct regions with varying geometry features with other attributes, taken from [Global Administrative Areas (GADM)](https://gadm.org/download_country.html) database.
+### 4.3. CityGML v2.0
 
-- Stored among three separate tables such as `region_sweden`, `region_bavaria`, `region_south_tyrol` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshot of every table is displayed below,
+We are also using [CityGML v2.0 Ontology](https://cui.unige.ch/isi/ke/ontologies) developed by the University of Geneva for the ontology component of the KG construction phase and further modified by [Ding et al., 2024](https://doi.org/10.1080/10095020.2024.2337360) by adding further classes on addresses (including xAL) and removing object properties with the same IRI as data properties.
 
-- `region_sweden` <img src="diagrams/region_sweden.png">
+### 4.4. Quantities, Units, Dimensions and Types (QUDT)
+
+The [QUDT](https://qudt.org) provides set of vocabularies representing the base classes properties, and restrictions used for modeling physical quantities, measurement units, and their dimensions in various measurement systems originally developed for the NASA Exploration Initiatives Ontology Models ([NExIOM](https://step.nasa.gov/pde2009/slides/20090506145822/PDE2009-NExIOM-TQ_v2.0-aRH-sFINAL.pdf)) project and now it forms the basis of the [NASA QUDT Handbook](http://ontolog.cim3.net/file/work/OntologyBasedStandards/2013-10-10_Case-for-QUOMOS/NASA-QUDT-Handbook-v10--RalphHodgson_20131010.pdf). QUDT aims to improve interoperability of data and the specification of information structures through industry standards for `Units of Measure (UoM)`, Quantity Kinds, Dimensions and Data Types as pointed out by [Ray et al., 2011](https://doi.org/10.25504/FAIRsharing.d3pqw7). This OWL schema is a foundation for a basic treatment of units which is considered for `Unit of Measurement (UoM)` in this work.
+
+### 4.5. Open Street Map (OSM) ontology
+
+- Defines classes of objects appearing on maps: roads, railways, water ways, amenities, emergency infrastructure, public transport, shops, tourist attractions, etc. This extensive ontology comprises over 660 classes, delineated according to the established set of OSM tags and their corresponding values. It was developed by Ontology Engineering Group ([link](https://smartcity.linkeddata.es/ontologies/mapserv.kt.agh.edu.plontologiesosm.owl.html)).
+
+- **OSMonto**: An ontology of OpenStreetMap tags, created with the purpose to ease maintenance and overview of existing tags and to allow enriching the semantics of tags by relating them to other ontologies. It has been developed as a research paper [Mihai et al 2011](https://www.inf.unibz.it/~okutz/resources/osmonto.pdf) at University Bremen and DFKI Bremen and was presented at State of the Map Europe [SotM-EU'2011](https://stateofthemap.eu/index.html) and . An [.owl](https://raw.githubusercontent.com/doroam/planning-do-roam/master/Ontology/tags.owl) file containing the OSMonto ontology can be viewed in Protégé.
+
+- [Open Street Map integration](https://documentation.researchspace.org/resource/Help:OpenStreetMap) : This integration creates a simple lookup service to federate against the Open Street Maps (OSM) API, allowing users to reference place names in their ResearchSpace instances. Users can lookup a street address, a city, a country etc. and be able to reference this in their data.
+
+## 5. Heterogenous Data Sources (**_D_**)
+
+We selected Munich, the capital and largest city of Bavaria State, Germany as our area of interest (AOI) which comprises an approximate area of 5504 $km^2$ including the city and the surrounding metropolitan area. This area is densely populated and hence features numerous structures encompassing residential and commercial zones.
+
+<img src="diagrams/AOIMunich04.PNG">
+
+\***\*NOTE** - Any other AOI with similar kinds of data can be used.
+
+### 5.1 Relational Data
+
+### 5.1.1. Vector Data
+
+- This demo utilised 25 districts and 105 sub-districts of Munich as our vector data, downloaded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b).
+
+- This demo also utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **Areas of Interest (AOI)** which comprises approx 500 distinct regions with varying geometry features with other attributes. Check this [branch](https://github.com/aghoshpro/OntoRaster/tree/ontoraster/Paper%40RuleML'24) to find more details.
+
+- Stored in three separate tables such as `dist_25`, `dist_105`, `region_bavaria`, `region_sweden`, `region_south_tyrol` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshot of first three tablse are displayed below,
+
+- `dist_25` <img src="diagrams/region_sweden.png">
+
+- `dist_105` <img src="diagrams/region_sweden.png">
 
 - `region_bavaria` <img src="diagrams/region_bavaria.png">
 
-- `region_south_tyrol` <img src="diagrams/region_tyrol.png">
+- Same goes for `region_sweden` and `region_south_tyrol`.
+
+<!-- - `region_south_tyrol` <img src="diagrams/region_tyrol.png"> -->
+
 - Ideally any user-specific vector data for any region of interest will work by adding relevant mappings.
+
+### 5.1.2. CityGML Data (**_D<sup>City3D</sup>_**)
+
+#### 5.1.2.1. Installing 3DCityDB
+
+- Check Java version 11 or higher
+
+- Follow the [instructions](https://3dcitydb-docs.readthedocs.io/en/latest/first-steps/install-impexp.html) to install **3DCityDB** schema that will contain **CityGML** data in RDBMS
+
+- Go to [3DCityDB](https://www.3dcitydb.org/3dcitydb/downloads/) and download the [Importer/Exporter](https://3dcitydb-docs.readthedocs.io/en/latest/first-steps/setup-3dcitydb.html#installation-steps-on-postgresql) installer `.jar` file
+
+- Set up **3DCityDB** schema for PostgreSQL as per the instructions [here](https://3dcitydb-docs.readthedocs.io/en/latest/first-steps/setup-3dcitydb.html#installation-steps-on-postgresql)
+
+- Launching Importer/Exporter [link](https://3dcitydb-docs.readthedocs.io/en/latest/impexp/launching.html#launching-the-importer-exporter)
+
+- Start the 3DCityDB GUI Wizard
+
+  > $ chmod u+x 3DCityDB-Importer-Exporter && ./3DCityDB-Importer-Exporter
+
+#### 5.1.2.2. Get Data
+
+- Area of Interest : **Munich Metropolitan Area**
+
+- To check how many LOD2 gml files are needed to cover the aforementioned AOI one may go to [OpenData](https://geodaten.bayern.de/opengeodata/OpenDataDetail.html?pn=lod2&active=MASSENDOWNLOAD) and upload text file containing geometry of the AOI in `EWKT` format.
+
+- It will give something like below. One can also download the file `./diagrams/lod2.meta4` which contains all LONGs and LATs for the entire dataset with respective links.
+
+ <div align="center">
+   <img src="./diagrams/CityGML.PNG" width=500>
+ </div>
+ 
+ - Run the following shell script (or gitbash in Windows) to download files (**110** `.gml` files ~ **6.4 GB** in our study)
+
+    ```sh
+    #!/bin/bash
+
+    for LONG in `seq 674 2 680`
+    do
+      for LAT in `seq 5332 2 5342`
+      do
+        wget "https://download1.bayernwolke.de/a/lod2/citygml/${LONG}_${LAT}.gml"
+      done
+    done
+    ```
+
+#### 5.1.2.3. Visualise CityGML Data as CityJSON
+
+- [CityJSON](https://www.cityjson.org) is a JSON-based encoding for storing 3D city models.
+- CityGML 2 CityJSON Conversion [here](https://www.cityjson.org/tutorials/conversion/)
+- Drop the converted `.json` file in the CityJSON official online viewer called [ninja](https://www.cityjson.org/tutorials/getting-started/#visualise-it).
+
+#### 5.1.2.4. Manipulate CityJSON files using CityJSON/io (cjio)
+
+- [clio](https://www.cityjson.org/tutorials/getting-started/#manipulate-and-edit-it-with-cjio) is a command-line interface program used to edit, marge and validate CityJSON files.
+
+- Python (version >3.7) is required and using pip `pip install cjio`.
+
+### 5.1.3. OSM Data (**_D<sup>osm</sup>_**)
+
+#### Direct Download
+
+- [GeoFabrik OpenStreetMap Data Extracts](https://download.geofabrik.de) : Select your area of interest (AOI) and download OSM data in various formats such as `.osm`, `.pfb`, `.shp`.
+
+- You can also use CLI tools such as `wget` pr `curl` if you have the Bounding Box (BBOX) of AOI
+  - **BBOX** : [11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]
+
+#### Small AOI
+
+```
+$ wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
+```
+
+#### LARGER AOI (>300 MB)
+
+```
+$ wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
+```
 
 ### 5.2 Raster Data (**_D<sup>arr</sup>_**)
 
+- Figure 1(e-i) displays the respective raster data over Munich which includes elevation, land surface temperature, vegetation, snow coer and soil moisture.
+
 - Stored in array DBMS [**RasDaMan**](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
+
 - Information about the Raster data can be found at NASA's [Earth Science Data Systems (ESDS)](https://lpdaac.usgs.gov/products/mod11a1v061/)
 
   - Demo data used for Sweden, Bavaria and South Tyrol can be downloaded direclty from [Google Drive](https://drive.google.com/drive/folders/1yCSmmok3Iz7J2lZ-uleCg_q87GZsHfI7?usp=sharing)

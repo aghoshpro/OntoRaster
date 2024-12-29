@@ -1,0 +1,64 @@
+{
+	"config": {
+		"service_url": "http://localhost:8080/rasdaman/ows",
+		"tmp_directory": "/tmp/",
+		"mock": false,
+		"automated": true,
+		"track_files": false
+	},
+	"input": {
+		"coverage_id": "Munich_ECOSTRESS_SoilMoisture_70m",
+		"paths": ["/data/ECO_L3T_SM.002_70m_aid0001_32N.nc"]
+	},
+	"recipe": {
+		"name": "general_coverage",
+		"options": {
+			"coverage": {
+				"crs": "OGC/0/AnsiDate@EPSG/0/4326",
+				"metadata": {
+					"type": "xml",
+					"global": "auto"
+				},
+				"slicer": {
+					"type": "netcdf",
+					"pixelIsPoint": true,
+					"bands": [
+						{
+							"name": "SoilMoisture",
+							"variable": "SM",
+							"description": "ECOsystem Spaceborne Thermal Radiometer Experiment on Space Station (ECOSTRESS) Gridded Downscaled Soil Moisture Instantaneous L3 Global 70 m over Munich till November, 2024",
+							"identifier": "SM",
+							"nilvalue": "-9999",
+							"uomCode": "1"
+						}
+					],
+					"axes": {
+						"ansi": {
+							"statements": "from datetime import datetime, timedelta, timezone",
+							"min": "(datetime(2018,7,9,0,0,0,tzinfo=timezone.utc) + timedelta(seconds=${netcdf:variable:time:min})).strftime(\"%Y-%m-%dT%H:%M:%S.%f%z\")",
+							"max": "(datetime(2018,7,9,0,0,0,tzinfo=timezone.utc) + timedelta(seconds=${netcdf:variable:time:max})).strftime(\"%Y-%m-%dT%H:%M:%S.%f%z\")",
+							"directPositions": "[(datetime(2018,7,9,0,0,0,tzinfo=timezone.utc) + timedelta(seconds=x)).strftime(\"%Y-%m-%dT%H:%M:%S.%f%z\") for x in ${netcdf:variable:time}]",
+							"gridOrder": 0,
+							"type": "ansidate",
+							"resolution": 1,
+							"irregular": false
+						},
+						"Long": {
+							"min": "${netcdf:variable:xdim:min}",
+							"max": "${netcdf:variable:xdim:max}",
+							"gridOrder": 2,
+							"resolution": "${netcdf:variable:xdim:resolution}"
+						},
+						"Lat": {
+							"min": "${netcdf:variable:ydim:min}",
+							"max": "${netcdf:variable:ydim:max}",
+							"gridOrder": 1,
+							"resolution": "-${netcdf:variable:ydim:resolution}"
+						}
+					}
+				}
+			},
+			"tiling": "ALIGNED [0:*, 0:*, 0:*]"
+		}
+	}
+}
