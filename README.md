@@ -43,7 +43,7 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 ## 0. Motivation
 
-- **Query** - _List all the 30 meters tall residentials in Munich where average terrain elevation less than **550 meters** and average land surface temperature is over **300K**, given the following data_.
+- **Query** - _List all the 30 meters tall residentials in Munich where average terrain elevation less than **550 meters** and average land surface temperature is over **300K**, given the following heterogenous data_.
 
   <img src="diagrams/AOIMunich03.PNG">
 
@@ -63,21 +63,21 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 ### 2.1 Clone this repository
 
-- Windows
+<!-- - Windows
 
   ```sh
   git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
   ```
 
-- MacOS and Linux:
+- MacOS and Linux: -->
 
   ```sh
-  git clone https://github.com/aghoshpro/OntoRaster
+  git clone https://github.com/aghoshpro/OntoRaster.git
   ```
 
 ### 2.2 Setup Docker
 
-- Go to https://docs.docker.com/desktop/ and install docker on your favourite OS.
+- Go to <https://docs.docker.com/desktop/> and install docker on your favourite OS.
 
 ### 2.3 Run the demo
 
@@ -94,11 +94,11 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 - `NOTE:` When running Rasdaman in a Docker container, it's important to ensure that your system has sufficient resources (CPU, memory, and disk space) to handle large raster file imports. If you encounter issues, such as failed imports, it may be due to insufficient available memory or other resource constraints. If this issue occurs try closing unnecessary applications or increase docker resource limits.
 
-- This Docker-compose file uses the mapping `vkg/OntoRaster.obda` and ontology `vkg/OntoRaster.owl`.
+- `docker-compose` file uses the mapping `vkg/OntoRaster.obda` and ontology `vkg/OntoRaster.owl`.
 
 ### 2.4 Ontop SPARQL Endpoint
 
-It becomes available at http://localhost:8082/ under `success` in docker desktop (ETC 5 min). Click the link and try out the RasSPARQL queries as shown below,
+It becomes available at <http://localhost:8082/> under `success` in docker desktop (ETC 5 min). Click the link and try out the RasSPARQL queries as shown below,
 
 <img src="diagrams/Success1.PNG"/>
 
@@ -112,10 +112,6 @@ It becomes available at http://localhost:8082/ under `success` in docker desktop
 
 All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml`.
 
-<!-- | **_Q<sub>i</sub>_**                 | Description                        |
-| ----------------------------------- | ---------------------------------- |
-| ```PREFIX :	<https://github.com/aghoshpro/OntoRaster/> PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>PREFIX geo:	<http://www.opengis.net/ont/geosparql#>PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>SELECT ?regionName ?answer ?regionWkt {?region a :Region .?region rdfs:label ?regionName .?region geo:asWKT ?regionWkt .?gridCoverage a :Raster .?gridCoverage rasdb:rasterName ?rasterName .FILTER (?regionName = 'Bolzano') # also try with Castelrotto, Sarentino, Fortezza  etc.FILTER (CONTAINS(?rasterName, 'Tyrol'))BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)BIND (rasdb:rasSpatialMinimum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)} | <img src="diagrams/Q1result.png"/> | -->
-
 | **_Q<sub>i</sub>_** | Description                                                                                                                                              |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **_Q1_**            | What is the dimension of the input raster dataset?                                                                                                       |
@@ -128,6 +124,32 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 | **_Q8_**            | Find the temporal minimum value from a user-specific raster dataset over a user-specific vector region between start time and end time.                  |
 | **_Q9_**            | Clip a portion of user-specific raster data using the geometry of a user-specific vector region at a particular time and return the clipped array        |
 | **_Q10_**           | Clip a portion of user-specific raster data based on the shape of custom vector region at a particular time and return filtered arrays                   |
+
+### 3.1 Query Result
+
+- Find all the `residentials` and respective `sub-districts` in Munich, where the average terrain elevation is above 520 meters
+
+<img align="right" width="300" height="350" src="diagrams/Q1result.png">
+
+```SQL
+PREFIX : <https://github.com/aghoshpro/OntoRaster/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?bldgName ?subdistName ?elevation 
+{ 
+  ?region a :SubDistrict ; rdfs:label ?subdistName ; geo:asWKT ?subdistWkt .
+  ?bldg a lgdo:Residential ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
+  FILTER (geof:sfWithin(?bldgWkt, ?subdistWkt))
+  ?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+  FILTER (CONTAINS(?rasterName, 'Elevation'))
+  BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+  BIND (rasdb:rasSpatialAverage(?timeStamp, ?subdistWkt, ?rasterName)
+  AS ?elevation)
+  FILTER(?elevation > 520)
+} 
+```
 
 ## 4. Ontology (**_O_**)
 
@@ -159,33 +181,37 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 ## 5. Heterogenous Data Sources (**_D_**)
 
-We selected Munich, the capital and largest city of Bavaria State, Germany as our area of interest (AOI) which comprises an approximate area of 5504 $km^2$ including the city and the surrounding metropolitan area. This area is densely populated and hence features numerous structures encompassing residential and commercial zones.
+Our **area of interest (AOI)** encompasses the city of Munich, the capital and largest city of Bavaria, Germany, covering approximately 311.20 $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project `D2G2`
 
-<img src="diagrams/AOIMunich04.PNG">
+<!-- We selected Munich, the capital and largest city of Bavaria State, Germany as our area of interest (AOI) which comprises an approximate area of 311.20 $km^2$ including the city and the surrounding metropolitan area. This area is densely populated and hence features numerous structures encompassing residential and commercial zones. -->
 
 \***\*NOTE** - Any other AOI with similar kinds of data can be used.
 
 ### 5.1 Relational Data
 
+<img src="diagrams/AOIMunich_VEC.PNG">
+
 ### 5.1.1. Vector Data
 
-- This demo utilised 25 districts and 105 sub-districts of Munich as our vector data, downloaded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b).
+- This demo utilised 25 districts, 105 sub-districtsm OpenstreetMap (OSM) buildings and 3DCityGML 3D buildings data of Munich as our vector data as displayed above in figure (a)-(d).
 
-- This demo also utilised municipalities in Sweden, Bavaria (Germany), and South Tyrol (Italy) as **Areas of Interest (AOI)** which comprises approx 500 distinct regions with varying geometry features with other attributes. Check this [branch](https://github.com/aghoshpro/OntoRaster/tree/ontoraster/Paper%40RuleML'24) to find more details.
+<!-- , downloaded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b). -->
 
-- Stored in three separate tables such as `dist_25`, `dist_105`, `region_bavaria`, `region_sweden`, `region_south_tyrol` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshot of first three tablse are displayed below,
+- Stored in two separate tables such as `munich_dist25`, `munich_dist105` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshots are dispayed below,
 
-- `dist_25` <img src="diagrams/region_sweden.png">
+- `munich_dist25` <img src="diagrams/dist25.PNG">
 
-- `dist_105` <img src="diagrams/region_sweden.png">
+- `munich_dist105` <img src="diagrams/dist105.PNG">
 
-- `region_bavaria` <img src="diagrams/region_bavaria.png">
+- Another demo at this branch [`ontoraster/PaperRuleML'24`](https://github.com/aghoshpro/OntoRaster/tree/ontoraster/Paper%40RuleML'24) posses municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as **Areas of Interest (AOI)** which comprises approx 500 distinct regions with varying geometry features i.e., enclaves, islands with other attributes. For instance, the table for Sweden is as follows,
 
-- Same goes for `region_sweden` and `region_south_tyrol`.
+  - `region_sweden` <img src="diagrams/region_sweden.png">
 
-<!-- - `region_south_tyrol` <img src="diagrams/region_tyrol.png"> -->
+  - Same goes for `region_bavaria` and `region_south_tyrol`.
 
-- Ideally any user-specific vector data for any region of interest will work by adding relevant mappings.
+- Ideally any user-specific vector data for any AOI will work by adding relevant mappings.
+
+---
 
 ### 5.1.2. CityGML Data (**_D<sup>City3D</sup>_**)
 
@@ -214,10 +240,10 @@ We selected Munich, the capital and largest city of Bavaria State, Germany as ou
 - It will give something like below. One can also download the file `./diagrams/lod2.meta4` which contains all LONGs and LATs for the entire dataset with respective links.
 
  <div align="center">
-   <img src="./diagrams/CityGML.PNG" width=500>
+   <img src="./diagrams/CityGML.PNG" width=400>
  </div>
- 
- - Run the following shell script (or gitbash in Windows) to download files (**110** `.gml` files ~ **6.4 GB** in our study)
+
+- Run the following shell script (or gitbash in Windows) to download files (**110** `.gml` files ~ **6.4 GB** in our study)
 
     ```sh
     #!/bin/bash
@@ -243,6 +269,8 @@ We selected Munich, the capital and largest city of Bavaria State, Germany as ou
 
 - Python (version >3.7) is required and using pip `pip install cjio`.
 
+---
+
 ### 5.1.3. OSM Data (**_D<sup>osm</sup>_**)
 
 #### Direct Download
@@ -252,95 +280,114 @@ We selected Munich, the capital and largest city of Bavaria State, Germany as ou
 - You can also use CLI tools such as `wget` pr `curl` if you have the Bounding Box (BBOX) of AOI
   - **BBOX** : [11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]
 
+- Check [bboxfinder.com](https://bboxfinder.com/) to find BBOX for your AOI
+
 #### Small AOI
 
 ```
-$ wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
+wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
 ```
 
 #### LARGER AOI (>300 MB)
 
 ```
-$ wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
+wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
 ```
+
+---
 
 ### 5.2 Raster Data (**_D<sup>arr</sup>_**)
 
-- Figure 1(e-i) displays the respective raster data over Munich which includes elevation, land surface temperature, vegetation, snow coer and soil moisture.
+<img src="diagrams/AOIMunich_raster.png">
+
+- Figure (e)-(i) displays the respective raster data over Munich which includes elevation, land surface temperature, vegetation, snow cover and soil moisture from different satellite sensors.
 
 - Stored in array DBMS [**RasDaMan**](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
 
-- Information about the Raster data can be found at NASA's [Earth Science Data Systems (ESDS)](https://lpdaac.usgs.gov/products/mod11a1v061/)
+<!-- - Information about the Raster data can be found at NASA's [Earth Science Data Systems (ESDS)](https://lpdaac.usgs.gov/products/mod11a1v061/)
 
-  - Demo data used for Sweden, Bavaria and South Tyrol can be downloaded direclty from [Google Drive](https://drive.google.com/drive/folders/1yCSmmok3Iz7J2lZ-uleCg_q87GZsHfI7?usp=sharing)
+  - Demo data used for Sweden, Bavaria and South Tyrol can be downloaded direclty from [Google Drive](https://drive.google.com/drive/folders/1yCSmmok3Iz7J2lZ-uleCg_q87GZsHfI7?usp=sharing) -->
 
-- Metadata are stored in `raster_lookup` table as shown below.
-- `raster_lookup` <img src="diagrams/raster_lookup.png">
+- Metadata of rasters are stored in `raster_lookup` table as shown below.
+- `raster_lookup` <img src="diagrams/raster_lookupx.png">
 
 - Ideally any 3-D gridded raster data of geospatial domain should work with the addition of relevant mappings.
 
 ## 6. Mapping (**_M_**)
 
-Mappings design is the most crusial user-centric step in generating Virtual Knowledge Graph (VKG).
-A mapping consist of three main parts: a mapping id, a source and a target.
+Mappings design is the most crusial user-centric step in generating Virtual Knowledge Graph (VKG). Mapping connect the raw data with the domain ontology to generate knowledge graph during user query.
 
-- **Mapping ID** is an arbitary but unique identifier
-- **Source** refers to a regular SQL query expressed over a relational database fetching the data from the table using the chosen column name.
-- **Target** is RDF triple pattern that uses the answer variables from preceding SQL query as placeholders and described using [Turtle syntax](https://github.com/ontop/ontop/wiki/TurtleSyntax)
+- A mapping consist of three main parts: a mapping id, a source and a target.
 
-Here we have provided the actual mappings for the demo vector and raster dataset (D).
+  - **Mapping ID** is an arbitary but unique identifier
+  - **Source** refers to a regular SQL query expressed over a relational database fetching the data from the table using the chosen column name.
+  - **Target** is RDF triple pattern that uses the answer variables from preceding SQL query as placeholders and described using [Turtle syntax](https://github.com/ontop/ontop/wiki/TurtleSyntax)
+
+<!-- Here we have provided the actual mappings for the demo vector and raster dataset.
 
 For vector data we simply substituted the table name `sample_regions_of_interest` with actual table names kept in RDBMS including `region_sweden`, `region_bavaria`, `region_south_tyrol` displaying vector data (**500+ unique regions**) for municipalities of Sweden, Bavaria (Germany) and South Tyrol (Italy) respectively.
 
-**User can add their own vector data by writing their own mappings in similar fashion shown below.**
+**Users can add their own vector data by writing their own mappings in similar fashion shown below.** -->
 
-### **_M1 `Vector Data` - Region Class_**
+### **_M1 `Vector` - Region Class_**
 
-The **_Region_** class includes any usecase-specific **_regions of interest (ROI)_**, such as municipalities, provinces, countries, administrative boundaries, and so on, together with their geometries and other features.
-
-- Target
-  ```sparql
-  :region/sweden/{gid} a :Region .
-  ```
-- Source
-  ```sql
-  SELECT gid AS regionId FROM region_sweden
-  ```
-
-### **_M2 `Vector Data` - Region Name_**
+The **_Region_** super-class includes `municipalities`, `districts`, `sub-districts`,`provinces`,`countries`etc. administrative boundaries, or any user specific `custom region` class. Here we have only provided the mapping for 25 districts of Munich but check `vkg/OntoRaster.obda` for test of the mappings for `subdist105`m `osm_buildings` and `3dcitygml` 3d buldings with proper table names.
 
 - Target
+
   ```sparql
-  :region/demo/{regionId} rdfs:label {regionName}^^xsd:string .
-  ```
-- Source
-  ```sql
-  SELECT gid AS regionId, name_2 AS region_name FROM region_sweden
+  :vector_region/bavaria/munich/districts/{regionId} a :District .
   ```
 
-### **_M3 `Vector Data` - Region Geometry_**
+- Source
+
+  ```sql
+  SELECT gid AS regionId FROM public.munich_dist25
+  ```
+
+### **_M2 `Vector` - Region Name_**
+
+- Target
+
+  ```sparql
+  :vector_region/bavaria/munich/districts/{regionId} rdfs:label {regionName}^^xsd:string .
+  ```
+
+- Source
+
+  ```sql
+  SELECT gid AS regionId, first_bezi AS regionName FROM public.munich_dist25
+  ```
+
+### **_M3 `Vector` - Region Geometry_**
 
 - **Target**
+
   ```sparql
-  :region/demo/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
+  :vector_region/bavaria/munich/districts/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
   ```
+
 - **Source**
+
   ```sql
-  SELECT regionId,
+  SELECT SELECT gid AS regionId,,
               CASE
                   WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
                   ELSE ST_AsText(geom)
               END AS regionWkt
-  FROM region_sweden
+  FROM public.munich_dist25
   ```
 
 ### **_R1 `Raster Metadata` - Raster Class_**
 
 - **Target**
+
   ```sparql
   :raster/{rasterId} a :Raster .
   ```
+
 - **Source**
+
   ```sql
   SELECT raster_id AS rasterId FROM raster_lookup
   ```
@@ -348,14 +395,17 @@ The **_Region_** class includes any usecase-specific **_regions of interest (ROI
 ### **_R2 `Raster Metadata` - Raster Name_**
 
 - **Target**
+
   ```sparql
   :raster/{rasterId} rasdb:rasterName {rasterName}^^xsd:string .
   ```
+
 - **Source**
+
   ```sql
   SELECT raster_id AS rasterId, raster_name AS rasterName FROM raster_lookup
   ```
 
 ## 7. More details
 
-Please visit the official website of Ontop https://ontop-vkg.org for more details on Virtual Knowledge Graphs and https://doc.rasdaman.org/index.html for more details on array databases.
+Please visit the official website of Ontop <https://ontop-vkg.org> for more details on Virtual Knowledge Graphs and <https://doc.rasdaman.org/index.html> for more details on array databases.
