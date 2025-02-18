@@ -129,7 +129,7 @@ All RasSPARQL queries with `PREFIX` are mentioned at `vkg/OntoRaster.toml`.
 
 - Find all the `residentials` and respective `sub-districts` in Munich, where the average terrain `elevation` is above 520 meters
 
-  <img align="right" width="300" height="380" src="diagrams/Q1result.png">
+  <img align="right" width="300" height="355" src="diagrams/Q1result.png">
 
   ```SQL
   SELECT ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
@@ -152,7 +152,7 @@ All RasSPARQL queries with `PREFIX` are mentioned at `vkg/OntoRaster.toml`.
 
 - Find all the `rasters` within respective `sub-districts` in Munich based on the similar conditions of above query [****WORK IN PROGRESS**]
   <!-- <img align="left" width="300  " height="380" src="diagrams/Screenshot from 2025-02-19 01-23-55.png"> -->
-  <img align="right" width="300  " height="350" src="diagrams/Screenshot from 2025-02-19 01-27-57.png">
+  <img align="right" width="300  " height="315" src="diagrams/Screenshot from 2025-02-19 01-27-57.png">
 
     ```SQL
     SELECT ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
