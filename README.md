@@ -43,7 +43,7 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 ## 0. Motivation
 
-- **Query** - _List all the 30 meters tall residentials in Munich where average terrain elevation less than **550 meters** and average land surface temperature is over **300K**, given the following heterogenous data_.
+- **Query** - _List all the 30 meters tall residentials in **Munich** where average terrain elevation less than **550 meters** and average land surface temperature is over **300K**, given the following heterogenous data_.
 
   <img src="diagrams/AOIMunich03.PNG">
 
@@ -70,7 +70,7 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
   ```
 
 - MacOS and Linux: -->
-
+-
   ```sh
   git clone https://github.com/aghoshpro/OntoRaster.git
   ```
@@ -110,9 +110,9 @@ It becomes available at <http://localhost:8082/> under `success` in docker deskt
 
 ## 3. Queries (**_Q_**)
 
-All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml`.
+All RasSPARQL queries with `PREFIX` are mentioned at `vkg/OntoRaster.toml`.
 
-| **_Q<sub>i</sub>_** | Description                                                                                                                                              |
+| **_Q<sub>i</sub>_** | Functional Description                                                                                                                                              |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **_Q1_**            | What is the dimension of the input raster dataset?                                                                                                       |
 | **_Q2_**            | Perform element-wise operation over cells of an array of an input raster dataset at a particular timestamp with the user-specific operator and operator. |
@@ -127,29 +127,49 @@ All RasSPARQL queries described below are also available at `vkg/OntoRaster.toml
 
 ### 3.1 Query Result
 
-- Find all the `residentials` and respective `sub-districts` in Munich, where the average terrain elevation is above 520 meters
+- Find all the `residentials` and respective `sub-districts` in Munich, where the average terrain `elevation` is above 520 meters
 
-<img align="right" width="300" height="350" src="diagrams/Q1result.png">
+  <img align="right" width="300" height="380" src="diagrams/Q1result.png">
 
-```SQL
-PREFIX : <https://github.com/aghoshpro/OntoRaster/> 
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
-
-SELECT ?bldgName ?subdistName ?elevation 
-{ 
-  ?region a :SubDistrict ; rdfs:label ?subdistName ; geo:asWKT ?subdistWkt .
-  ?bldg a lgdo:Residential ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
-  FILTER (geof:sfWithin(?bldgWkt, ?subdistWkt))
-  ?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+  ```SQL
+  SELECT ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
+  ?region a :SubDistrict . 
+  ?region rdfs:label ?distName .
+  ?region geo:asWKT ?distWkt .
+  BIND('#008AFF5C' AS ?distWktColor)
+  ?building a lgdo:Residential .
+  ?building geo:asWKT ?bldgWkt .
+  BIND('red' AS ?bldgWktColor)
+  FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+  ?gridCoverage a :Raster .
+  ?gridCoverage rasdb:rasterName ?rasterName .
   FILTER (CONTAINS(?rasterName, 'Elevation'))
   BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-  BIND (rasdb:rasSpatialAverage(?timeStamp, ?subdistWkt, ?rasterName)
-  AS ?elevation)
+  BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
   FILTER(?elevation > 520)
-} 
-```
+  } 
+  ```
+
+- Find all the `rasters` within respective `sub-districts` in Munich based on the similar conditions of above query [****WORK IN PROGRESS**]
+  <!-- <img align="left" width="300  " height="380" src="diagrams/Screenshot from 2025-02-19 01-23-55.png"> -->
+  <img align="right" width="300  " height="350" src="diagrams/Screenshot from 2025-02-19 01-27-57.png">
+
+    ```SQL
+    SELECT ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
+    ?region a :SubDistrict . 
+    ?region rdfs:label ?distName .
+    ?region geo:asWKT ?distWkt .
+    ?building a lgdo:Residential .
+    ?building geo:asWKT ?bldgWkt .
+    FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+    ?gridCoverage a :Raster .
+    ?gridCoverage rasdb:rasterName ?rasterName .
+    FILTER (CONTAINS(?rasterName, 'Elevation'))
+    BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+    BIND (rasdb:rasGeoTIFF(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+    FILTER(?elevation > 520)
+    } 
+    ```
 
 ## 4. Ontology (**_O_**)
 
@@ -181,19 +201,20 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 ## 5. Heterogenous Data Sources (**_D_**)
 
-Our **area of interest (AOI)** encompasses the city of Munich, the capital and largest city of Bavaria, Germany, covering approximately 311.20 $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project `D2G2`
+### Area of Interest (AOI)
+- **Munich**, the capital and largest city of Bavaria, Germany, covering approximately 311.20 $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project [Dense and Deep Geographic Virtual Knowledge Graphs for Visual Analysis (D2G2)](https://gepris.dfg.de/gepris/projekt/500249124).
 
 <!-- We selected Munich, the capital and largest city of Bavaria State, Germany as our area of interest (AOI) which comprises an approximate area of 311.20 $km^2$ including the city and the surrounding metropolitan area. This area is densely populated and hence features numerous structures encompassing residential and commercial zones. -->
 
-\***\*NOTE** - Any other AOI with similar kinds of data can be used.
+- \***\*NOTE** - Any other AOI with similar kinds of data can be used.
 
 ### 5.1 Relational Data
 
-<img src="diagrams/AOIMunich_VEC.PNG">
+<img src="diagrams/AOIMunich_vec.png">
 
 ### 5.1.1. Vector Data
 
-- This demo utilised 25 districts, 105 sub-districtsm OpenstreetMap (OSM) buildings and 3DCityGML 3D buildings data of Munich as our vector data as displayed above in figure (a)-(d).
+- This demo utilised 25 districts, 105 subdistricts, OpenStreetMap (OSM) data and 3DCityGML 3D buildings data as vector data for Munich as shown above in **Figure (a)-(d)**.
 
 <!-- , downloaded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b). -->
 
@@ -203,13 +224,13 @@ Our **area of interest (AOI)** encompasses the city of Munich, the capital and l
 
 - `munich_dist105` <img src="diagrams/dist105.PNG">
 
-- Another demo at this branch [`ontoraster/PaperRuleML'24`](https://github.com/aghoshpro/OntoRaster/tree/ontoraster/Paper%40RuleML'24) posses municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as **Areas of Interest (AOI)** which comprises approx 500 distinct regions with varying geometry features i.e., enclaves, islands with other attributes. For instance, the table for Sweden is as follows,
+- Another demo at this branch [`ontoraster/PaperRuleML'24`](https://github.com/aghoshpro/OntoRaster/tree/ontoraster/Paper%40RuleML'24) posses municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as **Areas of Interest (AOI)** which comprises approx **500** distinct regions with varying geometry features i.e., enclaves, islands with other attributes. For instance, the table for Sweden is as follows,
 
   - `region_sweden` <img src="diagrams/region_sweden.png">
 
   - Same goes for `region_bavaria` and `region_south_tyrol`.
 
-- Ideally any user-specific vector data for any AOI will work by adding relevant mappings.
+- **Ideally any user-specific vector data of any AOI will work by adding relevant mappings**.
 
 ---
 
@@ -247,7 +268,6 @@ Our **area of interest (AOI)** encompasses the city of Munich, the capital and l
 
     ```sh
     #!/bin/bash
-
     for LONG in `seq 674 2 680`
     do
       for LAT in `seq 5332 2 5342`
@@ -283,16 +303,17 @@ Our **area of interest (AOI)** encompasses the city of Munich, the capital and l
 - Check [bboxfinder.com](https://bboxfinder.com/) to find BBOX for your AOI
 
 #### Small AOI
-
-```
-wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
-```
+-
+  ```
+  wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
+  ```
 
 #### LARGER AOI (>300 MB)
 
-```
-wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
-```
+-
+  ```
+  wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
+  ```
 
 ---
 
@@ -300,7 +321,7 @@ wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.360
 
 <img src="diagrams/AOIMunich_raster.png">
 
-- Figure (e)-(i) displays the respective raster data over Munich which includes elevation, land surface temperature, vegetation, snow cover and soil moisture from different satellite sensors.
+- **Figure (e)-(i)** displays the respective raster data over Munich which includes elevation, land surface temperature, vegetation, snow cover and soil moisture from different satellite sensors.
 
 - Stored in array DBMS [**RasDaMan**](https://doc.rasdaman.org/index.html) ("Raster Data Manager").
 
@@ -329,10 +350,12 @@ For vector data we simply substituted the table name `sample_regions_of_interest
 
 **Users can add their own vector data by writing their own mappings in similar fashion shown below.** -->
 
-### **_M1 `Vector` - Region Class_**
+### 6.1. **Relational Data (including `Vector`)**
 
-The **_Region_** super-class includes `municipalities`, `districts`, `sub-districts`,`provinces`,`countries`etc. administrative boundaries, or any user specific `custom region` class. Here we have only provided the mapping for 25 districts of Munich but check `vkg/OntoRaster.obda` for test of the mappings for `subdist105`m `osm_buildings` and `3dcitygml` 3d buldings with proper table names.
+**Area of Interest (AOI)** contains one or more regions. **_Region_** can be a super-class that includes any type of real world ***feature classes*** such as administrative boundaries  e,g., `municipalities`, `districts`, `sub-districts`,`provinces`,`countries` or any user specific `custom region`. Here we have only provided the mapping for 25 districts of Munich (`munich_dist25` table).
 
+
+#### **_M1 - `regionId`_ of District Class**
 - Target
 
   ```sparql
@@ -345,7 +368,7 @@ The **_Region_** super-class includes `municipalities`, `districts`, `sub-distri
   SELECT gid AS regionId FROM public.munich_dist25
   ```
 
-### **_M2 `Vector` - Region Name_**
+#### **_M2 - `regionName`_ of District Class**
 
 - Target
 
@@ -358,8 +381,7 @@ The **_Region_** super-class includes `municipalities`, `districts`, `sub-distri
   ```sql
   SELECT gid AS regionId, first_bezi AS regionName FROM public.munich_dist25
   ```
-
-### **_M3 `Vector` - Region Geometry_**
+#### **_M3 - `regionGeometry`_ of District Class**
 
 - **Target**
 
@@ -378,7 +400,12 @@ The **_Region_** super-class includes `municipalities`, `districts`, `sub-distri
   FROM public.munich_dist25
   ```
 
-### **_R1 `Raster Metadata` - Raster Class_**
+- Please check `vkg/OntoRaster.obda` for rest of the mappings for `subdistricts`, `osm_buildings` and `3dcitygml` buildings.
+
+### 6.2. **Raster Metadata**
+
+
+#### **_M11 - `rasterId`_ of Raster Class**
 
 - **Target**
 
@@ -392,7 +419,7 @@ The **_Region_** super-class includes `municipalities`, `districts`, `sub-distri
   SELECT raster_id AS rasterId FROM raster_lookup
   ```
 
-### **_R2 `Raster Metadata` - Raster Name_**
+#### **_M12 - `rasterName`_ of Raster Class**
 
 - **Target**
 
