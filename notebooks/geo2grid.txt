@@ -1,0 +1,142 @@
+import numpy as np
+import re
+from affine import Affine
+from shapely.geometry import Polygon, LinearRing, MultiPolygon
+from shapely.ops import unary_union
+from shapely import wkt
+
+def grid2WKT_ring(y_grid, x_grid):
+    coordinates = list(zip(y_grid, x_grid))
+    # Ensure the ring is closed by repeating the first point at the end if needed
+    if coordinates[0] != coordinates[-1]:
+        coordinates.append(coordinates[0])
+    ring_wkt = "LINEARRING(" + ", ".join(f"{x} {y}" for x, y in coordinates) + ")"
+    return ring_wkt
+
+def grid2WKT_polygon(y_grid, x_grid):
+    coordinates = list(zip(y_grid, x_grid))
+    # Ensure the ring is closed by repeating the first point at the end if needed
+    if coordinates[0] != coordinates[-1]:
+        coordinates.append(coordinates[0])
+    polygon_wkt = "POLYGON((" + ", ".join(f"{x} {y}" for x, y in coordinates) + "))"
+    return polygon_wkt
+
+def geo2grid(lons, lats, xmin, ymax, x_scale, y_scale, xskew = 0.0, yskew = 0.0):
+    aff_gdal = Affine.from_gdal(xmin, x_scale, xskew, ymax, 0.0, -y_scale)
+    lons = np.array(lons)
+    lats = np.array(lats)
+    xs, ys = ~aff_gdal*(lons, lats)
+    xs = np.int64(xs)
+    ys = np.int64(ys)
+    return xs, ys 
+
+def process_boundary(boundary):
+    """Process a boundary (exterior or interior) to grid coordinates"""
+    # Get coordinates but don't remove the last point (which closes the ring)
+    coords = np.dstack(boundary.xy).tolist()[0]
+    coordinates = [{"long": x, "lat": y} for x, y in coords]
+    
+    lat_arr = []
+    long_arr = []
+    for coord in coordinates:
+        long_arr = np.append(long_arr, coord['long'])
+        lat_arr = np.append(lat_arr, coord['lat'])
+
+    long_list = long_arr.tolist()
+    lat_list = lat_arr.tolist()
+
+    x_grid, y_grid = geo2grid(long_list, lat_list, xmin, ymax, x_scale, y_scale)
+    return x_grid, y_grid
+
+def processPOLYGON(inputPOLYGON):
+    """Process a polygon, including those with holes (interior rings)"""
+    if inputPOLYGON.area == 0:
+        return None
+    
+    # Process exterior ring
+    ext_x_grid, ext_y_grid = process_boundary(inputPOLYGON.exterior)
+    
+    # If there are no interior rings (holes), create a simple polygon
+    if len(inputPOLYGON.interiors) == 0:
+        gridPOLYGON_wkt = grid2WKT_polygon(ext_y_grid, ext_x_grid)
+        return gridPOLYGON_wkt
+    
+    # Handle polygons with holes
+    else:
+        # Start with exterior ring - ensure it's closed
+        ext_coordinates = list(zip(ext_x_grid, ext_y_grid))
+        if ext_coordinates[0] != ext_coordinates[-1]:
+            ext_x_grid = np.append(ext_x_grid, ext_x_grid[0])
+            ext_y_grid = np.append(ext_y_grid, ext_y_grid[0])
+            
+        rings_wkt = "POLYGON((" + ", ".join(f"{x} {y}" for x, y in zip(ext_x_grid, ext_y_grid)) + ")"
+        
+        # Add each interior ring - ensure each is closed
+        for interior in inputPOLYGON.interiors:
+            int_x_grid, int_y_grid = process_boundary(interior)
+            int_coordinates = list(zip(int_x_grid, int_y_grid))
+            
+            # Ensure the interior ring is closed
+            if int_coordinates[0] != int_coordinates[-1]:
+                int_x_grid = np.append(int_x_grid, int_x_grid[0])
+                int_y_grid = np.append(int_y_grid, int_y_grid[0])
+                
+            rings_wkt += ", (" + ", ".join(f"{x} {y}" for x, y in zip(int_x_grid, int_y_grid)) + ")"
+        
+        # Close the polygon
+        rings_wkt += ")"
+        return rings_wkt
+
+def geoPOLYGON_to_gridPOLYGON(inputREGION, min_lon, max_lat, resolution_lon, resolution_lat):
+    """Convert geographic polygons to grid polygons, supporting all types"""
+    # Set global variables for coordinate transformation
+    global xmin, ymax, x_scale, y_scale
+    xmin = min_lon
+    ymax = max_lat
+    x_scale = resolution_lon
+    y_scale = resolution_lat
+    
+    try:
+        # Parse the input WKT string to a shapely geometry
+        inputREGION = wkt.loads(inputREGION)
+        
+        # Case 1: Single Polygon
+        if inputREGION.geom_type == 'Polygon':
+            return processPOLYGON(inputREGION)
+        
+        # Case 2: MultiPolygon (with or without holes)
+        elif inputREGION.geom_type == 'MultiPolygon':
+            polygon_wkts = []
+            
+            # Process each polygon in the MultiPolygon
+            for polygon in inputREGION.geoms:
+                grid_polygon = processPOLYGON(polygon)
+                if grid_polygon:
+                    polygon_wkts.append(grid_polygon)
+            
+            if not polygon_wkts:
+                return None
+                
+            # Convert WKT strings back to shapely geometries
+            try:
+                grid_polygons = [wkt.loads(poly_wkt) for poly_wkt in polygon_wkts if poly_wkt]
+                
+                # Try to merge overlapping polygons
+                merged = unary_union(grid_polygons)
+                
+                # Return either a merged polygon or MultiPolygon depending on the result
+                return merged.wkt
+            except Exception as e:
+                # If there's an error in merging, return a MultiPolygon of the individual polygons
+                return f"MULTIPOLYGON({','.join([p.replace('POLYGON', '') for p in polygon_wkts])})"
+        
+        # Default case for unsupported geometry types
+        else:
+            raise ValueError(f"Unsupported geometry type: {inputREGION.geom_type}")
+    except Exception as e:
+        # Return the error message for debugging
+        return f"Error: {str(e)}"
+
+# Call the function and return the result
+gridPOLY = geoPOLYGON_to_gridPOLYGON(geoPOLY, min_lon, max_lat, resolution_lon, resolution_lat)
+return gridPOLY

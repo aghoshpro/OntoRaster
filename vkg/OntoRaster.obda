@@ -18,7 +18,7 @@ rasdb:		https://github.com/aghoshpro/RasterDataCube/
 ; ---------------- Mapping for All Regions in Sweden -----------------
 
 mappingId	Get_region_class_table_sweden
-target		:vector_region/sweden/{regionId} a :Region .
+target		:vector_region/sweden/{regionId} a :Country_SWEDEN .
 source		SELECT gid AS regionId FROM public.region_sweden
 
 mappingId	mapping_regionName_sweden
@@ -37,7 +37,7 @@ source		SELECT gid AS regionId,
 ; ---------------- Mapping for All Regions in Bavaria -----------------
 
 mappingId	Get_region_class_table_bavaria
-target		:vector_region/bavaria/{regionId} a :Region .
+target		:vector_region/bavaria/{regionId} a :Country_GERMANY .
 source		SELECT gid AS regionId FROM public.region_bavaria
 
 mappingId	mapping_regionName_bavaria
@@ -164,7 +164,7 @@ source		SELECT gid AS buildingId,
 ; ---------------- Mapping for All Regions in South Tyrol -----------------
 
 mappingId	Get_region_class_table_south_tyrol
-target		:vector_region/tyrol/{regionId} a :Region .
+target		:vector_region/tyrol/{regionId} a :Country_ITALY .
 source		SELECT gid AS regionId FROM public.region_south_tyrol
 
 mappingId	mapping_regionName_south_tyrol

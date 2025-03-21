@@ -1,0 +1,113 @@
+import numpy as np
+import re
+from affine import Affine
+from shapely.geometry import Polygon, LinearRing, MultiPolygon
+from shapely.ops import unary_union
+from shapely import wkt
+
+def grid2WKT_ring(y_grid, x_grid):
+    coordinates = list(zip(y_grid, x_grid))
+    ring_wkt = "LINEARRING(" + ", ".join(f"{x} {y}" for x, y in coordinates) + ")"
+    return ring_wkt
+
+def grid2WKT_polygon(y_grid, x_grid):
+    coordinates = list(zip(y_grid, x_grid))
+    polygon_wkt = "POLYGON((" + ", ".join(f"{x} {y}" for x, y in coordinates) + "))"
+    return polygon_wkt
+
+def geo2grid(lons, lats, xmin, ymax, x_scale, y_scale, xskew = 0.0, yskew = 0.0):
+    aff_gdal = Affine.from_gdal(xmin, x_scale, xskew, ymax, 0.0, -y_scale)
+    lons = np.array(lons)
+    lats = np.array(lats)
+    xs, ys = ~aff_gdal*(lons, lats)
+    xs = np.int64(xs)
+    ys = np.int64(ys)
+    return xs, ys 
+
+def add_closing_coordinates(d):
+    i = re.search(r"\d", d).start()
+    j = re.search(r'(\d)[^\d]*$', d).start() + 1
+    c = d.index(',')    
+    return d[:j] + ", " + d[i:c] + d[j:]
+
+def processRING(ring):
+    lat_arr = []
+    long_arr = []
+    if ring.is_closed == True:
+        longitudes, latitudes = zip(ring.xy)
+        
+        for i in range(len(latitudes[0])):
+            long_arr = np.append(long_arr, longitudes[0][i])
+            lat_arr = np.append(lat_arr, latitudes[0][i])
+
+        long_list = long_arr.tolist()
+        lat_list = lat_arr.tolist()
+
+        x_grid, y_grid = geo2grid(long_list, lat_list, xmin, ymax, x_scale, y_scale)
+        gridRING_yx = grid2WKT_ring(y_grid, x_grid)
+
+        return gridRING_yx
+    else:
+        return null
+
+def processPOLYGON(inputPOLYGON):
+    if inputPOLYGON.area == 0:
+        pass
+    elif len(inputPOLYGON.interiors) == 0:
+        coords = np.dstack(inputPOLYGON.boundary.xy).tolist()[0][:-1]
+        expected_list_of_coordinates_for_received_code = [{"long": x, "lat": y} for x, y in coords]
+        lat_arr = []
+        long_arr = []
+        for i in range(len(expected_list_of_coordinates_for_received_code)):
+            long_arr = np.append(long_arr, expected_list_of_coordinates_for_received_code[i]['long'])
+            lat_arr = np.append(lat_arr, expected_list_of_coordinates_for_received_code[i]['lat'])
+
+        long_list = long_arr.tolist()
+        lat_list = lat_arr.tolist()
+
+        x_grid, y_grid = geo2grid(long_list, lat_list, xmin, ymax, x_scale, y_scale)
+        gridPOLYGON_yx = grid2WKT_polygon(y_grid, x_grid)
+
+        return gridPOLYGON_yx
+    else:
+        mainPOLYGON = Polygon(inputPOLYGON.exterior)  
+        gridPOLYGON_yx = processPOLYGON(mainPOLYGON)
+
+        return gridPOLYGON_yx
+
+def geoPOLYGON_to_gridPOLYGON_03(inputREGION, min_lon, max_lat, resolution_lon, resolution_lat):
+    polygons_array1 = []
+    polygons_array2 = []
+    i = 0
+    r = 0
+    global xmin
+    xmin = min_lon
+    global ymax
+    ymax= max_lat
+    global x_scale
+    x_scale = resolution_lon
+    global y_scale
+    y_scale = resolution_lat
+    
+    inputREGION = wkt.loads(inputREGION)
+    if inputREGION.geom_type == 'Polygon':
+        return processPOLYGON(inputREGION)
+    
+    elif len(list(inputREGION.geoms[0].interiors)) > 0:         
+        for poly in inputREGION.geoms:
+            gridPOLYGON = processPOLYGON(poly)
+            polygons_array1.append(gridPOLYGON)
+            
+        gridMULTI =  [wkt.loads(poly) for poly in polygons_array1]
+        return shapely.geometry.MultiPolygon(gridMULTI)
+
+    else:                                                  
+        for poly in inputREGION.geoms:
+            gridPOLYGON = processPOLYGON(poly)
+            polygons_array2.append(gridPOLYGON)
+            
+        gridMULTI =  [wkt.loads(poly) for poly in polygons_array2]
+        return shapely.geometry.MultiPolygon(unary_union(gridMULTI))
+    
+gridPOLY = geoPOLYGON_to_gridPOLYGON_03(geoPOLY, min_lon, max_lat, resolution_lon, resolution_lat)
+return gridPOLY

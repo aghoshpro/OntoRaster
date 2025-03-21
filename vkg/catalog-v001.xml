@@ -14,5 +14,6 @@
         <uri id="Automatically generated entry, Timestamp=1704986029146" name="http://www.w3.org/ns/sosa/" uri="ontologies/sosa.owl"/>
         <uri id="Automatically generated entry, Timestamp=1704986029146" name="http://www.w3.org/ns/ssn/" uri="ontologies/ssn.owl"/>
         <uri id="Automatically generated entry, Timestamp=1704986029146" name="https://schema.org/version/latest/schemaorg-current-http.rdf" uri="ontologies/schema.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1705506029146" name="https://www.geonames.org/ontology" uri="ontologies/geonames_v3.3.owl"/>
     </group>
 </catalog>

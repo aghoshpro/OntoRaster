@@ -43,16 +43,24 @@ CREATE OR REPLACE FUNCTION rasdaman_op.geo2grid_final(
 AS $BODY$
 import numpy as np
 import re
-
 from affine import Affine
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, LinearRing, MultiPolygon
 from shapely.ops import unary_union
 from shapely import wkt
 
+def grid2WKT_ring(y_grid, x_grid):
+    coordinates = list(zip(y_grid, x_grid))
+    if coordinates[0] != coordinates[-1]:
+        coordinates.append(coordinates[0])
+    ring_wkt = "LINEARRING(" + ", ".join(f"{x} {y}" for x, y in coordinates) + ")"
+    return ring_wkt
+
 def grid2WKT_polygon(y_grid, x_grid):
     coordinates = list(zip(y_grid, x_grid))
-    polygon = "POLYGON((" + ", ".join(f"{x} {y}" for x, y in coordinates) + "))"
-    return polygon
+    if coordinates[0] != coordinates[-1]:
+        coordinates.append(coordinates[0])
+    polygon_wkt = "POLYGON((" + ", ".join(f"{x} {y}" for x, y in coordinates) + "))"
+    return polygon_wkt
 
 def geo2grid(lons, lats, xmin, ymax, x_scale, y_scale, xskew = 0.0, yskew = 0.0):
     aff_gdal = Affine.from_gdal(xmin, x_scale, xskew, ymax, 0.0, -y_scale)
@@ -61,66 +69,90 @@ def geo2grid(lons, lats, xmin, ymax, x_scale, y_scale, xskew = 0.0, yskew = 0.0)
     xs, ys = ~aff_gdal*(lons, lats)
     xs = np.int64(xs)
     ys = np.int64(ys)
-    return xs, ys
+    return xs, ys 
+
+def process_boundary(boundary):
+    coords = np.dstack(boundary.xy).tolist()[0]
+    coordinates = [{"long": x, "lat": y} for x, y in coords]
+    
+    lat_arr = []
+    long_arr = []
+    for coord in coordinates:
+        long_arr = np.append(long_arr, coord['long'])
+        lat_arr = np.append(lat_arr, coord['lat'])
+
+    long_list = long_arr.tolist()
+    lat_list = lat_arr.tolist()
+
+    x_grid, y_grid = geo2grid(long_list, lat_list, xmin, ymax, x_scale, y_scale)
+    return x_grid, y_grid
 
 def processPOLYGON(inputPOLYGON):
     if inputPOLYGON.area == 0:
-	    pass
-    elif len(inputPOLYGON.interiors) == 0:
-        coords = np.dstack(inputPOLYGON.boundary.xy).tolist()[0][:-1]
-        expected_list_of_coordinates_for_received_code = [{"long": x, "lat": y} for x, y in coords]
-        lat_arr = []
-        long_arr = []
-        for i in range(len(expected_list_of_coordinates_for_received_code)):
-            long_arr = np.append(long_arr, expected_list_of_coordinates_for_received_code[i]['long'])
-            lat_arr = np.append(lat_arr, expected_list_of_coordinates_for_received_code[i]['lat'])
-
-        long_list = long_arr.tolist()
-        lat_list = lat_arr.tolist()
-
-        x_grid, y_grid = geo2grid(long_list, lat_list, xmin, ymax, x_scale, y_scale)
-        gridPOLYGON_yx = grid2WKT_polygon(y_grid, x_grid)
-
-        return gridPOLYGON_yx
+        return None
+    
+    ext_x_grid, ext_y_grid = process_boundary(inputPOLYGON.exterior)
+    
+    if len(inputPOLYGON.interiors) == 0:
+        gridPOLYGON_wkt = grid2WKT_polygon(ext_y_grid, ext_x_grid)
+        return gridPOLYGON_wkt
+    
     else:
-        mainPOLYGON = Polygon(inputPOLYGON.exterior)
-        gridPOLYGON_yx = processPOLYGON(mainPOLYGON)
-
-        return gridPOLYGON_yx
+        ext_coordinates = list(zip(ext_x_grid, ext_y_grid))
+        if ext_coordinates[0] != ext_coordinates[-1]:
+            ext_x_grid = np.append(ext_x_grid, ext_x_grid[0])
+            ext_y_grid = np.append(ext_y_grid, ext_y_grid[0])
+            
+        rings_wkt = "POLYGON((" + ", ".join(f"{x} {y}" for x, y in zip(ext_x_grid, ext_y_grid)) + ")"
+        
+        for interior in inputPOLYGON.interiors:
+            int_x_grid, int_y_grid = process_boundary(interior)
+            int_coordinates = list(zip(int_x_grid, int_y_grid))
+            
+            if int_coordinates[0] != int_coordinates[-1]:
+                int_x_grid = np.append(int_x_grid, int_x_grid[0])
+                int_y_grid = np.append(int_y_grid, int_y_grid[0])
+                
+            rings_wkt += ", (" + ", ".join(f"{x} {y}" for x, y in zip(int_x_grid, int_y_grid)) + ")"
+        
+        rings_wkt += ")"
+        return rings_wkt
 
 def geoPOLYGON_to_gridPOLYGON(inputREGION, min_lon, max_lat, resolution_lon, resolution_lat):
-    polygons_array1 = []
-    polygons_array2 = []
-    i = 0
-    r = 0
-    global xmin
+    global xmin, ymax, x_scale, y_scale
     xmin = min_lon
-    global ymax
-    ymax= max_lat
-    global x_scale
+    ymax = max_lat
     x_scale = resolution_lon
-    global y_scale
     y_scale = resolution_lat
-
-    inputREGION = wkt.loads(inputREGION)
-    if inputREGION.geom_type == 'Polygon':
-        return processPOLYGON(inputREGION)
-
-    elif len(list(inputREGION.geoms[0].interiors)) > 0:
-        for polygon in inputREGION.geoms:
-            gridPOLYGON = processPOLYGON(polygon)
-            polygons_array1.append(gridPOLYGON)
-
-        gridMULTI =  [wkt.loads(poly) for poly in polygons_array1]
-        return shapely.geometry.MultiPolygon(gridMULTI)
-
-    else:
-        for polygon in inputREGION.geoms:
-            gridPOLYGON = processPOLYGON(polygon)
-            polygons_array2.append(gridPOLYGON)
-
-        gridMULTI =  [wkt.loads(poly) for poly in polygons_array2]
-        return unary_union(gridMULTI)
+    
+    try:
+        inputREGION = wkt.loads(inputREGION)
+        
+        if inputREGION.geom_type == 'Polygon':
+            return processPOLYGON(inputREGION)
+        
+        elif inputREGION.geom_type == 'MultiPolygon':
+            polygon_wkts = []
+            
+            for polygon in inputREGION.geoms:
+                grid_polygon = processPOLYGON(polygon)
+                if grid_polygon:
+                    polygon_wkts.append(grid_polygon)
+            
+            if not polygon_wkts:
+                return None
+                
+            try:
+                grid_polygons = [wkt.loads(poly_wkt) for poly_wkt in polygon_wkts if poly_wkt]
+                merged = unary_union(grid_polygons)
+                return merged.wkt
+            except Exception as e:
+                return f"MULTIPOLYGON({','.join([p.replace('POLYGON', '') for p in polygon_wkts])})"
+        
+        else:
+            raise ValueError(f"Unsupported geometry type: {inputREGION.geom_type}")
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 gridPOLY = geoPOLYGON_to_gridPOLYGON(geoPOLY, min_lon, max_lat, resolution_lon, resolution_lat)
 return gridPOLY
