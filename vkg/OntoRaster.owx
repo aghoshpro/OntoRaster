@@ -12,6 +12,7 @@
      ontologyIRI="https://github.com/aghoshpro/OntoRaster/">
     <Prefix name="" IRI="https://github.com/aghoshpro/OntoRaster/"/>
     <Prefix name="geo" IRI="http://www.opengis.net/ont/geosparql#"/>
+    <Prefix name="gn" IRI="http://www.geonames.org/ontology#"/>
     <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
     <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
     <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
@@ -158,6 +159,9 @@
     </Declaration>
     <Declaration>
         <DataProperty abbreviatedIRI="lgdo:bldgType"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI="gn:featureCode"/>
     </Declaration>
     <Declaration>
         <DataProperty abbreviatedIRI="rasdb:reason"/>
@@ -471,6 +475,10 @@
     </DataPropertyRange>
     <DataPropertyRange>
         <DataProperty abbreviatedIRI="lgdo:bldgType"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI="gn:featureCode"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>

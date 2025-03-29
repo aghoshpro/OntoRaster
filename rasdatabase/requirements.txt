@@ -2,3 +2,6 @@ rasdapy3
 protobuf==3.20.*
 affine
 shapely
+pandas
+sqlalchemy
+psycopg2-binary

@@ -1,5 +1,6 @@
 [PrefixDeclaration]
 :		https://github.com/aghoshpro/OntoRaster/
+gn:         http://www.geonames.org/ontology#
 geo:		http://www.opengis.net/ont/geosparql#
 owl:		http://www.w3.org/2002/07/owl#
 rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
@@ -15,6 +16,27 @@ lgdo:		http://linkedgeodata.org/ontology/
 rasdb:		https://github.com/aghoshpro/RasterDataCube/
 
 [MappingDeclaration] @collection [[
+; ---------------- Mapping for GeoNames Data for Sweden (SE) -----------------
+;mappingId  GeoNames_ID_SE
+;target     :geonames/sweden/{geonameid} a gn:Feature .
+;source     SELECT geonameid FROM public.geonames_se
+
+;mappingId  GeoNames_ID_SE1
+;target     :geonames/sweden/{geonameid} rdfs:label {name}^^xsd:string .
+;source     SELECT geonameid, name FROM public.geonames_se
+
+;mappingId  GeoNames_ID_SE2
+;target     :geonames/sweden/{geonameid} gn:countryCode {country_code}^^xsd:string .
+;source     SELECT geonameid, country_code FROM public.geonames_se
+
+;mappingId  GeoNames_ID_SE3
+;target     :geonames/sweden/{geonameid} geo:asWKT {pointWkt}^^geo:wktLiteral .
+;source     SELECT geonameid, ST_AsText(ST_Point(longitude, latitude)) AS pointWkt FROM public.geonames_se
+
+;mappingId  GeoNames_ID_SE4
+;target     :geonames/sweden/{geonameid} a gn:{featureCode} .
+;source     SELECT geonameid, feature_code AS featureCode FROM public.geonames_se
+
 ; ---------------- Mapping for All Regions in Sweden -----------------
 
 mappingId	Get_region_class_table_sweden

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<rdf:RDF 
+<rdf:RDF xmlns="https://www.geonames.org/ontology"
          xml:base="https://www.geonames.org/ontology"
          xmlns:skos="http://www.w3.org/2004/02/skos/core#"
          xmlns:foaf="http://xmlns.com/foaf/0.1/"
@@ -9,12 +9,12 @@
          xmlns:owl="http://www.w3.org/2002/07/owl#"
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-		 xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+		     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
          xmlns:dcterms="http://purl.org/dc/terms/"
          xmlns:vann="http://purl.org/vocab/vann/"
          xmlns:mrel="http://id.loc.gov/vocabulary/relators/"
          xmlns:adms="http://www.w3.org/ns/adms#"
-		 xmlns:spatial="http://geovocab.org/spatial#">
+		     xmlns:spatial="http://geovocab.org/spatial#">
 
 <!-- Ontology Information -->  
       <owl:Ontology rdf:about="https://www.geonames.org/ontology">
@@ -67,81 +67,6 @@
     <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </owl:Class>
 
-  <owl:Class rdf:about="#GeonamesFeature">
-    <rdfs:comment xml:lang="en">A feature described in geonames database, uniquely defined by its geonames identifier</rdfs:comment>
-    <skos:historyNote xml:lang="en">Added in version 3.1</skos:historyNote>
-    <rdfs:label xml:lang="en">Geonames Feature</rdfs:label>
-    <rdfs:subClassOf rdf:resource="#Feature"/>
-        <!-- Mandatory unique properties for Geonames Features -->
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
-                    <owl:onProperty rdf:resource="#geonamesID"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
-                    <owl:onProperty rdf:resource="#name"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>      
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
-                    <owl:onProperty rdf:resource="#lat"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>   
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
-                    <owl:onProperty rdf:resource="#long"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>    
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:onProperty rdf:resource="#featureClass"/>
-					<owl:someValuesFrom rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>
-        <!-- Properties with max cardinality 1 -->
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    <owl:onProperty rdf:resource="#countryCode"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    <owl:onProperty rdf:resource="#parentADM1"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    <owl:onProperty rdf:resource="#parentADM2"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    <owl:onProperty rdf:resource="#parentADM3"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    <owl:onProperty rdf:resource="#parentADM4"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-              <owl:Restriction>
-                    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    <owl:onProperty rdf:resource="#population"/>
-              </owl:Restriction>
-        </rdfs:subClassOf>
-
-  </owl:Class>
       
 <owl:Class rdf:about="#Feature">
       <rdfs:comment xml:lang="en">A geographical feature</rdfs:comment>
