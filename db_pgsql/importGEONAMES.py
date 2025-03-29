@@ -8,7 +8,7 @@ columns = ['geonameid', 'name', 'asciiname', 'alternatenames', 'latitude', 'long
            'dem', 'timezone', 'modification_date']
 
 # Read the file with proper column names
-df_cleaned = pd.read_csv('SE.txt', 
+df_cleaned = pd.read_csv('/data/DE.txt', 
                         header=None, 
                         delimiter='\t',
                         names=columns,

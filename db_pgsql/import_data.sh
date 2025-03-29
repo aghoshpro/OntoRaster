@@ -1,5 +1,4 @@
 #!/bin/bash
-
 echo "Viewing the PostgreSQL Client Version"
 psql -Version
 
@@ -28,6 +27,10 @@ sleep 5
 echo "Loading OSM buildings of Munich"
 shp2pgsql -s 4326 /data/MunichOSM.shp public.munich_bldings_osm | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 5
+# Run Python import script for GeoNames data
+echo "Importing GeoNames data..."
+python3 importGEONAMES.py
+sleep 20
 
 echo "------------------ FLAG 1 -----------------------"
 # pg_dump copy all data from petascopedb to vectordb since Ontop does not support multiple databases
@@ -41,6 +44,7 @@ sleep 10
 echo "------------------ FLAG 3 -----------------------"
 # Additional scripts to create lookup table
 psql -h rasdatabase -p 5432 -U petauser -d vectordb -f lookup_scripts.sql
+
 echo "------------------ FINISHED -----------------------"
 
 
