@@ -164,7 +164,7 @@ source		SELECT gid AS buildingId,
 ; ---------------- Mapping for All Regions in South Tyrol -----------------
 
 mappingId	Get_region_class_table_south_tyrol
-target		:vector_region/tyrol/{regionId} a :Region .
+target		:vector_region/tyrol/{regionId} a :Region_IT .
 source		SELECT gid AS regionId FROM public.region_south_tyrol
 
 mappingId	mapping_regionName_south_tyrol

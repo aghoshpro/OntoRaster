@@ -93,7 +93,7 @@ FILTER (?regionName = 'Stockholm') # also try with Linköping, Uppsala, Götebor
 FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
-} # LIMIT 1 
+}
 """
 
 [[tabGroups.tabs]]
@@ -146,7 +146,7 @@ FILTER (CONTAINS(?rasterName, 'Bavaria'))
 BIND ('2023-06-15T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
 BIND ('2023-07-21T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
 BIND (rasdb:rasTemporalAverage(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
-} # LIMIT 1 
+}
 """
 
 [[tabGroups.tabs]]
@@ -173,7 +173,7 @@ FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-04-05T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
 BIND ('2022-06-19T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
 BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
-} LIMIT 1 
+}
 """
 
 [[tabGroups.tabs]]
@@ -770,7 +770,7 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?answer {
+SELECT ?regionName ?tempK {
 ?region a :Region .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
@@ -779,8 +779,8 @@ SELECT ?answer {
 FILTER (?regionName = 'Stockholm') # also try with Linköping, Uppsala, Göteborg, Stockholm etc.
 FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
-} # LIMIT 1 
+BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+}
 """
 
 [[tabGroups.tabs]]
@@ -796,20 +796,56 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?regionName ?answer {
+SELECT ?regionName ?tempK ?regionWkt {
 ?region a :Region .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Linköping') 
+FILTER (?regionName = 'Göteborg') # Söderköping
 FILTER (CONTAINS(?rasterName, 'Sweden'))
 BIND ('2022-04-05T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
 BIND ('2022-06-19T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
-BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?answer)
+BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?tempK)
 }
 """
 
+[[tabGroups.tabs]]
+
+name="Q23. Spatial Average"
+query="""
+###########################################################################################################
+#### Query 23. Find spatial maximum value over a vector Region class Country Sweden and Raster dataset ####
+###########################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?regionName ?tempK ?regionWkt ?regionWktColor {
+?region a :Region .
+?region rdfs:label ?regionName .
+?region geo:asWKT ?regionWkt .
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?regionName, 'Ö')) # Ö Å Ä
+FILTER(?regionName NOT IN('Sjöbo')) # ISSUE with Sjöbo
+FILTER (CONTAINS(?rasterName, 'Sweden'))
+BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+FILTER(?tempK > 250) .
+  BIND( 
+    IF(?tempK < 260, "blue" , 
+    IF(?tempK < 270, "#008AFF",
+    IF(?tempK < 280, "magenta",
+    IF(?tempK < 285, "red",
+    IF(?tempK < 290, "#820000",
+    "black")))))
+    AS ?regionWktColor).
+} 
+GROUP BY ?regionName ?tempK ?regionWkt ?regionWktColor
+"""
 
 [[tabGroups.tabs]]
 name="READ ME"
@@ -831,6 +867,80 @@ name="AOI - South Tyrol, Italy"
 
 [[tabGroups.tabs]]
 
+name="Q25. Spatial Average"
+query="""
+############################################################################
+#### Query 25. Find spatial average temperature over South Tyrol, ITALY ####
+############################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?regionName ?tempK ?regionWkt ?regionWktLabel ?regionWktColor {
+?region a :Region_IT .
+?region rdfs:label ?regionName .
+?region geo:asWKT ?regionWkt .
+BIND (?regionName AS ?regionWktLabel)
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+#FILTER (?regionName = 'Bolzano')
+FILTER (CONTAINS(?rasterName, 'Tyrol'))
+BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialAverage(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+FILTER(?tempK > 250) .
+  BIND( 
+    IF(?tempK < 260, "blue" , 
+    IF(?tempK < 265, "#008AFF",
+    IF(?tempK < 270, "magenta",
+    IF(?tempK < 275, "red",
+    IF(?tempK < 280, "black",
+    "black")))))
+    AS ?regionWktColor).
+} 
+GROUP BY ?regionName ?tempK ?regionWkt ?regionWktLabel ?regionWktColor
+"""
+
+[[tabGroups.tabs]]
+
+name="Q26. Spatial Maximum"
+query="""
+###########################################################################################
+#### Query 26. Find spatial maximum temperature over wine fields of South Tyrol, ITALY ####
+###########################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?regionName ?tempK { #?regionWkt ?regionWktLabel ?regionWktColor
+?region a :Region_IT .
+?region rdfs:label ?regionName .
+?region geo:asWKT ?regionWkt .
+BIND (?regionName AS ?regionWktLabel)
+?gridCoverage a :Raster .
+?gridCoverage rasdb:rasterName ?rasterName .
+FILTER (CONTAINS(?regionName, 'Vino'))
+FILTER (CONTAINS(?rasterName, 'Tyrol'))
+BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+#FILTER(?tempK > 250) .
+#  BIND( 
+#    IF(?tempK < 260, "blue" , 
+#    IF(?tempK < 265, "#008AFF",
+#    IF(?tempK < 270, "magenta",
+#    IF(?tempK < 275, "red",
+#    IF(?tempK < 280, "black",
+#    "black")))))
+#    AS ?regionWktColor).
+}
+#GROUP BY ?regionName ?tempK ?regionWkt ?regionWktLabel ?regionWktColor
+"""
+
+[[tabGroups.tabs]]
+
 name="Q25. Spatial Minimum"
 query="""
 ###################################################################################################
@@ -843,14 +953,14 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?regionName ?tempK ?regionWkt ?regionWktLabel { #?regiontWktColor 
-?region a :Region .
+?region a :Region_IT .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
 BIND (?regionName AS ?regionWktLabel)
 #BIND('#008AFFF0' AS ?regiontWktColor)
 ?gridCoverage a :Raster .
 ?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Sarentino') # also try with Castelrotto, Sarentino, Fortezza  etc.
+FILTER (?regionName = 'Lagundo') # also try with Castelrotto, Sarentino, Fortezza  etc.
 FILTER (CONTAINS(?rasterName, 'Tyrol'))
 BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialMinimum(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
@@ -870,8 +980,8 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?regionName ?answer {
-?region a :Region .
+SELECT ?regionName ?arrayClipped {
+?region a :Region_IT .
 ?region rdfs:label ?regionName .
 ?region geo:asWKT ?regionWkt .
 ?gridCoverage a :Raster .
@@ -879,7 +989,7 @@ SELECT ?regionName ?answer {
 FILTER (?regionName = 'Castelrotto') 
 FILTER (CONTAINS(?rasterName, 'Tyrol')) 
 BIND ('2023-09-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-BIND (rasdb:rasClipRaster(?timeStamp, ?regionWkt, ?rasterName) AS ?answer) 
+BIND (rasdb:rasClipRaster(?timeStamp, ?regionWkt, ?rasterName) AS ?arrayClipped) 
 }
 """
 

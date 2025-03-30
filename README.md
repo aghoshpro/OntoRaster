@@ -23,18 +23,20 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 4. [Ontology (**_O_**)](#4-ontology-o)
 
 - 4.1. [Raster Ontology](#41-raster-ontology)
-- 4.2. [GeoSPARQL Ontology v1.1](#42-geosparql-v11)
-- 4.3. [CityGML v2.0](#43-citygml-v20)
-- 4.4. [Quantities, Units, Dimensions and Types (QUDT) Ontology](#44-quantities-units-dimensions-and-types-qudt)
-- 4.5. [OpenStreetMap (OSM) Ontology](#45-open-street-map-osm-ontology)
+- 4.2. [GeoSPARQL v1.1](#42-geosparql-v11)
+- 4.3. [GeoNames v3.3](#43-geonames-v33)
+- 4.4. [LinkedGeoData](#44-linked-geo-data)
+- 4.5. [CityGML v2.0](#45-citygml-v20)
+- 4.6. [Quantities, Units, Dimensions and Types (QUDT) Ontology](#46-quantities-units-dimensions-and-types-qudt)
+
 
 5. [Heterogenous Data Sources (**_D_**)](#5-heterogenous-data-sources-d)
 
-- 5.1. [Relational Data (**_D<sup>rel</sup>_**)](#51-relational-data)
-
-  - 5.1.1. [Vector Data (**_D<sup>Vector</sup>_**)](#511-vector-data)
-  - 5.1.2. [3DCityGML Data (**_D<sup>City3D</sup>_**)](#512-citygml-data-dcity3d)
-  - 5.1.2. [OSM Data (**_D<sup>OSM</sup>_**)](#513-osm-data-dosm)
+- 5.1. [Relational Data](#51-relational-data)
+  - 5.1.1. [GeoNames Data](#511-geonames-data)
+  - 5.1.2. [Vector Data (**_D<sup>Vector</sup>_**)](#512-vector-data)
+  - 5.1.3. [3DCityGML Data (**_D<sup>City3D</sup>_**)](#513-citygml-data-dcity3d)
+  - 5.1.4. [OSM Data (**_D<sup>OSM</sup>_**)](#51-osm-data-dosm)
 
 - 5.2. [Raster Data (**_D<sup>arr</sup>_**)](#52-raster-data-darr)
 
@@ -107,6 +109,14 @@ It becomes available at <http://localhost:8082/> under `success` in docker deskt
 <!-- <img src="diagrams/Ontop-Endpoint.gif"/> -->
 
 <img src="diagrams/Munich02.gif"/>
+
+### 2.5 Stop demo (optional)
+
+- Press `Ctrl+C` to stop and then run the following to remove containers, images, volumes to start fresh.
+
+  ```sh
+  docker-compose -f docker-compose.ontoraster.yml down --volumes --rmi all 
+  ```
 
 ## 3. Queries (**_Q_**)
 
@@ -183,21 +193,30 @@ We have provided **Raster Ontology** ontology that describe meta-level informati
 
 For vector data we are using [GeoSPARQL v1.1 Ontology](https://opengeospatial.github.io/ogc-geosparql/geosparql11/index.html) introduces classes likes features, geometries, and their representation using Geography Markup Language (GML) and Well-Known Text (WKT) literals, and includes topological relationship vocabularies. GeoSPARQL also provides an extension of the standard SPARQL query interface, supporting a set of topological functions for quantitative reasoning.
 
-### 4.3. CityGML v2.0
+### 4.3. GeoNames v3.3
 
-We are also using [CityGML v2.0 Ontology](https://cui.unige.ch/isi/ke/ontologies) developed by the University of Geneva for the ontology component of the KG construction phase and further modified by [Ding et al., 2024](https://doi.org/10.1080/10095020.2024.2337360) by adding further classes on addresses (including xAL) and removing object properties with the same IRI as data properties.
+The GeoNames Ontology, part of [GeoNames](https://www.geonames.org/about.html) geographical database, makes it possible to add geospatial semantic information to the Word Wide Web (WWW). It consists over 11 million geonames toponyms with a distinct URL correlating with RDF web service. Founded by Marc Wick (`marc@geonames.org`), a project of [Unxos GmbH](https://www.unxos.com/), Tutilostrasse 17d, 9011 St. Gallen, Switzerland.
 
-### 4.4. Quantities, Units, Dimensions and Types (QUDT)
+- Ontology is available at <https://www.geonames.org/ontology/documentation.html>
 
-The [QUDT](https://qudt.org) provides set of vocabularies representing the base classes properties, and restrictions used for modeling physical quantities, measurement units, and their dimensions in various measurement systems originally developed for the NASA Exploration Initiatives Ontology Models ([NExIOM](https://step.nasa.gov/pde2009/slides/20090506145822/PDE2009-NExIOM-TQ_v2.0-aRH-sFINAL.pdf)) project and now it forms the basis of the [NASA QUDT Handbook](http://ontolog.cim3.net/file/work/OntologyBasedStandards/2013-10-10_Case-for-QUOMOS/NASA-QUDT-Handbook-v10--RalphHodgson_20131010.pdf). QUDT aims to improve interoperability of data and the specification of information structures through industry standards for `Units of Measure (UoM)`, Quantity Kinds, Dimensions and Data Types as pointed out by [Ray et al., 2011](https://doi.org/10.25504/FAIRsharing.d3pqw7). This OWL schema is a foundation for a basic treatment of units which is considered for `Unit of Measurement (UoM)` in this work.
-
-### 4.5. Open Street Map (OSM) ontology
+### 4.4. Linked Geo Data
 
 - Defines classes of objects appearing on maps: roads, railways, water ways, amenities, emergency infrastructure, public transport, shops, tourist attractions, etc. This extensive ontology comprises over 660 classes, delineated according to the established set of OSM tags and their corresponding values. It was developed by Ontology Engineering Group ([link](https://smartcity.linkeddata.es/ontologies/mapserv.kt.agh.edu.plontologiesosm.owl.html)).
 
 - **OSMonto**: An ontology of OpenStreetMap tags, created with the purpose to ease maintenance and overview of existing tags and to allow enriching the semantics of tags by relating them to other ontologies. It has been developed as a research paper [Mihai et al 2011](https://www.inf.unibz.it/~okutz/resources/osmonto.pdf) at University Bremen and DFKI Bremen and was presented at State of the Map Europe [SotM-EU'2011](https://stateofthemap.eu/index.html) and . An [.owl](https://raw.githubusercontent.com/doroam/planning-do-roam/master/Ontology/tags.owl) file containing the OSMonto ontology can be viewed in Protégé.
 
 - [Open Street Map integration](https://documentation.researchspace.org/resource/Help:OpenStreetMap) : This integration creates a simple lookup service to federate against the Open Street Maps (OSM) API, allowing users to reference place names in their ResearchSpace instances. Users can lookup a street address, a city, a country etc. and be able to reference this in their data.
+
+
+### 4.5. CityGML v2.0
+
+Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontologies) at the University of Geneva. In our research, [CityGML v2.0 Ontology](https://smartcity.linkeddata.es/ontologies/cui.unige.chcitygml2.0.html) is used for for the KG construction based on 3D CityGML buildings data with the further modifications and OSM integration by [Ding et al., 2024](https://doi.org/10.1080/10095020.2024.2337360).
+
+- Research is undergoing for more efficent integration of 3DCityGML data
+
+### 4.6. Quantities, Units, Dimensions and Types (QUDT)
+
+The [QUDT](https://qudt.org) provides set of vocabularies representing the base classes properties, and restrictions used for modeling physical quantities, measurement units, and their dimensions in various measurement systems originally developed for the NASA Exploration Initiatives Ontology Models ([NExIOM](https://step.nasa.gov/pde2009/slides/20090506145822/PDE2009-NExIOM-TQ_v2.0-aRH-sFINAL.pdf)) project and now it forms the basis of the [NASA QUDT Handbook](http://ontolog.cim3.net/file/work/OntologyBasedStandards/2013-10-10_Case-for-QUOMOS/NASA-QUDT-Handbook-v10--RalphHodgson_20131010.pdf). QUDT aims to improve interoperability of data and the specification of information structures through industry standards for `Units of Measure (UoM)`, Quantity Kinds, Dimensions and Data Types as pointed out by [Ray et al., 2011](https://doi.org/10.25504/FAIRsharing.d3pqw7). This OWL schema is a foundation for a basic treatment of units which is considered for `Unit of Measurement (UoM)` in this work.
 
 ## 5. Heterogenous Data Sources (**_D_**)
 
@@ -212,7 +231,24 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 <img src="diagrams/AOIMunich_vec.png">
 
-### 5.1.1. Vector Data
+### 5.1.1. Geonames Data
+
+Contains over **25 million** geographical names of places in different languages as well as their alternate names (e.g.  16 million), population, timezone, location coordinates (lat/long in WGS84) etc., from various **[data sources](https://www.geonames.org/datasources/)** with more than 12 million unique features. All features are categorized into one out of **9 feature classes** e.g., **A, H, L, P, R, S, T, U, V**  and further subcategorized into one out of **[645 feature codes](https://www.geonames.org/export/codes.html)**. The data is accessible free of charge at **[link](https://www.geonames.org/export/)**
+
+|Feature classes |Feature codes|
+|----------------|------------------------|
+| **A** (country, state, region,...) | `A.ADM1` - Admin Region 1,`A.ADM2` - Admin Region 2, `TERR` - Territory, `ZN` - Zone|
+| **H** (stream, lake, ...)          | `H.ANCH` - Anchorage. `H.FISH` - Fishing Area, `H.LKS` - Lakes|
+| **L** (parks,area, ...)            | `L.RGN`- Region, `L.CONT` - Continent, `L.AREA` - Area|
+| **P** (city, village,...)          | `P.PPL` - Populated place, `P.PPLC` -  Capital of a political entity |
+| **R** (road, railroad)             | `R.ST` - Street, `R.RD` -Road, `R.RR` - Railroad|
+| **S** (spot, building, farm)       | `S.UNIV`- University, `S.SCH`- School, `S.RSTN` - Railroad Station, `S.AIRP` -Airport|
+| **T** (mountain,hill,rock,...)     | `T.DSRT`- Desert, `T.MT` - Mountain, `T.PEN` - Peninsula|
+| **U** (undersea)                   | `U.BDLU` - Borderland, `U.MTU` - Mountain|
+| **V** (forest,heath,...)           | `V.FRST`- Forests, `V.GRSLD` - Grassland|
+
+
+### 5.1.2. Vector Data
 
 - This demo utilised 25 districts, 105 subdistricts, OpenStreetMap (OSM) data and 3DCityGML 3D buildings data as vector data for Munich as shown above in **Figure (a)-(d)**.
 
@@ -234,9 +270,9 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 ---
 
-### 5.1.2. CityGML Data (**_D<sup>City3D</sup>_**)
+### 5.1.3. CityGML Data (**_D<sup>City3D</sup>_**)
 
-#### 5.1.2.1. Installing 3DCityDB
+#### 5.1.3.1. Installing 3DCityDB
 
 - Check Java version 11 or higher
 
@@ -252,7 +288,7 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
   > $ chmod u+x 3DCityDB-Importer-Exporter && ./3DCityDB-Importer-Exporter
 
-#### 5.1.2.2. Get Data
+#### 5.1.3.2. Get Data
 
 - Area of Interest : **Munich Metropolitan Area**
 
@@ -277,7 +313,7 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
     done
     ```
 
-#### 5.1.2.3. Visualise CityGML Data as CityJSON
+#### 5.1.3.3. Visualise CityGML Data as CityJSON
 
 - [CityJSON](https://www.cityjson.org) is a JSON-based encoding for storing 3D city models.
 - CityGML 2 CityJSON Conversion [here](https://www.cityjson.org/tutorials/conversion/)
@@ -291,9 +327,9 @@ The [QUDT](https://qudt.org) provides set of vocabularies representing the base 
 
 ---
 
-### 5.1.3. OSM Data (**_D<sup>osm</sup>_**)
+### 5.1.4. OSM Data (**_D<sup>osm</sup>_**)
 
-#### Direct Download
+#### Download Data
 
 - [GeoFabrik OpenStreetMap Data Extracts](https://download.geofabrik.de) : Select your area of interest (AOI) and download OSM data in various formats such as `.osm`, `.pfb`, `.shp`.
 
