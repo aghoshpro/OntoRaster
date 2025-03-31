@@ -305,20 +305,16 @@ function createStyledLayer(geojson, color, label, properties) {
         // Create the main geometry layer
         const layer = L.geoJSON(geojson, {
             style: {
-                color: '#000',
-                weight: 2,
+                color: color,
+                weight: 4,
                 opacity: 1,
                 fillColor: color,
-                fillOpacity: 0.9
+                fillOpacity: 0.4
             },
             pointToLayer: (feature, latlng) => {
                 return L.circleMarker(latlng, {
                     radius: 8,
-                    fillColor: color,
-                    color: '#000',
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8
+                    fillColor: color
                 });
             }
         });
@@ -372,17 +368,17 @@ function createStyledLayer(geojson, color, label, properties) {
                 const layer = e.target;
                 layer.setStyle({
                     color: '#c90000',
-                    weight: 4,
-                    opacity: 1,
-                    fillOpacity: 0.9
+                    weight: 4
                 });
                 layer.bringToFront();
             },
             mouseout: (e) => {
                 const layer = e.target;
                 layer.setStyle({
-                    color: '#000',
-                    weight: 2
+                    color: color,
+                    weight: 4,
+                    opacity: 1,
+                    fillOpacity: 0.4
                 });
             }
         });
@@ -436,7 +432,7 @@ function clearGeometries() {
 // Generate a random color for features without specified colors
 function getRandomColor() {
     const colors = [
-        '#008AFF5C '
+        '#0094f6 '
     ];
     return colors[Math.floor(Math.random() * colors.length)];
 }
