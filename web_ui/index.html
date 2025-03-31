@@ -27,6 +27,12 @@
     <script src="mapview.js"></script>
     <!-- LLM Explanation Script -->
     <script src="explainLLM.js"></script>
+    <!-- Query Plan Script -->
+    <!-- <script src="queryPlanLLM.js"></script> -->
+    <!-- Add in the head section -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sparql.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -91,23 +97,35 @@
         <div class="content-container p-2 md:p-4 gap-3 md:gap-4">
             <!-- Left Column -->
             <div class="lg:w-1/2 space-y-3 md:space-y-4 flex-shrink-0 flex-grow">
-                <!-- Visualization Section -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="bg-blue-500 text-white px-3 py-2 flex justify-between items-center">
-                        <h2 class="text-lg font-semibold">Visualization</h2>
-                        <div class="text-sm">
-                            <span id="geometry-info" class="hidden">Showing WKT geometry</span>
-                        </div>
-                    </div>
-                    <div id="map" class="h-[400px] w-full"></div>
-                </div>
-
-                <!-- Query Result Section -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="bg-blue-500 text-white px-3 py-2">
                         <h2 class="text-lg font-semibold">Query Result</h2>
                     </div>
-                    <div id="output-1" class="p-3 min-h-[200px] overflow-x-auto"></div>
+                    <!-- Tabs Navigation -->
+                    <div class="border-b border-gray-200">
+                        <nav class="flex" aria-label="Tabs">
+                            <button id="results-tab" 
+                                class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                Table View
+                            </button>
+                            <button id="visualization-tab" 
+                                class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
+                                aria-current="page">
+                                Visualization
+                            </button>
+
+                        </nav>
+                    </div>
+
+                    <!-- Visualization Content -->
+                    <div id="visualization-content">
+                        <div id="map" class="h-[600px] w-full"></div>
+                    </div>
+
+                    <!-- Query Results Content -->
+                    <div id="results-content" class="hidden">
+                        <div id="output-1" class="p-3 min-h-[600px] overflow-x-auto"></div>
+                    </div>
                 </div>
             </div>
 
@@ -122,14 +140,14 @@
                         <textarea id="sparql-input" 
                             class="w-full p-2 border border-gray-800 rounded-md font-mono text-sm h-[300px] focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                             placeholder="SELECT ?answer ?regionWkt {
-  ?region a :Region ; rdfs:label ?regionName ; geo:asWKT ?regionWkt .
-  ?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
-  FILTER (?regionName = 'München')
-  FILTER (CONTAINS(?rasterName, 'Bavaria'))
-  BIND ('2023-01-20T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-  BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
-}"></textarea>
-                        
+                            ?region a :Region ; rdfs:label ?regionName ; geo:asWKT ?regionWkt .
+                            ?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+                            FILTER (?regionName = 'München')
+                            FILTER (CONTAINS(?rasterName, 'Bavaria'))
+                            BIND ('2023-01-20T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+                            BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
+                            }"></textarea>
+                                                    
                         <div class="flex gap-3 mt-3">
                             <button id="submit-query" 
                                 class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition-colors flex-1">
@@ -137,7 +155,7 @@
                             </button>
                             <button id="generate-query" 
                                 class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md transition-colors flex-1">
-                                Generate Query
+                                Explain Query Plan
                             </button>
                         </div>
                     </div>

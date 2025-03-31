@@ -126,7 +126,7 @@ function displayWktOnMap(wktString, label) {
         weight: 3,
         opacity: 0.7,
         fillColor: '#3388ff',
-        fillOpacity: 0.3
+        fillOpacity: 0.9
       },
       pointToLayer: function(feature, latlng) {
         return L.circleMarker(latlng, {

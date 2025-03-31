@@ -51,7 +51,44 @@ document.addEventListener("DOMContentLoaded", () => {
 				output1.innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
 			});
 	});
+
+	// Setup visualization/results tabs
+	setupResultsTabs();
 });
+
+function setupResultsTabs() {
+	const visualizationTab = document.getElementById("visualization-tab");
+	const resultsTab = document.getElementById("results-tab");
+	const visualizationContent = document.getElementById("visualization-content");
+	const resultsContent = document.getElementById("results-content");
+
+	visualizationTab.addEventListener("click", () => {
+		// Update tab styles
+		visualizationTab.classList.add("text-blue-600", "border-b-2", "border-blue-600");
+		resultsTab.classList.remove("text-blue-600", "border-b-2", "border-blue-600");
+		resultsTab.classList.add("text-gray-500");
+		
+		// Show/hide content
+		visualizationContent.classList.remove("hidden");
+		resultsContent.classList.add("hidden");
+		
+		// Trigger map resize to fix any display issues
+		if (window.map) {
+			window.map.invalidateSize();
+		}
+	});
+
+	resultsTab.addEventListener("click", () => {
+		// Update tab styles
+		resultsTab.classList.add("text-blue-600", "border-b-2", "border-blue-600");
+		resultsTab.classList.remove("text-gray-500");
+		visualizationTab.classList.remove("text-blue-600", "border-b-2", "border-blue-600");
+		
+		// Show/hide content
+		resultsContent.classList.remove("hidden");
+		visualizationContent.classList.add("hidden");
+	});
+}
 
 function extractRegionName(query) {
 	const match = query.match(/\?regionName\s*=\s*['"]([^'"]+)['"]/);
@@ -115,6 +152,11 @@ function displayResultTable(result, container, regionName) {
 		detail: eventDetail
 	});
 	document.dispatchEvent(event);
+
+	// After displaying the table, switch to results tab if there are results
+	if (result.results && result.results.bindings && result.results.bindings.length > 0) {
+		document.getElementById("results-tab").click();
+	}
 }
 
 const ENDPOINT = "http://localhost:8082/sparql";

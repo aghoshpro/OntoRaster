@@ -109,7 +109,45 @@ legend {
     margin-bottom: 10px;
     width: 670px;
     height: 470px;
-    /* resize: none; */
+    background: transparent !important;
+    font-family: monospace;
+    tab-size: 4;
+    position: relative;
+    z-index: 1;
+    color: transparent;
+    caret-color: black;
+    resize: vertical;
+}
+
+#sparql-input::selection {
+    background: rgba(0, 122, 255, 0.2);
+    color: transparent;
+}
+
+.relative pre {
+    background: transparent !important;
+    font-family: monospace;
+    tab-size: 4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Customize Prism.js theme colors for SPARQL */
+.token.keyword {
+    color: #0066cc;
+}
+
+.token.string {
+    color: #008000;
+}
+
+.token.variable {
+    color: #7a3e9d;
+}
+
+.token.prefix {
+    color: #0066cc;
+    font-weight: bold;
 }
 
 #submit-query {
@@ -141,4 +179,30 @@ legend {
 
 #generate-query {
     background-color: rgb(135, 135, 135);
+}
+
+/* Add these styles for the tabs */
+#visualization-content,
+#results-content {
+    height: calc(100vh - 200px);
+    min-height: 600px;
+    overflow: auto;
+}
+
+#map {
+    height: 100% !important;
+}
+
+/* Style the tabs */
+.border-b {
+    border-bottom-width: 1px;
+}
+
+nav[aria-label="Tabs"] button {
+    transition: all 0.2s;
+}
+
+nav[aria-label="Tabs"] button:hover:not([aria-current="page"]) {
+    border-bottom-width: 2px;
+    border-color: #e2e8f0;
 }
