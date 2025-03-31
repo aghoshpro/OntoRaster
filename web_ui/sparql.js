@@ -122,7 +122,7 @@ function displayResultTable(result, container, regionName) {
 			
 			// Format WKT values to be more readable in the table
 			if (header.toLowerCase().includes('wkt') && value.length > 50) {
-				displayValue = `<span class="text-green-600 italic cursor-help" title="${value}">WKT geometry (displayed on map)</span>`;
+				displayValue = `<span class="text-green-600 italic cursor-help" title="${value}">displayed on map</span>`;
 			}
 			
 			tableHTML += `<td class='border border-gray-300 px-3 py-2'>${displayValue}</td>`;

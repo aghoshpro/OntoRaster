@@ -98,6 +98,7 @@ legend {
 
 #output-1 {
     flex: 2 530px;
+    overflow: scroll;
 }
 
 #output-2 {
