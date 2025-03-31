@@ -69,7 +69,7 @@ function addModelSelector() {
         <option value="claude-3-sonnet">Claude 3 Sonnet</option>
       </select>
       <button id="explain-button" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-md transition-colors">
-        Explain Result
+        Explain
       </button>
     </div>
     <div class="flex items-center justify-between mb-3">
@@ -159,7 +159,7 @@ async function explainQueryResults() {
   }
   
   // Update UI to show we're generating an explanation
-  explainOutput.value = "Generating explanation...";
+  explainOutput.value = "Generating insights...";
   
   try {
     // Build prompt for the LLM

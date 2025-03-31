@@ -1,5 +1,6 @@
 // Add this at the top of the file
 let queryResults = null;
+let queryStartTime;
 
 class SPARQLClient {
 	constructor(endpoint) {
@@ -31,25 +32,64 @@ document.addEventListener("DOMContentLoaded", () => {
 	const sparqlInput = document.getElementById("sparql-input");
 	const output1 = document.getElementById("output-1");
 
-	submitButton.addEventListener("click", () => {
+	submitButton.addEventListener("click", async function() {
+		const progressBar = document.getElementById('query-progress');
+		const progressBarFill = document.getElementById('progress-bar');
+		const executionTime = document.getElementById('execution-time');
+		
+		// Show progress bar
+		progressBar.classList.remove('hidden');
+		progressBarFill.style.width = '0%';
+		
+		// Start timer
+		queryStartTime = performance.now();
+		
+		// Update progress bar animation and timer
+		let progress = 0;
+		const progressInterval = setInterval(() => {
+			progress += 1;
+			if (progress <= 90) { // Only fill to 90% while waiting
+				progressBarFill.style.width = `${progress}%`;
+				// Update running time
+				const currentTime = performance.now();
+				const elapsedTime = (currentTime - queryStartTime) / 1000;
+				executionTime.textContent = `${elapsedTime.toFixed(3)}s`;
+			}
+		}, 50);
+
 		const query = sparqlInput.value;
 		const regionName = extractRegionName(query);
-		sparqlClient
-			.execute(query)
-			.then((result) => {
-				console.log("Query result received:", result);
-				displayResultTable(result, output1, regionName);
-				
-				// Trigger event for map visualization with complete results
-				const event = new CustomEvent("queryResultsReady", { 
-					detail: result 
-				});
-				document.dispatchEvent(event);
-			})
-			.catch((error) => {
-				console.error("Error executing query:", error);
-				output1.innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
+		try {
+			const result = await sparqlClient.execute(query);
+			
+			// Query complete
+			clearInterval(progressInterval);
+			progressBarFill.style.width = '100%';
+			
+			// Calculate final execution time
+			const executionTimeMs = performance.now() - queryStartTime;
+			executionTime.textContent = `${(executionTimeMs / 1000).toFixed(3)}s`;
+			
+			console.log("Query result received:", result);
+			displayResultTable(result, output1, regionName);
+			
+			// Trigger event for map visualization with complete results
+			const event = new CustomEvent("queryResultsReady", { 
+				detail: result 
 			});
+			document.dispatchEvent(event);
+		} catch (error) {
+			clearInterval(progressInterval);
+			progressBarFill.style.width = '50%';
+			progressBarFill.style.backgroundColor = '#ef4444'; // red for error
+			console.error('Query failed:', error);
+			output1.innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
+		}
+		
+		// Hide progress bar after 2 seconds
+		setTimeout(() => {
+			progressBar.classList.add('hidden');
+		}, 5000);
 	});
 
 	// Setup visualization/results tabs
@@ -109,23 +149,26 @@ function displayResultTable(result, container, regionName) {
 	const rows = result.results.bindings;
 
 	let tableHTML = "<table class='w-full border-collapse'><thead><tr>";
-	headers.forEach((header) => {
+	// Filter out color columns from headers
+	const visibleHeaders = headers.filter(header => !header.toLowerCase().includes('color'));
+	
+	visibleHeaders.forEach((header) => {
 		tableHTML += `<th class='border border-gray-300 px-3 py-2 bg-gray-100'>${header}</th>`;
 	});
 	tableHTML += "</tr></thead><tbody>";
 
 	rows.forEach((row) => {
 		tableHTML += "<tr>";
-		headers.forEach((header) => {
+		visibleHeaders.forEach((header) => {
 			const value = row[header] ? row[header].value : "";
 			let displayValue = value;
 			
 			// Format WKT values to be more readable in the table
 			if (header.toLowerCase().includes('wkt') && value.length > 50) {
-				displayValue = `<span class="text-green-600 italic cursor-help" title="${value}">displayed on map</span>`;
+				displayValue = `<span class="text-green-600 italic cursor-help tracking-tight" title="${value}">map view</span>`;
 			}
 			
-			tableHTML += `<td class='border border-gray-300 px-3 py-2'>${displayValue}</td>`;
+			tableHTML += `<td class='border border-gray-300 px-3 py-2 text-sm font-medium'>${displayValue}</td>`;
 		});
 		tableHTML += "</tr>";
 	});

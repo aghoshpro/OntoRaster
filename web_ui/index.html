@@ -95,19 +95,33 @@
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="bg-blue-500 text-white px-3 py-2">
                         <h2 class="text-lg font-semibold">Query Result</h2>
+                        <!-- Add loading bar container -->
+                        <div id="query-progress" class="hidden mt-2">
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 bg-green-100 rounded-full h-2">
+                                    <div id="progress-bar" class="bg-green-500 h-2 rounded-full transition-all duration-300"></div>
+                                </div>
+                                <span id="execution-time" class="text-sm font-medium">0.000s</span>
+                            </div>
+                        </div>
                     </div>
                     <!-- Tabs Navigation -->
                     <div class="border-b border-gray-200">
                         <nav class="flex" aria-label="Tabs">
                             <button id="results-tab" 
                                 class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                Table View
+                                🧾 Table View
                             </button>
                             <button id="visualization-tab" 
                                 class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
                                 aria-current="page">
-                                Visualization
+                                🗺️ Map View
                             </button>
+
+                            <button id="json-tab" 
+                            class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                            ⛓️ JSON View
+                        </button>
 
                         </nav>
                     </div>
@@ -119,7 +133,7 @@
 
                     <!-- Query Results Content -->
                     <div id="results-content" class="hidden">
-                        <div id="output-1" class="p-3 min-h-[600px]"></div>
+                        <div id="output-1" class="p-3 min-h-[600px] max-h-[600px] overflow-auto"></div>
                     </div>
                 </div>
             </div>
@@ -150,7 +164,7 @@
                             </button>
                             <button id="generate-query" 
                                 class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md transition-colors flex-1">
-                                Explain Query Plan
+                                Query Plan
                             </button>
                         </div>
                     </div>
@@ -159,7 +173,7 @@
                 <!-- LLM Explanation Section -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="bg-blue-500 text-white px-3 py-2">
-                        <h2 class="text-lg font-semibold">Answer Explanation By LLM</h2>
+                        <h2 class="text-lg font-semibold"> Result Explanation By LLM</h2>
                     </div>
                     <div class="p-3 space-y-3">
                         <!-- The model selector and controls will be added by explainLLM.js -->
@@ -167,8 +181,8 @@
                             class="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
                             placeholder="API Key (Not needed for Ollama)" />
                         <textarea id="explanation-output" 
-                            class="w-full p-2 border border-gray-300 rounded-md h-[150px] bg-gray-50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
-                            placeholder="The answer in Query Result will be explained here..." 
+                            class="w-full p-2 border border-gray-300 rounded-md h-[150px] bg-gray-50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-medium bg-gradient-to-r from-indigo-500 via-red-500 to-blue-400 inline-block text-transparent bg-clip-text" 
+                            placeholder="..." 
                             readonly></textarea>
                     </div>
                 </div>
