@@ -2,6 +2,20 @@
 let queryResults = null;
 let queryStartTime;
 
+// Add these utility functions at the top
+function easeInOutCubic(x) {
+	return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+}
+
+function updateProgressBar(startTime, progressBarFill, executionTime, duration = 10000) {
+	const elapsed = performance.now() - startTime;
+	const progress = Math.min(elapsed / duration, 0.9); // Max 90% until complete
+	const easedProgress = easeInOutCubic(progress) * 100;
+	
+	progressBarFill.style.width = `${easedProgress}%`;
+	executionTime.textContent = `${(elapsed / 1000).toFixed(3)}s`;
+}
+
 class SPARQLClient {
 	constructor(endpoint) {
 		this.endpoint = endpoint;
@@ -42,20 +56,15 @@ document.addEventListener("DOMContentLoaded", () => {
 		progressBarFill.style.width = '0%';
 		
 		// Start timer
-		queryStartTime = performance.now();
+		const queryStartTime = performance.now();
 		
-		// Update progress bar animation and timer
-		let progress = 0;
-		const progressInterval = setInterval(() => {
-			progress += 1;
-			if (progress <= 90) { // Only fill to 90% while waiting
-				progressBarFill.style.width = `${progress}%`;
-				// Update running time
-				const currentTime = performance.now();
-				const elapsedTime = (currentTime - queryStartTime) / 1000;
-				executionTime.textContent = `${elapsedTime.toFixed(3)}s`;
-			}
-		}, 50);
+		// Smoother progress animation
+		const animationFrame = {id: null};
+		const animate = () => {
+			updateProgressBar(queryStartTime, progressBarFill, executionTime);
+			animationFrame.id = requestAnimationFrame(animate);
+		};
+		animate();
 
 		const query = sparqlInput.value;
 		const regionName = extractRegionName(query);
@@ -63,12 +72,26 @@ document.addEventListener("DOMContentLoaded", () => {
 			const result = await sparqlClient.execute(query);
 			
 			// Query complete
-			clearInterval(progressInterval);
-			progressBarFill.style.width = '100%';
+			cancelAnimationFrame(animationFrame.id);
 			
-			// Calculate final execution time
-			const executionTimeMs = performance.now() - queryStartTime;
-			executionTime.textContent = `${(executionTimeMs / 1000).toFixed(3)}s`;
+			// Smooth transition to 100%
+			const finalProgress = performance.now();
+			const finalAnimation = () => {
+				const elapsed = performance.now() - finalProgress;
+				const progress = Math.min(elapsed / 300, 1); // 300ms transition to 100%
+				const easedProgress = 90 + (progress * 10); // Transition from 90% to 100%
+				
+				progressBarFill.style.width = `${easedProgress}%`;
+				
+				if (progress < 1) {
+					requestAnimationFrame(finalAnimation);
+				} else {
+					// Final execution time
+					const totalTime = (performance.now() - queryStartTime) / 1000;
+					executionTime.textContent = `${totalTime.toFixed(3)}s`;
+				}
+			};
+			requestAnimationFrame(finalAnimation);
 			
 			console.log("Query result received:", result);
 			displayResultTable(result, output1, regionName);
@@ -79,17 +102,17 @@ document.addEventListener("DOMContentLoaded", () => {
 			});
 			document.dispatchEvent(event);
 		} catch (error) {
-			clearInterval(progressInterval);
-			progressBarFill.style.width = '50%';
+			cancelAnimationFrame(animationFrame.id);
+			progressBarFill.style.width = '100%';
 			progressBarFill.style.backgroundColor = '#ef4444'; // red for error
 			console.error('Query failed:', error);
 			output1.innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
 		}
 		
-		// Hide progress bar after 2 seconds
+		// Hide progress bar after 3 seconds
 		setTimeout(() => {
 			progressBar.classList.add('hidden');
-		}, 5000);
+		}, 3000);
 	});
 
 	// Setup visualization/results tabs
