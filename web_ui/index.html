@@ -4,13 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OntoRaster Dashboard</title>
+    <title>OntoRaster</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
     <!-- Favicon -->
     <link rel="shortcut icon" href="./Paomedia-Small-N-Flat-Map-map-marker.svg" type="image/x-icon">
@@ -30,7 +32,7 @@
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sparql.min.js"></script> -->
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -42,43 +44,44 @@
             }
         }
     </script>
-    
+
     <style>
         /* Add custom styles to ensure full-height layout */
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
-        
+
         #map {
             min-height: 400px;
             width: 100%;
         }
-        
+
         .page-container {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
-        
+
         .content-container {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
-        
+
         @media (min-width: 1024px) {
             .content-container {
                 flex-direction: row;
             }
         }
-        
+
         /* Make panels resizable */
         .resizable-panel {
             position: relative;
         }
-        
+
         textarea {
             resize: vertical;
         }
@@ -88,7 +91,9 @@
 <body class="bg-gray-100">
     <div class="page-container">
         <header class="bg-black text-white shadow-md">
-            <h1 class="text-2xl md:text-3xl font-bold text-center"><img class="h-20 inline-block" src="/diagrams/OntoRaster-Dark.png" alt="OntoRaster"></h1>
+            <h1 class="text-2xl md:text-3xl font-bold text-center"><a href="https://github.com/aghoshpro/OntoRaster"
+                    target="_blank"><img class="h-20 inline-block" src="/diagrams/OntoRaster-Dark.png"
+                        alt="OntoRaster"></a></h1>
         </header>
         <!-- style="width: 200px; height: 20px; -->
         <div class="content-container p-2 md:p-4 gap-3 md:gap-4">
@@ -96,14 +101,61 @@
             <div class="lg:w-1/2 space-y-3 md:space-y-4 flex-shrink-0 flex-grow">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="bg-blue-500 text-white px-3 py-2">
+                        <h2 class="text-lg font-semibold">RasSPARQL Query Editor</h2>
+                    </div>
+                    <div class="p-3">
+                        <!-- Add Query Tabs Navigation -->
+                        <div class="flex items-center border-b border-gray-200 mb-3">
+                            <div id="query-tabs" class="flex flex-grow">
+                                <button class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
+                                    data-tab="query-1">
+                                    Query 1
+                                </button>
+                            </div>
+                            <button id="add-query-tab"
+                                class="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">
+                                <span class="text-xl">+</span>
+                            </button>
+                        </div>
+
+                        <!-- Query Editor -->
+                        <div id="query-editors">
+                            <div id="query-1" class="query-editor active">
+                                <textarea spellcheck="false" id="sparql-input-1"
+                                    class="w-full p-2 border border-gray-800 rounded-md font-mono text-sm h-[550px] focus:border-blue-500 focus:ring-1 focus:ring-blue-500"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 mt-3">
+                            <button id="submit-query"
+                                class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition-colors flex-1">
+                                Run Query
+                            </button>
+                            <button id="generate-query"
+                                class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md transition-colors flex-1">
+                                Query Plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="lg:w-1/2 space-y-3 md:space-y-4 flex-shrink-0 flex-grow">
+                <!-- SPARQL Query Editor -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-blue-500 text-white px-3 py-2">
                         <div class="flex items-center justify-between">
                             <h2 class="text-lg font-semibold">Query Result</h2>
                             <div id="query-progress" class="hidden flex-1 ml-4">
                                 <div class="flex items-center gap-2">
                                     <div class="flex-1 bg-green-100 rounded-full h-2">
-                                        <div id="progress-bar" class="bg-green-500 h-2 rounded-full transition-all duration-300"></div>
+                                        <div id="progress-bar"
+                                            class="bg-green-500 h-2 rounded-full transition-all duration-300"></div>
                                     </div>
-                                    <span id="execution-time" class="text-sm font-medium min-w-[4.5rem] text-right">0.000s</span>
+                                    <span id="execution-time"
+                                        class="text-sm font-medium min-w-[4.5rem] text-right">0.000s</span>
                                 </div>
                             </div>
                         </div>
@@ -111,17 +163,17 @@
                     <!-- Tabs Navigation -->
                     <div class="border-b border-gray-200">
                         <nav class="flex" aria-label="Tabs">
-                            <button id="results-tab" 
+                            <button id="results-tab"
                                 class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
                                 🧾 Table View
                             </button>
-                            <button id="visualization-tab" 
+                            <button id="visualization-tab"
                                 class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
                                 aria-current="page">
                                 🗺️ Map View
                             </button>
 
-                            <button id="json-tab" 
+                            <button id="json-tab"
                                 class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
                                 ⛓️ JSON View
                             </button>
@@ -139,39 +191,6 @@
                         <div id="output-1" class="p-3 min-h-[600px] max-h-[600px] overflow-auto"></div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Right Column -->
-            <div class="lg:w-1/2 space-y-3 md:space-y-4 flex-shrink-0 flex-grow">
-                <!-- SPARQL Query Editor -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="bg-blue-500 text-white px-3 py-2">
-                        <h2 class="text-lg font-semibold">RasSPARQL Query Editor</h2>
-                    </div>
-                    <div class="p-3">
-                        <textarea id="sparql-input" 
-                            class="w-full p-2 border border-gray-800 rounded-md font-mono text-sm h-[300px] focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                            placeholder="SELECT ?answer ?regionWkt {
-    ?region a :Region ; rdfs:label ?regionName ; geo:asWKT ?regionWkt .
-    ?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
-    FILTER (?regionName = 'München')
-    FILTER (CONTAINS(?rasterName, 'Bavaria'))
-    BIND ('2023-01-20T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-    BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
-}"></textarea>                                                    
-
-                        <div class="flex gap-3 mt-3">
-                            <button id="submit-query" 
-                                class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition-colors flex-1">
-                                Run Query
-                            </button>
-                            <button id="generate-query" 
-                                class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md transition-colors flex-1">
-                                Query Plan
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- LLM Explanation Section -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
@@ -180,13 +199,12 @@
                     </div>
                     <div class="p-3 space-y-3">
                         <!-- The model selector and controls will be added by explainLLM.js -->
-                        <input type="password" id="api-key" 
-                            class="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
+                        <input type="password" id="api-key"
+                            class="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                             placeholder="API Key (Not needed for Ollama)" />
-                        <textarea id="explanation-output" 
-                            class="w-full p-2 border border-gray-300 rounded-md h-[150px] bg-gray-50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-medium bg-gradient-to-r from-indigo-500 via-red-500 to-blue-400 inline-block text-transparent bg-clip-text" 
-                            placeholder="..." 
-                            readonly></textarea>
+                        <textarea spellcheck="false" id="explanation-output"
+                            class="w-full p-2 border border-gray-300 rounded-md h-[150px] bg-gray-50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-medium bg-gradient-to-r from-indigo-500 via-red-500 to-blue-400 inline-block text-transparent bg-clip-text"
+                            placeholder="..." readonly></textarea>
                     </div>
                 </div>
             </div>

@@ -159,7 +159,23 @@ async function explainQueryResults() {
   }
   
   // Update UI to show we're generating an explanation
-  explainOutput.value = "Generating insights...";
+  // Add at the top of your file with other constants
+const LOADING_MESSAGES = [
+    "Insights are cooking....",
+    "Shh.. magic is happening 🔮.....",
+    "Thinking, wanna tea ? ☕..... ",
+    "To be or not to be, that's the question 🎭 or is it 🤔.....",
+    "Generating insights..."
+];
+
+// Helper function to get random message
+function getRandomLoadingMessage() {
+    const randomIndex = Math.floor(Math.random() * LOADING_MESSAGES.length);
+    return LOADING_MESSAGES[randomIndex];
+}
+
+//   explainOutput.value = "Generating insights...";
+  explainOutput.value = getRandomLoadingMessage(); // Add random message here
   
   try {
     // Build prompt for the LLM
@@ -487,11 +503,13 @@ function updateModelSelector() {
       displayName = 'Llama 3';
     } else if (model.includes('llama2')) {
       displayName = 'Llama 2';
+    } else if (model.includes('deepseek')) {
+        displayName = 'DeepSeek R1-8B';
     } else if (model.includes('mistral')) {
       displayName = 'Mistral';
     }
     
-    option.textContent = `Ollama - ${displayName}`;
+    option.textContent = `${displayName}`;
     
     // If this is llama3.2, insert at the top
     if (model.includes('llama3.2') || (model === 'llama3' && !hasLlama32)) {
@@ -506,13 +524,13 @@ function updateModelSelector() {
   // Add a generic Ollama option if no models were found
   if (!ollamaModelsAdded) {
     const option = document.createElement('option');
-    option.value = 'ollama-llama3';
-    option.textContent = 'Ollama - Llama 3';
+    option.value = 'ollama-llama3.2';
+    option.textContent = 'Llama 3.2';
     modelSelector.appendChild(option);
     
     const option2 = document.createElement('option');
     option2.value = 'ollama-mistral';
-    option2.textContent = 'Ollama - Mistral';
+    option2.textContent = 'Mistral';
     modelSelector.appendChild(option2);
   }
   

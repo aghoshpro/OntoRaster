@@ -207,3 +207,11 @@ nav[aria-label="Tabs"] button:hover:not([aria-current="page"]) {
     border-bottom-width: 2px;
     border-color: #e2e8f0;
 }
+
+.query-editor.hidden {
+    display: none;
+}
+
+.query-editor.active {
+    display: block;
+}
