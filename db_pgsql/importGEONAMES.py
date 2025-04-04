@@ -8,7 +8,7 @@ columns = ['geonameid', 'name', 'asciiname', 'alternatenames', 'latitude', 'long
            'dem', 'timezone', 'modification_date']
 
 # Read the file with proper column names
-df_cleaned = pd.read_csv('/data/DE.txt', 
+df_cleaned = pd.read_csv('/data/SE.txt', 
                         header=None, 
                         delimiter='\t',
                         names=columns,
@@ -23,41 +23,43 @@ df_cleaned['elevation'] = df_cleaned['elevation'].fillna(-9999).astype('int64')
 df_cleaned['dem'] = df_cleaned['dem'].fillna(-9999).astype('int64')
 
 # Create SQLAlchemy engine with Docker-compatible connection string
-engine = create_engine('postgresql://postgres:postgres@db:5432/vectordb')
+engine = create_engine('postgresql://petauser:petapasswd@rasdatabase:5432/vectordb')
+# db_iri = f'postgresql://petauser:petapasswd@host.docker.internal:7777/vectordb'
+# engine = sqlalchemy.create_engine(db_iri)
 
 try:
     # First, create the table with proper primary key
-    with engine.connect() as connection:
-        # Drop table if exists
-        connection.execute(text('DROP TABLE IF EXISTS geonames_se'))
+    # with engine.connect() as connection:
+    #     # Drop table if exists
+    #     connection.execute(text('DROP TABLE IF EXISTS geonames_se'))
         
-        # Create table with primary key
-        connection.execute(text('''
-            CREATE TABLE geonames_se (
-                geonameid INTEGER PRIMARY KEY,
-                name VARCHAR(200),
-                asciiname VARCHAR(200),
-                alternatenames VARCHAR(10000),
-                latitude DECIMAL(10, 8),
-                longitude DECIMAL(11, 8),
-                feature_class CHAR(1),
-                feature_code VARCHAR(10),
-                country_code CHAR(2),
-                cc2 VARCHAR(200),
-                admin1_code VARCHAR(20),
-                admin2_code VARCHAR(80),
-                admin3_code VARCHAR(20),
-                admin4_code VARCHAR(20),
-                population BIGINT,
-                elevation INTEGER,
-                dem INTEGER,
-                timezone VARCHAR(40),
-                modification_date DATE
-            )
-        '''))
+    #     # Create table with primary key
+    #     connection.execute(text('''
+    #         CREATE TABLE geonames_se (
+    #             geonameid INTEGER NOT NULL PRIMARY KEY,
+    #             name VARCHAR(200),
+    #             asciiname VARCHAR(200),
+    #             alternatenames VARCHAR(10000),
+    #             latitude DECIMAL(10, 8),
+    #             longitude DECIMAL(11, 8),
+    #             feature_class CHAR(1),
+    #             feature_code VARCHAR(10),
+    #             country_code CHAR(2),
+    #             cc2 VARCHAR(200),
+    #             admin1_code VARCHAR(20),
+    #             admin2_code VARCHAR(80),
+    #             admin3_code VARCHAR(20),
+    #             admin4_code VARCHAR(20),
+    #             population BIGINT,
+    #             elevation INTEGER,
+    #             dem INTEGER,
+    #             timezone VARCHAR(40),
+    #             modification_date DATE
+    #         )
+    #     '''))
         
-        # Commit the transaction
-        connection.commit()
+    #     # Commit the transaction
+    #     connection.commit()
 
     # Upload to PostgreSQL using the engine
     df_cleaned.to_sql('geonames_se', 

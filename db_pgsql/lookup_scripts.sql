@@ -78,7 +78,26 @@ CREATE TABLE raster_lookup AS SELECT * FROM lookup_structured;
 
 ALTER TABLE raster_lookup ADD PRIMARY KEY (raster_id);
 
-
+CREATE TABLE geonames_se (
+                geonameid BIGINT NOT NULL PRIMARY KEY,
+                name VARCHAR(200),
+                asciiname VARCHAR(200),
+                alternatenames VARCHAR(10000),
+                latitude DECIMAL(10, 8),
+                longitude DECIMAL(11, 8),
+                feature_class CHAR(1),
+                feature_code VARCHAR(10),
+                country_code CHAR(2),
+                cc2 VARCHAR(200),
+                admin1_code VARCHAR(20),
+                admin2_code VARCHAR(80),
+                admin3_code VARCHAR(20),
+                admin4_code VARCHAR(20),
+                population BIGINT,
+                elevation INTEGER,
+                dem INTEGER,
+                timezone VARCHAR(40),
+                modification_date DATE);
 
 -- ##########################
 -- ### PL/pgsql Functions ### **********************************************************************************************************************************************

@@ -913,6 +913,88 @@ BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?ras
 }
 """
 
+[[tabGroups.tabs]]
+
+name="Q24. Geonames1"
+query="""
+############################################################################################################################
+#### Query 24. Find temporal maximum value over a user-specific vector Region and Raster dataset between two timestamps ####
+############################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX gn:  <https://www.geonames.org/ontology#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+
+SELECT ?featureName ?pointWkt ?regionWkt {
+?vector a :Country_SWEDEN ; rdfs:label ?regionName ; geo:asWKT ?regionWkt .
+?gname a gn:UNIV ; rdfs:label ?featureName ; geo:asWKT ?pointWkt . # UNIV, LKS, RSTN etc.
+#FILTER (?regionName = 'Uppsala') # Check for Uppsala only OR 
+FILTER (CONTAINS(?regionName, '')) # Checking all of Sweden
+FILTER (geof:sfWithin(?pointWkt, ?regionWkt))
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q25. Geonames2"
+query="""
+############################################################################################################################
+#### Query 25. Find all Rail Stations of Sweden                                                                         ####
+############################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX gn:  <https://www.geonames.org/ontology#>
+PREFIX geo:	 <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
+
+
+SELECT ?featureName ?pointWkt ?pointWktColor ?regionWkt ?regionWktColor {
+?vector a :Country_SWEDEN ; rdfs:label ?regionName ; geo:asWKT ?regionWkt .
+?gname a gn:RSTN ; rdfs:label ?featureName ; geo:asWKT ?pointWkt . # UNIV, LKS, RSTN etc. are avalable at https://www.geonames.org/export/codes.html
+#FILTER (?regionName = 'Uppsala') # Check for Uppsala only OR 
+FILTER (CONTAINS(?regionName, '')) # Checking all of Sweden
+#FILTER(?regionName NOT IN('Sjöbo')) # ISSUE with Sjöbo
+FILTER (geof:sfWithin(?pointWkt, ?regionWkt))
+BIND('#4400ff' AS ?regionWktColor)
+BIND('red' AS ?pointWktColor)
+} 
+"""
+
+[[tabGroups.tabs]]
+
+name="Q26. Geonames3"
+query="""
+############################################################################################################################
+#### Query 26. Find all the Lakes and the respectibe regions of Sweden where spatial average temperarure is over 291    ####
+############################################################################################################################
+
+PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX gn:  <https://www.geonames.org/ontology#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?featureName ?regionName ?tempK ?regionWkt ?regionWktColor {
+?region a :Country_SWEDEN ; rdfs:label ?regionName ; geo:asWKT ?regionWkt .
+?gname a gn:LKS ; rdfs:label ?featureName ; geo:asWKT ?pointWkt .
+?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+BIND('#4400ff' AS ?regionWktColor)
+FILTER (geof:sfWithin(?pointWkt, ?regionWkt))
+FILTER (CONTAINS(?regionName, '')) # ALL REGIONS OF SWEDEN
+FILTER (CONTAINS(?rasterName, 'Sweden'))
+BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+FILTER(?tempK > 291) .
+}
+"""
+
 
 [[tabGroups.tabs]]
 name="READ ME"
@@ -920,6 +1002,7 @@ query="""
 ##########################
 #### Relational Data  ####
 ##########################
+## Geonames feature classes are at https://www.geonames.org/export/codes.html
 ## Vector data (Boundaries of Districts and Sub-District) [POLYGONS and MULTIPOLYGONS]
 
 ######################

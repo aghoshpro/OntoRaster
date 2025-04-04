@@ -1,7 +1,7 @@
+@base <https://www.geonames.org/ontology#> .
 @prefix : <https://www.geonames.org/ontology#> .
 @prefix g: <https://www.geonames.org/ontology/> .
 @prefix cc: <https://creativecommons.org/ns#> .
-@prefix gn: <https://www.geonames.org/ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
@@ -384,58 +384,6 @@ gn:Feature rdf:type owl:Class ;
            rdfs:label "Feature"@en ;
            rdfs:seeAlso <http://schema.org/Place> ;
            skos:historyNote "Modified in version 3.1 : The cardinality constraints on feature code, feature class are relaxed on this class, and put on the specific subclass Geonames Feature. This class and attached properties can therefore be used for features not necessarily identified in the Geoanmes data base"@en .
-
-
-###  https://www.geonames.org/ontology#GeonamesFeature
-gn:GeonamesFeature rdf:type owl:Class ;
-                   rdfs:subClassOf gn:Feature ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:featureClass ;
-                                     owl:someValuesFrom skos:ConceptScheme
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:parentADM1 ;
-                                     owl:maxCardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:parentADM2 ;
-                                     owl:maxCardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:parentADM3 ;
-                                     owl:maxCardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:parentADM4 ;
-                                     owl:maxCardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:geonamesID ;
-                                     owl:cardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:lat ;
-                                     owl:cardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:long ;
-                                     owl:cardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:name ;
-                                     owl:cardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:countryCode ;
-                                     owl:maxCardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty gn:population ;
-                                     owl:maxCardinality "1"^^xsd:nonNegativeInteger
-                                   ] ;
-                   rdfs:comment "A feature described in geonames database, uniquely defined by its geonames identifier"@en ;
-                   rdfs:label "Geonames Feature"@en ;
-                   skos:historyNote "Added in version 3.1"@en .
 
 
 ###  https://www.geonames.org/ontology#Map
