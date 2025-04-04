@@ -312,14 +312,14 @@ function createStyledLayer(geojson, color, label, properties) {
                 fillOpacity: 0.4
             },
             pointToLayer: (feature, latlng) => {
-                return L.circleMarker(latlng, {
+                return L.marker(latlng, {
                     radius: 8,
                     fillColor: color
                 });
             }
         });
 
-        // Calculate and add centroid marker
+        // //Calculate and add centroid marker
         // try {
         //     // Calculate centroid using Turf.js
         //     const centroid = turf.centroid(geojson);
@@ -429,10 +429,10 @@ function clearGeometries() {
     }
 }
 
-// Generate a random color for features without specified colors
+// Generate a random color for features without specified colors '#0094f6 ',
 function getRandomColor() {
     const colors = [
-        '#0094f6 '
+        '#4400ff'
     ];
     return colors[Math.floor(Math.random() * colors.length)];
 }
@@ -440,7 +440,7 @@ function getRandomColor() {
 // Extract label from results
 function extractLabelFromResults(results, row) {
     const labelFields = [
-        'distWktLabel', 'distName', 'regionName', 
+        'distxWktLabel', 'distxName', 'regionxName', 
         'name', 'label', 'title', 'id'
     ];
     
@@ -450,15 +450,15 @@ function extractLabelFromResults(results, row) {
         }
     }
     
-    if (row['elevation'] && row['elevation'].value) {
-        return `Elevation: ${row['elevation'].value}m`;
-    }
+    // if (row['elevation'] && row['elevation'].value) {
+    //     return `Elevation: ${row['elevation'].value}m`;
+    // }
     
-    if (row['answer'] && row['answer'].value) {
-        return `Value: ${row['answer'].value}`;
-    }
+    // if (row['answer'] && row['answer'].value) {
+    //     return `Value: ${row['answer'].value}`;
+    // }
     
-    return 'Geographic Feature';
+    return '';
 }
 
 // Make map instance available globally

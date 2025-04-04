@@ -25,6 +25,9 @@ sleep 5
 echo "Loading 105 Sub-Districts of Munich"
 shp2pgsql -s 4326 /data/Munich_105_Bezirke.shp public.munich_subdist105 | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 5
+echo "Loading GeoNames data for Germany"
+python3 -u importGEONAMES.py
+sleep 5
 echo "Loading OSM buildings of Munich"
 shp2pgsql -s 4326 /data/MunichOSM.shp public.munich_bldings_osm | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 5

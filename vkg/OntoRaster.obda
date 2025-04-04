@@ -1,5 +1,6 @@
 [PrefixDeclaration]
 :		https://github.com/aghoshpro/OntoRaster/
+gn:         https://www.geonames.org/ontology#
 geo:		http://www.opengis.net/ont/geosparql#
 owl:		http://www.w3.org/2002/07/owl#
 rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
@@ -12,13 +13,34 @@ bldg:		http://www.opengis.net/citygml/building/2.0/
 lgd:		http://linkedgeodata.org/resource/
 lgdg:		http://linkedgeodata.org/geometry/
 lgdo:		http://linkedgeodata.org/ontology/
-rasdb:		https://github.com/aghoshpro/RasterDataCube/
+rasdb:		https://github.com/aghoshpro/RasterDataCube/    
 
 [MappingDeclaration] @collection [[
+; ---------------- Mapping for GeoNames Data for Sweden (SE) -----------------
+mappingId  GeoNames_ID_SE
+target     :geonames/{geonameid} a :Geonames .
+source     SELECT geonameid FROM public.geonames
+
+mappingId  GeoNames_Feature_Name
+target     :geonames/{geonameid} rdfs:label {featureName}^^xsd:string .
+source     SELECT geonameid, name AS featureName FROM public.geonames
+
+mappingId  GeoNames_Country_Code
+target     :geonames/{geonameid} gn:countryCode {country_code}^^xsd:string .
+source     SELECT geonameid, country_code FROM public.geonames
+
+mappingId  GeoNames_Feature_Location
+target     :geonames/{geonameid} geo:asWKT {pointWkt}^^geo:wktLiteral .
+source     SELECT geonameid, ST_AsText(ST_Point(longitude, latitude)) AS pointWkt FROM public.geonames
+
+mappingId  GeoNames_ID_Feature_Code
+target     :geonames/{geonameid} a gn:{featureCode} .
+source     SELECT geonameid, upper(feature_code) AS featureCode FROM public.geonames
+
 ; ---------------- Mapping for All Regions in Sweden -----------------
 
 mappingId	Get_region_class_table_sweden
-target		:vector_region/sweden/{regionId} a :Region .
+target		:vector_region/sweden/{regionId} a :Region_SWEDEN .
 source		SELECT gid AS regionId FROM public.region_sweden
 
 mappingId	mapping_regionName_sweden
@@ -118,32 +140,6 @@ source		SELECT gid AS buildingId,
                    END AS bldgWkt
             FROM public.munich_bldings_osm
 
-
-
-;mappingId	Munich_OSM_building_id
-;target		:osmlink/lgd:relation{osm_id} rdfs:label lgdg:type{osm_id} .
-;source		SELECT osm_id FROM public.munich_bldings_osm
-
-;mappingId	Munich_OSM_building_name
-;target		:osmlinklgd:relation{osm_id} rdfs:label {buildingName}^^xsd:string .
-;source		SELECT osm_id, name AS buildingName FROM public.munich_bldings_osm
-
-;mappingId	Munich_OSM_building_type
-;target		:osmlinklgd:relation{osm_id} rdfs:label {buildingType}^^xsd:string .
-;source		SELECT osm_id, type AS buildingType FROM public.munich_bldings_osm
-
-;mappingId	Munich_OSM_building_geometry
-;target		:osmlinklgd:relation{osm_id} geo:asWKT {buildingWkt}^^geo:wktLiteral .
-;source		SELECT osm_id,
-;                   CASE
-;                       WHEN ST_NumGeometries(geom) = 1 THEN ST_AsText(ST_GeometryN(geom, 1))
-;                       ELSE ST_AsText(geom)
-;                   END AS buildingWkt
-;            FROM public.munich_bldings_osm
-
-
-
-
 ; ---------------- 3DCityGML Buildings Data of Munich -----------------
 
 ;mappingId	Building
@@ -164,7 +160,7 @@ source		SELECT gid AS buildingId,
 ; ---------------- Mapping for All Regions in South Tyrol -----------------
 
 mappingId	Get_region_class_table_south_tyrol
-target		:vector_region/tyrol/{regionId} a :Region_IT .
+target		:vector_region/tyrol/{regionId} a :Region_ITALY .
 source		SELECT gid AS regionId FROM public.region_south_tyrol
 
 mappingId	mapping_regionName_south_tyrol
@@ -179,7 +175,6 @@ source		SELECT gid AS regionId,
                        ELSE ST_AsText(geom)
                    END AS regionWkt
             FROM public.region_south_tyrol
-
 
 ; ---------------- Mapping for Raster Metadata Lookup Table -----------------
 

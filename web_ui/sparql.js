@@ -49,15 +49,15 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?regionName ?tempK ?regionWkt {
-?region a :Region_IT.
-?region rdfs:label ?regionName .
-?region geo:asWKT ?regionWkt .
-?gridCoverage a :Raster .
-?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (CONTAINS(?regionName, 'Vino'))
-FILTER (CONTAINS(?rasterName, 'Tyrol'))
-BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-BIND (rasdb:rasSpatialMinimum(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+	?region a :Region_ITALY.
+	?region rdfs:label ?regionName .
+	?region geo:asWKT ?regionWkt .
+	?gridCoverage a :Raster .
+	?gridCoverage rasdb:rasterName ?rasterName .
+	FILTER (CONTAINS(?regionName, 'Vino'))
+	FILTER (CONTAINS(?rasterName, 'Tyrol'))
+	BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+	BIND (rasdb:rasSpatialMinimum(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
 }`,
 	'Query 2': `PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -67,16 +67,16 @@ PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?bldgName ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
-?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
-?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
-BIND('#008AFF5C' AS ?distWktColor)
-BIND('red' AS ?bldgWktColor)
-FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
-?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
-FILTER (CONTAINS(?rasterName, 'Elevation')) # NDVI
-BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp) # 2022-01-01T00:00:00+00:00
-BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
-FILTER(?elevation < 520) # FILTER(?ndvi > 0.35) # NDVI Scale [0.1 (Desert) to >= 1.0 (Forest)]
+	?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
+	?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
+	BIND('#008AFF5C' AS ?distWktColor)
+	BIND('red' AS ?bldgWktColor)
+	FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
+	?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+	FILTER (CONTAINS(?rasterName, 'Elevation')) # NDVI
+	BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp) # 2022-01-01T00:00:00+00:00
+	BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+	FILTER(?elevation < 520) # FILTER(?ndvi > 0.35) # NDVI Scale [0.1 (Desert) to >= 1.0 (Forest)]
 }`,
 	'Query 3': `PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
@@ -84,16 +84,16 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?regionName ?tempK ?regionWkt {
-?region a :Region .
-?region rdfs:label ?regionName .
-?region geo:asWKT ?regionWkt .
-?gridCoverage a :Raster .
-?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (?regionName = 'Göteborg') # Stockholm, Umeå, Göteborg
-FILTER (CONTAINS(?rasterName, 'Sweden'))
-BIND ('2022-04-05T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
-BIND ('2022-06-19T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
-BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?tempK)
+	?region a :Region_SWEDEN .
+	?region rdfs:label ?regionName .
+	?region geo:asWKT ?regionWkt .
+	?gridCoverage a :Raster .
+	?gridCoverage rasdb:rasterName ?rasterName .
+	FILTER (?regionName = 'Göteborg') # Stockholm, Umeå, Göteborg, Söderköping
+	FILTER (CONTAINS(?rasterName, 'Sweden'))
+	BIND ('2022-04-05T00:00:00+00:00'^^xsd:dateTime AS ?startTimeStamp)
+	BIND ('2022-06-19T00:00:00+00:00'^^xsd:dateTime AS ?endTimeStamp)
+	BIND (rasdb:rasTemporalMaximum(?startTimeStamp, ?endTimeStamp , ?regionWkt, ?rasterName) AS ?tempK)
 }`,
 	'Query 4': `PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
@@ -101,25 +101,25 @@ PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
 SELECT ?regionName ?tempK ?regionWkt ?regionWktLabel ?regionWktColor {
-?region a :Region_IT .
-?region rdfs:label ?regionName .
-?region geo:asWKT ?regionWkt .
-BIND (?regionName AS ?regionWktLabel)
-?gridCoverage a :Raster .
-?gridCoverage rasdb:rasterName ?rasterName .
-#FILTER (?regionName = 'Bolzano')
-FILTER (CONTAINS(?rasterName, 'Tyrol'))
-BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-BIND (rasdb:rasSpatialAverage(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
-FILTER(?tempK > 250) .
-  BIND( 
-    IF(?tempK < 260, "blue" , 
-    IF(?tempK < 265, "#008AFF",
-    IF(?tempK < 270, "magenta",
-    IF(?tempK < 275, "red",
-    IF(?tempK < 280, "black",
-    "black")))))
-    AS ?regionWktColor).
+	?region a :Region_ITALY .
+	?region rdfs:label ?regionName .
+	?region geo:asWKT ?regionWkt .
+	BIND (?regionName AS ?regionWktLabel)
+	?gridCoverage a :Raster .
+	?gridCoverage rasdb:rasterName ?rasterName .
+	#FILTER (?regionName = 'Bolzano')
+	FILTER (CONTAINS(?rasterName, 'Tyrol'))
+	BIND ('2023-03-03T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+	BIND (rasdb:rasSpatialAverage(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+	FILTER(?tempK > 250) .
+	BIND( 
+		IF(?tempK < 260, "blue" , 
+		IF(?tempK < 265, "#008AFF",
+		IF(?tempK < 270, "magenta",
+		IF(?tempK < 275, "red",
+		IF(?tempK < 280, "black",
+		"black")))))
+		AS ?regionWktColor).
 }
 GROUP BY ?regionName ?tempK ?regionWkt ?regionWktLabel ?regionWktColor`,
 	'Query 5': `PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
@@ -127,17 +127,37 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
-SELECT ?regionName ?tempK ?regionWkt ?regionWktColor {
-?region a :Region .
-?region rdfs:label ?regionName .
-?region geo:asWKT ?regionWkt .
-?gridCoverage a :Raster .
-?gridCoverage rasdb:rasterName ?rasterName .
-FILTER (CONTAINS(?regionName, 'Ö'))
-FILTER(?regionName NOT IN('Sjöbo'))
-FILTER (CONTAINS(?rasterName, 'Sweden'))
-BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
-BIND (rasdb:rasSpatialAverage(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+SELECT ?regionName ?answer ?regionWkt {
+	?region a :Region .
+	?region rdfs:label ?regionName .
+	?region geo:asWKT ?regionWkt .
+	?gridCoverage a :Raster .
+	?gridCoverage rasdb:rasterName ?rasterName .
+	#FILTER (?regionName = 'Traunstein') # also try with München, Deggendorf, Bayreuth, Würzburg etc.   
+	FILTER (CONTAINS(?regionName, 'R'))
+	#FILTER(?regionName NOT IN('Traunstein')) (ISSUE with Traunstein)  
+	FILTER (CONTAINS(?rasterName, 'Bavaria'))
+	BIND ('2023-09-04T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+	BIND (rasdb:rasSpatialAverage(?timeStamp, ?regionWkt, ?rasterName) AS ?answer)
+} `,
+'Query 6': `PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
+PREFIX gn:  <https://www.geonames.org/ontology#>
+PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+SELECT ?featureName ?regionName ?tempK ?pointWkt ?regionWkt ?regionWktColor {
+	?region a :Region_SWEDEN ; rdfs:label ?regionName ; geo:asWKT ?regionWkt .
+	?gname a gn:UNIV; rdfs:label ?featureName ; geo:asWKT ?pointWkt . # UNIV, LKS, RSTN etc.
+	?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
+	BIND('#4400ff' AS ?regionWktColor)
+	FILTER (geof:sfWithin(?pointWkt, ?regionWkt))
+	FILTER (CONTAINS(?regionName, '')) 
+	FILTER (CONTAINS(?rasterName, 'Sweden'))
+	BIND ('2022-08-24T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
+	BIND (rasdb:rasSpatialMaximum(?timeStamp, ?regionWkt, ?rasterName) AS ?tempK)
+	FILTER(?tempK > 281) .
 }`
 };
 
@@ -146,10 +166,10 @@ function createHighlightedQueryEditor(id, query) {
 	return `
 		<div class="relative">
 			<textarea spellcheck="false" id="sparql-input-${id}" 
-				class="w-full p-2 border border-gray-800 rounded-md font-mono text-sm h-[550px] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white text-transparent font-bold caret-red-800"
+				class="w-full p-2 border border-gray-800 rounded-md font-mono text-sm h-[550px] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white text-transparent font-thin caret-red-800"
 			>${query}</textarea>
 			<pre id="highlighted-${id}" 
-				class="absolute top-0 left-0 w-full h-full p-2 pointer-events-none font-mono text-sm overflow-hidden"
+				class="absolute top-0 left-0 w-full h-full p-2 pointer-events-none font-bold font-mono text-sm overflow-hidden"
 				aria-hidden="true"
 			><code>${highlightSPARQL(query)}</code></pre>
 		</div>
@@ -160,9 +180,9 @@ function createHighlightedQueryEditor(id, query) {
 const styles = `
 	.keyword { color:rgb(0, 47, 255); }
 	.variable { color:rgb(186, 112, 0); }
-	.user-input { color:rgb(0, 197, 13); }
+	.user-input { color:rgb(0, 158, 11); }
 	.custom-input { color:rgb(255, 0, 255); }
-	.class { color:rgb(255, 204, 0); }
+	.class { color:rgb(255, 0, 0); }
 	.prefix-link { color: rgba(0, 47, 255, 0.62);; }
 	.comment { color: #808080; font-style: italic; }
 	
@@ -177,7 +197,7 @@ const styles = `
 function highlightSPARQL(query) {
 	query = query.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-	const comments = /#.*/g; // Matches comments starting with #
+	const comments = /#(?![0-9a-fA-F]{6}\b).*/g; // Matches comments starting with # /#(?![0-9a-fA-F]{6}\b).*/g;  /#.*/g;
             
 	// Temporarily replace comments to prevent them from being affected by other highlights
 	let commentMatches = [];
@@ -186,7 +206,7 @@ function highlightSPARQL(query) {
 		return `__COMMENT_PLACEHOLDER_${commentMatches.length - 1}__`;
 	});	
 
-	const keywords = /\b(PREFIX|SELECT|WHERE|FILTER|BIND|AS|a|CONTAINS)\b/g;
+	const keywords = /\b(PREFIX|SELECT|WHERE|FILTER|BIND|AS|CONTAINS)\b/g;
 	const variables = /\?[a-zA-Z_]\w*/g;
 	const userInputs = /'[^']*'/g;
 	const customInputs = /\b([a-zA-Z_]\w*:)\b/g;

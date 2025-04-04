@@ -27,8 +27,9 @@
     <!-- Query Plan Script -->
     <!-- <script src="queryPlanLLM.js"></script> -->
     <!-- Add in the head section -->
-    <link href="prism.css" rel="stylesheet" />
-    <script src="prism.js"></script>
+    <!-- <link href="prism.css" rel="stylesheet" />
+    <script src="prism.js"></script> -->
+    <!-- <script src="keepTime.js"></script> -->
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sparql.min.js"></script> -->
@@ -94,6 +95,7 @@
             <h1 class="text-2xl md:text-3xl font-bold text-center"><a href="https://github.com/aghoshpro/OntoRaster"
                     target="_blank"><img class="h-20 inline-block" src="/diagrams/OntoRaster-Dark.png"
                         alt="OntoRaster"></a></h1>
+                        <p class="p-1 text-center text-gray-400 font-mono text-sm">Ontop SPARQL Endpoint : <a class="hover:text-yellow-300" href="http://localhost:8082/" target="_blank">http://localhost:8082/sparql</a></p>
         </header>
         <!-- style="width: 200px; height: 20px; -->
         <div class="content-container p-2 md:p-4 gap-3 md:gap-4">
@@ -167,6 +169,7 @@
                                 class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
                                 🧾 Table View
                             </button>
+
                             <button id="visualization-tab"
                                 class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
                                 aria-current="page">
@@ -176,6 +179,11 @@
                             <button id="json-tab"
                                 class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
                                 ⛓️ JSON View
+                            </button>
+
+                            <button id="history-tab"
+                                class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                ⏱️ History
                             </button>
 
                         </nav>

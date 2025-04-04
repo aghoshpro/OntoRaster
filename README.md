@@ -1,9 +1,3 @@
-<!-- <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/aghoshpro/OntoRaster/assets/71174892/21fee824-3011-4a80-9225-77fc92f3a153">
-  <source media="(prefers-color-scheme: light)" srcset="https://github.com/aghoshpro/OntoRaster/assets/71174892/a93cd5f8-cb1b-441b-acaf-415deb089d3b">
-  <img alt=OntoRaster Logo" src="https://github.com/aghoshpro/OntoRaster/assets/71174892/a93cd5f8-cb1b-441b-acaf-415deb089d3b" style="width:auto;">
-</picture> -->
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="diagrams/OntoRaster-Dark.png">
   <source media="(prefers-color-scheme: light)" srcset="diagrams/OntoRaster-Light.png">
@@ -65,13 +59,6 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 ### 2.1 Clone this repository
 
-<!-- - Windows
-
-  ```sh
-  git clone https://github.com/aghoshpro/OntoRaster  --config core.autocrlf=input
-  ```
-
-- MacOS and Linux: -->
 -
   ```sh
   git clone https://github.com/aghoshpro/OntoRaster.git
@@ -216,7 +203,8 @@ Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontol
 
 ### 4.6. Quantities, Units, Dimensions and Types (QUDT)
 
-The [QUDT](https://qudt.org) provides set of vocabularies representing the base classes properties, and restrictions used for modeling physical quantities, measurement units, and their dimensions in various measurement systems originally developed for the NASA Exploration Initiatives Ontology Models ([NExIOM](https://step.nasa.gov/pde2009/slides/20090506145822/PDE2009-NExIOM-TQ_v2.0-aRH-sFINAL.pdf)) project and now it forms the basis of the [NASA QUDT Handbook](http://ontolog.cim3.net/file/work/OntologyBasedStandards/2013-10-10_Case-for-QUOMOS/NASA-QUDT-Handbook-v10--RalphHodgson_20131010.pdf). QUDT aims to improve interoperability of data and the specification of information structures through industry standards for `Units of Measure (UoM)`, Quantity Kinds, Dimensions and Data Types as pointed out by [Ray et al., 2011](https://doi.org/10.25504/FAIRsharing.d3pqw7). This OWL schema is a foundation for a basic treatment of units which is considered for `Unit of Measurement (UoM)` in this work.
+- The [QUDT](https://qudt.org) provides set of vocabularies representing the base classes properties, and restrictions used for modeling physical quantities, measurement units, and their dimensions in various measurement systems originally developed for the NASA Exploration Initiatives Ontology Models ([NExIOM](https://step.nasa.gov/pde2009/slides/20090506145822/PDE2009-NExIOM-TQ_v2.0-aRH-sFINAL.pdf)) project and now it forms the basis of the [NASA QUDT Handbook](http://ontolog.cim3.net/file/work/OntologyBasedStandards/2013-10-10_Case-for-QUOMOS/NASA-QUDT-Handbook-v10--RalphHodgson_20131010.pdf). 
+- QUDT aims to improve interoperability of data and the specification of information structures through industry standards for `Units of Measure (UoM)`, quantity types, dimensions and data Types as pointed out by [Ray et al., 2011](https://doi.org/10.25504/FAIRsharing.d3pqw7).
 
 ## 5. Heterogenous Data Sources (**_D_**)
 
@@ -372,7 +360,7 @@ Contains over **25 million** geographical names of places in different languages
 
 ## 6. Mapping (**_M_**)
 
-Mappings design is the most crusial user-centric step in generating Virtual Knowledge Graph (VKG). Mapping connect the raw data with the domain ontology to generate knowledge graph during user query.
+Mappings design is the most crucial user-centric step in generating Virtual Knowledge Graph (VKG) as it connects the raw data with respective domain ontology to generate knowledge graph during user query.
 
 - A mapping consist of three main parts: a mapping id, a source and a target.
 
@@ -380,12 +368,8 @@ Mappings design is the most crusial user-centric step in generating Virtual Know
   - **Source** refers to a regular SQL query expressed over a relational database fetching the data from the table using the chosen column name.
   - **Target** is RDF triple pattern that uses the answer variables from preceding SQL query as placeholders and described using [Turtle syntax](https://github.com/ontop/ontop/wiki/TurtleSyntax)
 
-<!-- Here we have provided the actual mappings for the demo vector and raster dataset.
-
-For vector data we simply substituted the table name `sample_regions_of_interest` with actual table names kept in RDBMS including `region_sweden`, `region_bavaria`, `region_south_tyrol` displaying vector data (**500+ unique regions**) for municipalities of Sweden, Bavaria (Germany) and South Tyrol (Italy) respectively.
-
-**Users can add their own vector data by writing their own mappings in similar fashion shown below.** -->
-
+#### Check out the mappings at `vkg/OntoRaster.obda`
+<!-- 
 ### 6.1. **Relational Data (including `Vector`)**
 
 **Area of Interest (AOI)** contains one or more regions. **_Region_** can be a super-class that includes any type of real world ***feature classes*** such as administrative boundaries  e,g., `municipalities`, `districts`, `sub-districts`,`provinces`,`countries` or any user specific `custom region`. Here we have only provided the mapping for 25 districts of Munich (`munich_dist25` table).
@@ -467,7 +451,7 @@ For vector data we simply substituted the table name `sample_regions_of_interest
 
   ```sql
   SELECT raster_id AS rasterId, raster_name AS rasterName FROM raster_lookup
-  ```
+  ``` -->
 
 ## 7. More details
 
