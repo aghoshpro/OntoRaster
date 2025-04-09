@@ -6,7 +6,7 @@
 
 <!-- Raster extension of VKG system Ontop to query over **multidimensional raster** data combined with **relational data**. Current version of OntoRaster supports regular gridded 3-D **raster** data and geometrical **vector data** in geospatial domain. We are constantly improving the extension with new features which will enable the end user to query over raster data and vector data of any domain under the VKG paradigm in future. -->
 
-Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over **multidimensional raster** data in conjunction with **relational data** in arbitrary domains. Currently it integrates and queries regular gridded (geo) spatial-temporal **raster** data [OGC Coverage] together with relational data including **vector** geometrical data, **OpenStreetMap (OSM)** data and **3DCityGML** data. We're constantly enhancing the extension with new robust features to allow the end users to semantically query integrated raster data with relational data of arbitrary domain under the VKG paradigm.
+Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over **multidimensional raster** data integrated with **relational data** in arbitrary domains. At present, it integrates and queries regular gridded (geo) spatial-temporal **raster** data together with relational data including **vector** geometrical data, **OpenStreetMap (OSM)** data and **3DCityGML** data on the fly. We're constantly enhancing the extension with new robust features to enable end users to semantically query raster data of arbitrary domain under the VKG paradigm.
 
 ## Table of Contents
 
@@ -19,10 +19,9 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 - 4.1. [Raster Ontology](#41-raster-ontology)
 - 4.2. [GeoSPARQL v1.1](#42-geosparql-v11)
 - 4.3. [GeoNames v3.3](#43-geonames-v33)
-- 4.4. [LinkedGeoData](#44-linked-geo-data)
+- 4.4. [LinkedGeoData](#44-linkedgeodata)
 - 4.5. [CityGML v2.0](#45-citygml-v20)
 - 4.6. [Quantities, Units, Dimensions and Types (QUDT) Ontology](#46-quantities-units-dimensions-and-types-qudt)
-
 
 5. [Heterogenous Data Sources (**_D_**)](#5-heterogenous-data-sources-d)
 
@@ -60,6 +59,7 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 ### 2.1 Clone this repository
 
 -
+
   ```sh
   git clone https://github.com/aghoshpro/OntoRaster.git
   ```
@@ -109,7 +109,7 @@ It becomes available at <http://localhost:8082/> under `success` in docker deskt
 
 All RasSPARQL queries with `PREFIX` are mentioned at `vkg/OntoRaster.toml`.
 
-| **_Q<sub>i</sub>_** | Functional Description                                                                                                                                              |
+| **_Q<sub>i</sub>_** | Functional Description                                                                                                                                   |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **_Q1_**            | What is the dimension of the input raster dataset?                                                                                                       |
 | **_Q2_**            | Perform element-wise operation over cells of an array of an input raster dataset at a particular timestamp with the user-specific operator and operator. |
@@ -182,18 +182,19 @@ For vector data we are using [GeoSPARQL v1.1 Ontology](https://opengeospatial.gi
 
 ### 4.3. GeoNames v3.3
 
-The GeoNames Ontology, part of [GeoNames](https://www.geonames.org/about.html) geographical database, makes it possible to add geospatial semantic information to the Word Wide Web (WWW). It consists over 11 million geonames toponyms with a distinct URL correlating with RDF web service. Founded by Marc Wick (`marc@geonames.org`), a project of [Unxos GmbH](https://www.unxos.com/), Tutilostrasse 17d, 9011 St. Gallen, Switzerland.
+The GeoNames Ontology, part of [GeoNames](https://www.geonames.org/about.html) geographical database, makes it possible to add geospatial semantic information to the Word Wide Web (WWW). It consists over 11 million geonames toponyms with a distinct URL correlating with RDF web service. Founded by Marc Wick (`marc@geonames.org`), [Unxos GmbH](https://www.unxos.com/), Switzerland.
 
 - Ontology is available at <https://www.geonames.org/ontology/documentation.html>
 
-### 4.4. Linked Geo Data
+### 4.4. LinkedGeoData
 
-- Defines classes of objects appearing on maps: roads, railways, water ways, amenities, emergency infrastructure, public transport, shops, tourist attractions, etc. This extensive ontology comprises over 660 classes, delineated according to the established set of OSM tags and their corresponding values. It was developed by Ontology Engineering Group ([link](https://smartcity.linkeddata.es/ontologies/mapserv.kt.agh.edu.plontologiesosm.owl.html)).
+- Defines classes of objects appearing on Open Street Map (OSM) such as `roads`, `railways`, `amenities`, `emergency infrastructure`, `tourist attractions`, etc. This extensive [ontology](https://github.com/GeoKnow/LinkedGeoData/blob/develop/lgd-ontop-web/lgd.owl), from the [LinkedGeoData Project](http://linkedgeodata.org/) comprises over 400 million geo-elements spread accross 500 classes. The RDF data comprises approximately 20 billion triples. Data is available according to the Linked Data principles and interlinked with DBpedia and GeoNames.
 
-- **OSMonto**: An ontology of OpenStreetMap tags, created with the purpose to ease maintenance and overview of existing tags and to allow enriching the semantics of tags by relating them to other ontologies. It has been developed as a research paper [Mihai et al 2011](https://www.inf.unibz.it/~okutz/resources/osmonto.pdf) at University Bremen and DFKI Bremen and was presented at State of the Map Europe [SotM-EU'2011](https://stateofthemap.eu/index.html) and . An [.owl](https://raw.githubusercontent.com/doroam/planning-do-roam/master/Ontology/tags.owl) file containing the OSMonto ontology can be viewed in Protégé.
+<!-- - Developed by Ontology Engineering Group ([link](https://smartcity.linkeddata.es/ontologies/mapserv.kt.agh.edu.plontologiesosm.owl.html)). -->
 
-- [Open Street Map integration](https://documentation.researchspace.org/resource/Help:OpenStreetMap) : This integration creates a simple lookup service to federate against the Open Street Maps (OSM) API, allowing users to reference place names in their ResearchSpace instances. Users can lookup a street address, a city, a country etc. and be able to reference this in their data.
+- **OSMonto**: An ontology of OpenStreetMap tags was developed to facilitate tag maintenance and overview, as well as to enable the enrichment of tag semantics through relationships with other ontologies ([Mihai et al 2011](https://www.inf.unibz.it/~okutz/resources/osmonto.pdf)). It was presented at State of the Map Europe [SotM-EU'2011](https://stateofthemap.eu/index.html). View the  [.owl](https://raw.githubusercontent.com/doroam/planning-do-roam/master/Ontology/tags.owl) file in [Protégé](https://protegeproject.github.io/protege/getting-started/).
 
+<!-- - [Open Street Map integration](https://documentation.researchspace.org/resource/Help:OpenStreetMap) : This integration creates a simple lookup service to federate against the Open Street Maps (OSM) API, allowing users to reference place names in their ResearchSpace instances. Users can lookup a street address, a city, a country etc. and be able to reference this in their data. -->
 
 ### 4.5. CityGML v2.0
 
@@ -203,13 +204,14 @@ Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontol
 
 ### 4.6. Quantities, Units, Dimensions and Types (QUDT)
 
-- The [QUDT](https://qudt.org) provides set of vocabularies representing the base classes properties, and restrictions used for modeling physical quantities, measurement units, and their dimensions in various measurement systems originally developed for the NASA Exploration Initiatives Ontology Models ([NExIOM](https://step.nasa.gov/pde2009/slides/20090506145822/PDE2009-NExIOM-TQ_v2.0-aRH-sFINAL.pdf)) project and now it forms the basis of the [NASA QUDT Handbook](http://ontolog.cim3.net/file/work/OntologyBasedStandards/2013-10-10_Case-for-QUOMOS/NASA-QUDT-Handbook-v10--RalphHodgson_20131010.pdf). 
-- QUDT aims to improve interoperability of data and the specification of information structures through industry standards for `Units of Measure (UoM)`, quantity types, dimensions and data Types as pointed out by [Ray et al., 2011](https://doi.org/10.25504/FAIRsharing.d3pqw7).
+- The [QUDT](https://qudt.org) provides set of vocabularies representing the base classes properties, and restrictions used for modeling physical quantities, measurement units, and their dimensions in various measurement systems originally developed for the NASA Exploration Initiatives Ontology Models ([NExIOM](https://step.nasa.gov/pde2009/slides/20090506145822/PDE2009-NExIOM-TQ_v2.0-aRH-sFINAL.pdf)) project and now it forms the basis of the [NASA QUDT Handbook](http://ontolog.cim3.net/file/work/OntologyBasedStandards/2013-10-10_Case-for-QUOMOS/NASA-QUDT-Handbook-v10--RalphHodgson_20131010.pdf).
+- QUDT aims to improve interoperability of data and the specification of information structures through industry standards for `Units of Measure (UoM)`, quantity types, dimensions and data Types ([Ray et al., 2011](https://doi.org/10.25504/FAIRsharing.d3pqw7)).
 
 ## 5. Heterogenous Data Sources (**_D_**)
 
 ### Area of Interest (AOI)
-- **Munich**, the capital and largest city of Bavaria, Germany, covering approximately 311.20 $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project [Dense and Deep Geographic Virtual Knowledge Graphs for Visual Analysis (D2G2)](https://gepris.dfg.de/gepris/projekt/500249124).
+
+- **Munich**, the capital and largest city of Bavaria, Germany, covering approximately **311.20** $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project [Dense and Deep Geographic Virtual Knowledge Graphs for Visual Analysis (D2G2)](https://gepris.dfg.de/gepris/projekt/500249124).
 
 <!-- We selected Munich, the capital and largest city of Bavaria State, Germany as our area of interest (AOI) which comprises an approximate area of 311.20 $km^2$ including the city and the surrounding metropolitan area. This area is densely populated and hence features numerous structures encompassing residential and commercial zones. -->
 
@@ -221,7 +223,7 @@ Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontol
 
 ### 5.1.1. Geonames Data
 
-Contains over **25 million** geographical names of places in different languages as well as their alternate names (e.g.  16 million), population, timezone, location coordinates (lat/long in WGS84) etc., from various **[data sources](https://www.geonames.org/datasources/)** with more than 12 million unique features. All features are categorized into one out of **9 feature classes** e.g., **A, H, L, P, R, S, T, U, V**  and further subcategorized into one out of **[645 feature codes](https://www.geonames.org/export/codes.html)**. The data is accessible free of charge at **[link](https://www.geonames.org/export/)**
+Contains over **25 million** geographical names of places in different languages as well as their alternate names (e.g.  16 million), population, timezone, location coordinates (lat/long in WGS84) etc., from various **[data sources](https://www.geonames.org/datasources/)** with more than 12 million unique features. All features are categorized into one out of **9 feature classes** e.g., **A, H, L, P, R, S, T, U, V**  and further subcategorized into one out of **[645 feature codes](https://www.geonames.org/export/codes.html)**. Data available at **[link](https://www.geonames.org/export/)**
 
 |Feature classes |Feature codes|
 |----------------|------------------------|
@@ -234,7 +236,6 @@ Contains over **25 million** geographical names of places in different languages
 | **T** (mountain,hill,rock,...)     | `T.DSRT`- Desert, `T.MT` - Mountain, `T.PEN` - Peninsula|
 | **U** (undersea)                   | `U.BDLU` - Borderland, `U.MTU` - Mountain|
 | **V** (forest,heath,...)           | `V.FRST`- Forests, `V.GRSLD` - Grassland|
-
 
 ### 5.1.2. Vector Data
 
@@ -282,7 +283,7 @@ Contains over **25 million** geographical names of places in different languages
 
 - To check how many LOD2 gml files are needed to cover the aforementioned AOI one may go to [OpenData](https://geodaten.bayern.de/opengeodata/OpenDataDetail.html?pn=lod2&active=MASSENDOWNLOAD) and upload text file containing geometry of the AOI in `EWKT` format.
 
-- It will give something like below. One can also download the file `./diagrams/lod2.meta4` which contains all LONGs and LATs for the entire dataset with respective links.
+- It will give something like below. One can also download the file `./diagrams/lod2.meta4` which contains all `longitudes` and `latitudes` for the entire dataset with respective links.
 
  <div align="center">
    <img src="./diagrams/CityGML.PNG" width=400>
@@ -323,11 +324,18 @@ Contains over **25 million** geographical names of places in different languages
 
 - You can also use CLI tools such as `wget` pr `curl` if you have the Bounding Box (BBOX) of AOI
   - **BBOX** : [11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]
+  - _left,bottom,right,top_
+  - _minLongitude , minLatitude , maxLongitude , maxLatitude_
+  - _west,south,east,north_
+  - _xmin,ymin,xmax,ymax_
+  - [source](https://wiki.openstreetmap.org/wiki/Bounding_box)
 
-- Check [bboxfinder.com](https://bboxfinder.com/) to find BBOX for your AOI
+- Check [bboxfinder.com](http://bboxfinder.com/#0.000000,0.000000,0.000000,0.000000) to find BBOX for your AOI
 
 #### Small AOI
+
 -
+
   ```
   wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
   ```
@@ -335,6 +343,7 @@ Contains over **25 million** geographical names of places in different languages
 #### LARGER AOI (>300 MB)
 
 -
+
   ```
   wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
   ```
@@ -373,7 +382,6 @@ Mappings design is the most crucial user-centric step in generating Virtual Know
 ### 6.1. **Relational Data (including `Vector`)**
 
 **Area of Interest (AOI)** contains one or more regions. **_Region_** can be a super-class that includes any type of real world ***feature classes*** such as administrative boundaries  e,g., `municipalities`, `districts`, `sub-districts`,`provinces`,`countries` or any user specific `custom region`. Here we have only provided the mapping for 25 districts of Munich (`munich_dist25` table).
-
 
 #### **_M1 - `regionId`_ of District Class**
 - Target
@@ -423,7 +431,6 @@ Mappings design is the most crucial user-centric step in generating Virtual Know
 - Please check `vkg/OntoRaster.obda` for rest of the mappings for `subdistricts`, `osm_buildings` and `3dcitygml` buildings.
 
 ### 6.2. **Raster Metadata**
-
 
 #### **_M11 - `rasterId`_ of Raster Class**
 
