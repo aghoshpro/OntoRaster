@@ -6,7 +6,15 @@
 
 <!-- Raster extension of VKG system Ontop to query over **multidimensional raster** data combined with **relational data**. Current version of OntoRaster supports regular gridded 3-D **raster** data and geometrical **vector data** in geospatial domain. We are constantly improving the extension with new features which will enable the end user to query over raster data and vector data of any domain under the VKG paradigm in future. -->
 
-Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over **multidimensional raster** data integrated with **relational data** in arbitrary domains. At present, it integrates and queries regular gridded (geo) spatial-temporal **raster** data together with relational data including **vector** geometrical data, **OpenStreetMap (OSM)** data and **3DCityGML** data on the fly. We're constantly enhancing the extension with new robust features to enable end users to semantically query raster data of arbitrary domain under the VKG paradigm.
+Demonstrating  **raster** extension of _Virtual Knowledge Graph (VKG)_ system **Ontop** to query over **multidimensional raster** data integrated with **relational data** in arbitrary domains. At present, it integrates and queries regular gridded (geo) spatial-temporal **raster** data together with relational data including **vector** geometrical data on the fly. We're constantly enhancing the extension with new robust features to enable end users to semantically query raster data of arbitrary domain under the VKG paradigm.
+
+## Features
+- 🎯 Supports **RasSPARQL**, an extended SPARQL with raster functionalities compliant with GeoSPARQL functions.
+- 🧠 Smart integration of heterogenous relational data, 2D & 3D geometrical data and $n-dimensional$ data in geospatial domain (or ideally any arbitrary domain) with respective meta data handling during query time. 
+- 🧮 Supports incremental addition of new OWL ontologies, DB Schemas along with respective R2RML mappings to VKG specification.
+- 🗜️ Supported Data Formats : `.txt`, `.shp`, `.geojson`, `.geotiff`, `.netcdf`, `.gml`, `json`.
+- 🤖 Query Answers are explainable by LLMs i.e., Ollama, ChatGPT, Claude etc.
+- 🖥️ Clean Web UI and SPARQL YASGUI for usage demonstration.
 
 ## Table of Contents
 
@@ -40,7 +48,7 @@ Raster extension of _Virtual Knowledge Graph (VKG)_ system Ontop to query over *
 
 - **Query** - _List all the 30 meters tall residentials in **Munich** where average terrain elevation less than **550 meters** and average land surface temperature is over **300K**, given the following heterogenous data_.
 
-  <img src="diagrams/AOIMunich03.PNG">
+  <img src="diagrams/AOIMunich04.PNG">
 
   How can someone find an answer to this question if they don't have the required domain knowledge or expertise regarding to handle these many types of spatial data and their respective metadata.
 
@@ -107,7 +115,7 @@ It becomes available at <http://localhost:8082/> under `success` in docker deskt
 
 ## 3. Queries (**_Q_**)
 
-All RasSPARQL queries with `PREFIX` are mentioned at `vkg/OntoRaster.toml`.
+All RasSPARQL queries with `PREFIX` are mentioned at []`vkg/OntoRaster.toml`](https://github.com/aghoshpro/OntoRaster/blob/main/vkg/OntoRaster.toml).
 
 | **_Q<sub>i</sub>_** | Functional Description                                                                                                                                   |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -182,9 +190,9 @@ For vector data we are using [GeoSPARQL v1.1 Ontology](https://opengeospatial.gi
 
 ### 4.3. GeoNames v3.3
 
-The GeoNames Ontology, part of [GeoNames](https://www.geonames.org/about.html) geographical database, makes it possible to add geospatial semantic information to the Word Wide Web (WWW). It consists over 11 million geonames toponyms with a distinct URL correlating with RDF web service. Founded by Marc Wick (`marc@geonames.org`), [Unxos GmbH](https://www.unxos.com/), Switzerland.
+The [GeoNames v3.3 Ontology](https://www.geonames.org/ontology/documentation.html), part of [GeoNames](https://www.geonames.org/about.html) geographical database, makes it possible to add geospatial semantic information to the Word Wide Web (WWW). It consists over 11 million geonames toponyms with a distinct URL correlating with RDF web service. Founded by Marc Wick (`marc@geonames.org`), [Unxos GmbH](https://www.unxos.com/), Switzerland.
 
-- Ontology is available at <https://www.geonames.org/ontology/documentation.html>
+<!-- - Ontology is available at <https://www.geonames.org/ontology/documentation.html> -->
 
 ### 4.4. LinkedGeoData
 
@@ -213,17 +221,15 @@ Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontol
 
 - **Munich**, the capital and largest city of Bavaria, Germany, covering approximately **311.20** $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project [Dense and Deep Geographic Virtual Knowledge Graphs for Visual Analysis (D2G2)](https://gepris.dfg.de/gepris/projekt/500249124).
 
-<!-- We selected Munich, the capital and largest city of Bavaria State, Germany as our area of interest (AOI) which comprises an approximate area of 311.20 $km^2$ including the city and the surrounding metropolitan area. This area is densely populated and hence features numerous structures encompassing residential and commercial zones. -->
-
-- \***\*NOTE** - Any other AOI with similar kinds of data can be used.
+- \***\*NOTE** - Any other or user-specific AOI with similar kinds of data can be used by adding relevant mappings assertions. 
 
 ### 5.1 Relational Data
 
 <img src="diagrams/AOIMunich_vec.png">
 
-### 5.1.1. Geonames Data
+### 5.1.1. GeoNames Data
 
-Contains over **25 million** geographical names of places in different languages as well as their alternate names (e.g.  16 million), population, timezone, location coordinates (lat/long in WGS84) etc., from various **[data sources](https://www.geonames.org/datasources/)** with more than 12 million unique features. All features are categorized into one out of **9 feature classes** e.g., **A, H, L, P, R, S, T, U, V**  and further subcategorized into one out of **[645 feature codes](https://www.geonames.org/export/codes.html)**. Data available at **[link](https://www.geonames.org/export/)**
+Contains over **12 million** unique geographical features with their 25 million names including alternate and translated names (16 million), population, timezone, geo coordinates (lat/long in WGS84) etc., collected from various **[data sources](https://www.geonames.org/datasources/)**. All features are categorized into one of **9 feature classes** e.g., **A, H, L, P, R, S, T, U, V**  and further subcategorized into one of **[645 feature codes](https://www.geonames.org/export/codes.html)**. Data available for each country at **[here](https://www.geonames.org/export/)**.
 
 |Feature classes |Feature codes|
 |----------------|------------------------|
@@ -239,7 +245,7 @@ Contains over **25 million** geographical names of places in different languages
 
 ### 5.1.2. Vector Data
 
-- This demo utilised 25 districts, 105 subdistricts, OpenStreetMap (OSM) data and 3DCityGML 3D buildings data as vector data for Munich as shown above in **Figure (a)-(d)**.
+- This demo utilized 25 districts, 105 subdistricts, OpenStreetMap (OSM) data and 3DCityGML 3D buildings data as vector data for Munich as shown above in **Figure (a)-(d)**.
 
 <!-- , downloaded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b). -->
 
@@ -249,13 +255,11 @@ Contains over **25 million** geographical names of places in different languages
 
 - `munich_dist105` <img src="diagrams/dist105.PNG">
 
-- Another demo at this branch [`ontoraster/PaperRuleML'24`](https://github.com/aghoshpro/OntoRaster/tree/ontoraster/Paper%40RuleML'24) posses municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as **Areas of Interest (AOI)** which comprises approx **500** distinct regions with varying geometry features i.e., enclaves, islands with other attributes. For instance, the table for Sweden is as follows,
+- This demo also posses municipalities of Sweden, Bavaria (Germany), and South Tyrol (Italy) as **Area of Interests (AOIs)** which comprises approx **500** distinct regions with varying geometry features i.e., enclaves, islands with other attributes. For instance, the table for Sweden is as follows,
 
   - `region_sweden` <img src="diagrams/region_sweden.png">
 
-  - Same goes for `region_bavaria` and `region_south_tyrol`.
-
-- **Ideally any user-specific vector data of any AOI will work by adding relevant mappings**.
+  - Same goes for `region_bavaria` and `region_south_tyrol`. Check this branch [`ontoraster/PaperRuleML'24`](https://github.com/aghoshpro/OntoRaster/tree/ontoraster/Paper%40RuleML'24) for more info.
 
 ---
 
@@ -335,7 +339,6 @@ Contains over **25 million** geographical names of places in different languages
 #### Small AOI
 
 -
-
   ```
   wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
   ```
@@ -343,7 +346,6 @@ Contains over **25 million** geographical names of places in different languages
 #### LARGER AOI (>300 MB)
 
 -
-
   ```
   wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
   ```
@@ -377,7 +379,7 @@ Mappings design is the most crucial user-centric step in generating Virtual Know
   - **Source** refers to a regular SQL query expressed over a relational database fetching the data from the table using the chosen column name.
   - **Target** is RDF triple pattern that uses the answer variables from preceding SQL query as placeholders and described using [Turtle syntax](https://github.com/ontop/ontop/wiki/TurtleSyntax)
 
-#### Check out the mappings at `vkg/OntoRaster.obda`
+#### Check out the mappings at [`vkg/OntoRaster.obda`](https://github.com/aghoshpro/OntoRaster/blob/main/vkg/OntoRaster.obda)
 <!-- 
 ### 6.1. **Relational Data (including `Vector`)**
 

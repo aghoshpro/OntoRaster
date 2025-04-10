@@ -133,7 +133,7 @@ SELECT ?regionName ?answer ?regionWkt {
 	?region geo:asWKT ?regionWkt .
 	?gridCoverage a :Raster .
 	?gridCoverage rasdb:rasterName ?rasterName .
-	#FILTER (?regionName = 'Traunstein') # also try with München, Deggendorf, Bayreuth, Würzburg etc.   
+	#FILTER (?regionName = 'München') # also try with München, Deggendorf, Bayreuth, Würzburg etc.   
 	FILTER (CONTAINS(?regionName, 'R'))
 	#FILTER(?regionName NOT IN('Traunstein')) (ISSUE with Traunstein)  
 	FILTER (CONTAINS(?rasterName, 'Bavaria'))
