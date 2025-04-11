@@ -301,9 +301,7 @@ from osgeo import osr
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 import rasterio
-from rasterio.plot import show, reshape_as_image, reshape_as_raster, reshape_as_image
 import folium
-from folium.raster_layers import ImageOverlay
 
 def get_polygon_extent(polygon):
     coords = list(polygon.exterior.coords)

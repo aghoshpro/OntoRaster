@@ -9,9 +9,10 @@
 Demonstrating  **raster** extension of _Virtual Knowledge Graph (VKG)_ system **Ontop** to query over **multidimensional raster** data integrated with **relational data** in arbitrary domains. At present, it integrates and queries regular gridded (geo) spatial-temporal **raster** data together with relational data including **vector** geometrical data on the fly. We're constantly enhancing the extension with new robust features to enable end users to semantically query raster data of arbitrary domain under the VKG paradigm.
 
 ## Features
+
+- 🧠 Smart integration of heterogenous relational data, 2D & 3D geometrical data and $n-dimensional$ data in geospatial domain (or ideally any arbitrary domain) with respective meta data handling during query time.
 - 🎯 Supports **RasSPARQL**, an extended SPARQL with raster functionalities compliant with GeoSPARQL functions.
-- 🧠 Smart integration of heterogenous relational data, 2D & 3D geometrical data and $n-dimensional$ data in geospatial domain (or ideally any arbitrary domain) with respective meta data handling during query time. 
-- 🧮 Supports incremental addition of new OWL ontologies, DB Schemas along with respective R2RML mappings to VKG specification.
+- 🧮 Incremental addition of new OWL ontologies, DB Schemas with respective R2RML mappings to VKG specification.
 - 🗜️ Supported Data Formats : `.txt`, `.shp`, `.geojson`, `.geotiff`, `.netcdf`, `.gml`, `json`.
 - 🤖 Query Answers are explainable by LLMs i.e., Ollama, ChatGPT, Claude etc.
 - 🖥️ Clean Web UI and SPARQL YASGUI for usage demonstration.
@@ -67,7 +68,6 @@ Demonstrating  **raster** extension of _Virtual Knowledge Graph (VKG)_ system **
 ### 2.1 Clone this repository
 
 -
-
   ```sh
   git clone https://github.com/aghoshpro/OntoRaster.git
   ```
@@ -115,7 +115,7 @@ It becomes available at <http://localhost:8082/> under `success` in docker deskt
 
 ## 3. Queries (**_Q_**)
 
-All RasSPARQL queries with `PREFIX` are mentioned at []`vkg/OntoRaster.toml`](https://github.com/aghoshpro/OntoRaster/blob/main/vkg/OntoRaster.toml).
+All RasSPARQL queries are mentioned at [`vkg/OntoRaster.toml`](https://github.com/aghoshpro/OntoRaster/blob/main/vkg/OntoRaster.toml).
 
 | **_Q<sub>i</sub>_** | Functional Description                                                                                                                                   |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -208,7 +208,8 @@ The [GeoNames v3.3 Ontology](https://www.geonames.org/ontology/documentation.htm
 
 Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontologies) at the University of Geneva. In our research, [CityGML v2.0 Ontology](https://smartcity.linkeddata.es/ontologies/cui.unige.chcitygml2.0.html) is used for for the KG construction based on 3D CityGML buildings data with the further modifications and OSM integration by [Ding et al., 2024](https://doi.org/10.1080/10095020.2024.2337360).
 
-- Research is undergoing for more efficent integration of 3DCityGML data
+<!-- - Research is undergoing for more efficient integration of 3DCityGML data. -->
+- [CityGMl 3.0](https://doi.org/10.1007/s41064-020-00095-z) is in progress to be a standard. Although **CityGML 2.0** remains most popular yet for practical usage and implementation. 
 
 ### 4.6. Quantities, Units, Dimensions and Types (QUDT)
 
@@ -219,9 +220,9 @@ Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontol
 
 ### Area of Interest (AOI)
 
-- **Munich**, the capital and largest city of Bavaria, Germany, covering approximately **311.20** $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project [Dense and Deep Geographic Virtual Knowledge Graphs for Visual Analysis (D2G2)](https://gepris.dfg.de/gepris/projekt/500249124).
+- **Munich**, the capital of Bavaria, Germany, covering approximately **436.00** $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project [Dense and Deep Geographic Virtual Knowledge Graphs for Visual Analysis (D2G2)](https://gepris.dfg.de/gepris/projekt/500249124).
 
-- \***\*NOTE** - Any other or user-specific AOI with similar kinds of data can be used by adding relevant mappings assertions. 
+- \***\*NOTE** - Any other or user-specific AOI with similar kinds of data can be used by adding relevant mappings assertions.
 
 ### 5.1 Relational Data
 
@@ -229,7 +230,7 @@ Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontol
 
 ### 5.1.1. GeoNames Data
 
-Contains over **12 million** unique geographical features with their 25 million names including alternate and translated names (16 million), population, timezone, geo coordinates (lat/long in WGS84) etc., collected from various **[data sources](https://www.geonames.org/datasources/)**. All features are categorized into one of **9 feature classes** e.g., **A, H, L, P, R, S, T, U, V**  and further subcategorized into one of **[645 feature codes](https://www.geonames.org/export/codes.html)**. Data available for each country at **[here](https://www.geonames.org/export/)**.
+Contains over **12 million** unique geographical features with their 25 million names including alternate and translated names (16 million), population, timezone, geo coordinates (lat/long in WGS84) etc., collected from various **[data sources](https://www.geonames.org/datasources/)**. All features are categorized into one of **9 feature classes** e.g., **A, H, L, P, R, S, T, U, V**  and further subcategories into one of **[645 feature codes](https://www.geonames.org/export/codes.html)**. Data available for each country at **[here](https://www.geonames.org/export/)**.
 
 |Feature classes |Feature codes|
 |----------------|------------------------|
@@ -249,7 +250,7 @@ Contains over **12 million** unique geographical features with their 25 million 
 
 <!-- , downloaded from [arcgis](https://www.arcgis.com/home/item.html?id=369c18dfc10d457d9d1afb28adcc537b). -->
 
-- Stored in two separate tables such as `munich_dist25`, `munich_dist105` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshots are dispayed below,
+- Stored in two separate tables such as `munich_dist25`, `munich_dist105` in **VectorTablesDB** database inside **PostgreSQL** with spatial extension **PostGIS**. Snapshots are displayed below,
 
 - `munich_dist25` <img src="diagrams/dist25.PNG">
 
@@ -283,23 +284,26 @@ Contains over **12 million** unique geographical features with their 25 million 
 
 #### 5.1.3.2. Get Data
 
-- Area of Interest : **Munich Metropolitan Area**
+- **GUI** - First check how many LOD2 gml files are needed to cover the aforementioned **AOI** 
 
-- To check how many LOD2 gml files are needed to cover the aforementioned AOI one may go to [OpenData](https://geodaten.bayern.de/opengeodata/OpenDataDetail.html?pn=lod2&active=MASSENDOWNLOAD) and upload text file containing geometry of the AOI in `EWKT` format.
+  - Go to [OpenData](https://geodaten.bayern.de/opengeodata/OpenDataDetail.html?pn=lod2&active=MASSENDOWNLOAD) and upload text from `./citygml_data/Munich_EWKT.txt` containing geometry of the AOI in `EWKT` format.
 
-- It will give something like below. One can also download the file `./diagrams/lod2.meta4` which contains all `longitudes` and `latitudes` for the entire dataset with respective links.
+  - It will result a file `./citygml_data/lod2.meta4` which contains all `.gml` files with respective links.
 
- <div align="center">
-   <img src="./diagrams/CityGML.PNG" width=400>
- </div>
+  - Two ways to go using GUI are displayed below. 
 
-- Run the following shell script (or gitbash in Windows) to download files (**110** `.gml` files ~ **6.4 GB** in our study)
+    <div align="center">
+      <img src="./diagrams/CityGMLGUI.png" width=800>
+    </div>
+    
+
+- **CLI** - For the demo we used `./citygml_data/get.munich_citygml.sh` script (see below) which can be run in `terminal` (linux) or `gitbash` (Windows) to download all **110** `.gml` files (~ **6.4 GB**). .
 
     ```sh
     #!/bin/bash
-    for LONG in `seq 674 2 680`
+    for LONG in `seq 674 2 702`
     do
-      for LAT in `seq 5332 2 5342`
+      for LAT in `seq 5328 2 5346`
       do
         wget "https://download1.bayernwolke.de/a/lod2/citygml/${LONG}_${LAT}.gml"
       done
@@ -332,21 +336,21 @@ Contains over **12 million** unique geographical features with their 25 million 
   - _minLongitude , minLatitude , maxLongitude , maxLatitude_
   - _west,south,east,north_
   - _xmin,ymin,xmax,ymax_
-  - [source](https://wiki.openstreetmap.org/wiki/Bounding_box)
+  - OSM [Docs](https://wiki.openstreetmap.org/wiki/Bounding_box)
 
 - Check [bboxfinder.com](http://bboxfinder.com/#0.000000,0.000000,0.000000,0.000000) to find BBOX for your AOI
 
 #### Small AOI
 
 -
-  ```
+  ```sh
   wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
   ```
 
 #### LARGER AOI (>300 MB)
 
 -
-  ```
+  ```sh
   wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
   ```
 
