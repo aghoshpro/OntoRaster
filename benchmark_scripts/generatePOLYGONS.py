@@ -2,16 +2,16 @@
 # # bbox = left,bottom,right,top
 # # bbox = min Longitude , min Latitude , max Longitude , max Latitude 
 
-# input_bbox = [11.015629,55.128649,24.199222,69.380313]
+# INPUT_BBOX = [11.015629,55.128649,24.199222,69.380313]
 
-# def genPolygonPoints(input_bbox):
-#     """This function will generate different polygon within the input_bbox and EPSG:4326 - WGS 84 ranges from simple polygon (3 points) to dense polygon (infinitely many points) in OGC WKT format"""
+# def genPolygonPoints(INPUT_BBOX):
+#     """This function will generate different polygon within the INPUT_BBOX and EPSG:4326 - WGS 84 ranges from simple polygon (3 points) to dense polygon (infinitely many points) in OGC WKT format"""
 
-# def genPolygon_Area(input_bbox):
-#     """This function will generate different polygon within the input_bbox and EPSG:4326 - WGS 84 ranges from small area polygon to large polygons with large area in OGC WKT format"""
+# def genPolygon_Area(INPUT_BBOX):
+#     """This function will generate different polygon within the INPUT_BBOX and EPSG:4326 - WGS 84 ranges from small area polygon to large polygons with large area in OGC WKT format"""
 
 # def 
-
+import numpy as np
 import random
 import math
 from shapely.geometry import Polygon, box
@@ -19,19 +19,81 @@ from shapely.validation import explain_validity
 import matplotlib.pyplot as plt
 from tqdm import tqdm # or from tqdm.notebook import tqdm # FOR FANCY GREEN BAR
 
-def genPolygonPoints(input_bbox, num_points=None):
+def genPolygonPointsFIXED(INPUT_BBOX, num_points=None):
     """
-    Generate different polygons within the input_bbox in EPSG:4326 - WGS 84
+    Generate different polygons within the INPUT_BBOX in EPSG:4326 - WGS 84
     Ranges from simple polygon (3 points) to dense polygon (many points) in OGC WKT format
     
     Args:
-        input_bbox: List [min_lon, min_lat, max_lon, max_lat]
+        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
         num_points: Optional int, number of points in the polygon. If None, a random number between 3 and 20 is used.
         
     Returns:
         String: WKT format polygon
     """
-    min_lon, min_lat, max_lon, max_lat = input_bbox
+    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
+    
+    # Determine number of points if not specified
+    if num_points is None:
+        num_points = random.randint(3, 20)
+    
+    # Generate points for the polygon
+    points = []
+    
+    # For more complex shapes, we'll use a circular distribution with random perturbations
+    center_lon = (min_lon + max_lon) / 2
+    center_lat = (min_lat + max_lat) / 2
+
+    # Maximum radius that fits in the bbox (approximate)
+    max_radius_lon = (max_lon - min_lon) / 2 * 0.9
+    max_radius_lat = (max_lat - min_lat) / 2 * 0.9
+    
+    for i in range(num_points):
+        # Calculate angle for this point
+        angle = 2 * math.pi * i / num_points
+        
+        # Add some randomness to the radius
+        radius_factor = random.uniform(0.5, 1.0)
+        
+        # Calculate coordinates
+        x = center_lon + math.cos(angle) * max_radius_lon * radius_factor
+        y = center_lat + math.sin(angle) * max_radius_lat * radius_factor
+        
+        # Ensure points are within the bbox
+        x = max(min(x, max_lon), min_lon)
+        y = max(min(y, max_lat), min_lat)
+        
+        points.append((x, y))
+    
+    # Close the polygon by adding the first point at the end
+    points.append(points[0])
+    
+    # Convert to WKT format
+    wkt = "POLYGON (("
+    wkt += ", ".join([f"{p[0]} {p[1]}" for p in points])
+    wkt += "))"
+    
+    # Double-check OGC compliance
+    is_valid, message = validate_ogc_polygon(wkt)
+    if not is_valid:
+        # Try to fix the polygon
+        wkt = fix_ogc_polygon(wkt)
+        
+    return wkt
+
+def genPolygonPoints(INPUT_BBOX, num_points=None):
+    """
+    Generate different polygons within the INPUT_BBOX in EPSG:4326 - WGS 84
+    Ranges from simple polygon (3 points) to dense polygon (many points) in OGC WKT format
+    
+    Args:
+        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
+        num_points: Optional int, number of points in the polygon. If None, a random number between 3 and 20 is used.
+        
+    Returns:
+        String: WKT format polygon
+    """
+    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
     
     # Determine number of points if not specified
     if num_points is None:
@@ -82,26 +144,105 @@ def genPolygonPoints(input_bbox, num_points=None):
         # Try to fix the polygon
         wkt = fix_ogc_polygon(wkt)
         
-    return wkt, num_points
+    return wkt
 
-def genPolygon_Area(input_bbox, area_percentage=None):
+def genPolygon_AreaFIXED(INPUT_BBOX, area_percentage=None):
     """
-    Generate different polygons within the input_bbox in EPSG:4326 - WGS 84
+    Generate different polygons within the INPUT_BBOX in EPSG:4326 - WGS 84
     Ranges from small area polygon to large polygons with large area in OGC WKT format
     
     Args:
-        input_bbox: List [min_lon, min_lat, max_lon, max_lat]
+        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
         area_percentage: Optional float between 0 and 1, representing what percentage of the bbox area 
                         the polygon should occupy. If None, a random value is used.
         
     Returns:
         String: WKT format polygon
     """
-    min_lon, min_lat, max_lon, max_lat = input_bbox
+    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
     
     # Determine area percentage if not specified
     if area_percentage is None:
-        area_percentage = random.uniform(0.1, 0.9)
+        area_percentage = random.uniform(0.1, 1.0)
+    
+    # Get bbox dimensions
+    bbox_width = max_lon - min_lon
+    bbox_height = max_lat - min_lat
+    
+    # Calculate center of bbox
+    center_lon = (min_lon + max_lon) / 2
+    center_lat = (min_lat + max_lat) / 2
+
+    # center_lon = random.uniform(min_lon, max_lon)
+    # center_lat = random.uniform(min_lat, max_lat)
+    
+    # Calculate polygon dimensions based on area percentage
+    # For simplicity, we'll create a rectangular polygon
+    scale_factor = math.sqrt(area_percentage)
+    poly_width = bbox_width * scale_factor
+    poly_height = bbox_height * scale_factor
+    
+    # Calculate polygon corners
+    half_width = poly_width / 2
+    half_height = poly_height / 2
+    
+    # Create a more interesting polygon by adding some random points and perturbations
+    num_points = random.randint(3, 100)
+    points = []
+    
+    for i in range(num_points):
+        angle = 2 * math.pi * i / num_points
+        
+        # Base radius is determined by the desired area
+        x_radius = half_width
+        y_radius = half_height
+        
+        # Add some randomness but maintain approximate area
+        radius_factor = random.uniform(0.9, 1.1)
+        
+        x = center_lon + math.cos(angle) * x_radius * radius_factor
+        y = center_lat + math.sin(angle) * y_radius * radius_factor
+        
+        # Ensure points are within the bbox
+        x = max(min(x, max_lon), min_lon)
+        y = max(min(y, max_lat), min_lat)
+        
+        points.append((x, y))
+    
+    # Close the polygon by adding the first point at the end
+    points.append(points[0])
+    
+    # Convert to WKT format
+    wkt = "POLYGON (("
+    wkt += ", ".join([f"{p[0]} {p[1]}" for p in points])
+    wkt += "))"
+
+    # Double-check OGC compliance
+    is_valid, message = validate_ogc_polygon(wkt)
+    if not is_valid:
+        # Try to fix the polygon
+        wkt = fix_ogc_polygon(wkt)
+    
+    return wkt
+
+def genPolygon_Area(INPUT_BBOX, area_percentage=None):
+    """
+    Generate different polygons within the INPUT_BBOX in EPSG:4326 - WGS 84
+    Ranges from small area polygon to large polygons with large area in OGC WKT format
+    
+    Args:
+        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
+        area_percentage: Optional float between 0 and 1, representing what percentage of the bbox area 
+                        the polygon should occupy. If None, a random value is used.
+        
+    Returns:
+        String: WKT format polygon
+    """
+    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
+    
+    # Determine area percentage if not specified
+    if area_percentage is None:
+        area_percentage = random.uniform(0.1, 1.0)
     
     # Get bbox dimensions
     bbox_width = max_lon - min_lon
@@ -161,14 +302,14 @@ def genPolygon_Area(input_bbox, area_percentage=None):
         # Try to fix the polygon
         wkt = fix_ogc_polygon(wkt)
     
-    return wkt, area_percentage
+    return wkt
 
-def genPolygon_with_hole(input_bbox, num_points=None, area_percentage=None, hole_size=None):
+def genPolygon_with_hole(INPUT_BBOX, num_points=None, area_percentage=None, hole_size=None):
     """
-    Generate a polygon with one hole within the input_bbox in EPSG:4326 - WGS 84
+    Generate a polygon with one hole within the INPUT_BBOX in EPSG:4326 - WGS 84
     
     Args:
-        input_bbox: List [min_lon, min_lat, max_lon, max_lat]
+        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
         num_points: Optional int, number of points in the outer polygon. If None, a random number is used.
         area_percentage: Optional float between 0 and 1, representing what percentage of the bbox area 
                         the outer polygon should occupy. If None, a random value is used.
@@ -178,7 +319,7 @@ def genPolygon_with_hole(input_bbox, num_points=None, area_percentage=None, hole
     Returns:
         String: WKT format polygon with a hole
     """
-    min_lon, min_lat, max_lon, max_lat = input_bbox
+    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
     
     # Determine parameters if not specified
     if num_points is None:
@@ -271,14 +412,13 @@ def genPolygon_with_hole(input_bbox, num_points=None, area_percentage=None, hole
         
     return wkt
 
-def genPolygon_with_multiple_holes(input_bbox, num_points=None, area_percentage=None, 
-                                 num_holes=None, hole_sizes=None):
+def genPolygon_with_multiple_holes(INPUT_BBOX, num_points=None, area_percentage=None, num_holes=None, hole_sizes=None):
     """
-    Generate a polygon with multiple holes within the input_bbox in EPSG:4326 - WGS 84
+    Generate a polygon with multiple holes within the INPUT_BBOX in EPSG:4326 - WGS 84
     Ensures OGC compliance
     
     Args:
-        input_bbox: List [min_lon, min_lat, max_lon, max_lat]
+        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
         num_points: Optional int, number of points in the outer polygon. If None, a random number is used.
         area_percentage: Optional float between 0 and 1, representing what percentage of the bbox area 
                         the outer polygon should occupy. If None, a random value is used.
@@ -289,7 +429,7 @@ def genPolygon_with_multiple_holes(input_bbox, num_points=None, area_percentage=
     Returns:
         String: OGC compliant WKT format polygon with multiple holes
     """
-    min_lon, min_lat, max_lon, max_lat = input_bbox
+    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
     
     # Determine parameters if not specified
     if num_points is None:
@@ -392,79 +532,77 @@ def genPolygon_with_multiple_holes(input_bbox, num_points=None, area_percentage=
     wkt += "))"
     
     # Double-check OGC compliance
-    is_valid, message = validate_ogc_polygon(wkt)
-    if not is_valid:
-        # Try to fix the polygon
-        wkt_valid = fix_ogc_polygon(wkt)
+    # is_valid, message = validate_ogc_polygon(wkt)
+    # if not is_valid:
+    #     # Try to fix the polygon
+    #     wkt_valid = fix_ogc_polygon(wkt)
         
-    return wkt, wkt_valid
+    return wkt, fix_ogc_polygon(wkt)
 
+# def genPolygon_Random(INPUT_BBOX, num_points=None):
+#     """
+#     Generate a completely random polygon within the INPUT_BBOX in EPSG:4326 - WGS 84
+    
+#     Args:
+#         INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
+        
+#     Returns:
+#         String: WKT format polygon
+#     """
+#     min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
+    
+#     # Determine number of points if not specified
+#     if num_points is None:
+#         num_points = random.randint(3, 20)
+    
+#     # Generate random points
+#     random_points = []
+#     for _ in range(num_points):
+#         x = random.uniform(min_lon, max_lon)
+#         y = random.uniform(min_lat, max_lat)
+#         random_points.append((x, y))
+    
+#     # Create a valid polygon using convex hull
+#     try:
+#         from shapely.geometry import MultiPoint
+#         hull = MultiPoint(random_points).convex_hull
+        
+#         # Convert to WKT and extract just the coordinates
+#         wkt = hull.wkt
+        
+#         # If it's a valid polygon, return it
+#         if hull.geom_type == 'Polygon':
+#             return wkt, num_points
+#     except:
+#         pass
+    
+#     # Fallback if shapely is not available or returned invalid polygon
+#     # Sort points by their angle from the center
+#     center_x = sum(p[0] for p in random_points) / len(random_points)
+#     center_y = sum(p[1] for p in random_points) / len(random_points)
+    
+#     def angle_from_center(point):
+#         return math.atan2(point[1] - center_y, point[0] - center_x)
+    
+#     sorted_points = sorted(random_points, key=angle_from_center)
+    
+#     # Close the polygon by adding the first point at the end
+#     sorted_points.append(sorted_points[0])
+    
+#     # Convert to WKT format
+#     wkt = "POLYGON (("
+#     wkt += ", ".join([f"{p[0]} {p[1]}" for p in sorted_points])
+#     wkt += "))"
+    
+#     return wkt, num_points
 
-
-# def genPolygon_Random(input_bbox, num_points=None):
+def genPolygon_Random(INPUT_BBOX, num_holes=None, num_points=None, with_holes=False, area_percentage=None):
     """
-    Generate a completely random polygon within the input_bbox in EPSG:4326 - WGS 84
-    
-    Args:
-        input_bbox: List [min_lon, min_lat, max_lon, max_lat]
-        
-    Returns:
-        String: WKT format polygon
-    """
-    min_lon, min_lat, max_lon, max_lat = input_bbox
-    
-    # Determine number of points if not specified
-    if num_points is None:
-        num_points = random.randint(3, 20)
-    
-    # Generate random points
-    random_points = []
-    for _ in range(num_points):
-        x = random.uniform(min_lon, max_lon)
-        y = random.uniform(min_lat, max_lat)
-        random_points.append((x, y))
-    
-    # Create a valid polygon using convex hull
-    try:
-        from shapely.geometry import MultiPoint
-        hull = MultiPoint(random_points).convex_hull
-        
-        # Convert to WKT and extract just the coordinates
-        wkt = hull.wkt
-        
-        # If it's a valid polygon, return it
-        if hull.geom_type == 'Polygon':
-            return wkt, num_points
-    except:
-        pass
-    
-    # Fallback if shapely is not available or returned invalid polygon
-    # Sort points by their angle from the center
-    center_x = sum(p[0] for p in random_points) / len(random_points)
-    center_y = sum(p[1] for p in random_points) / len(random_points)
-    
-    def angle_from_center(point):
-        return math.atan2(point[1] - center_y, point[0] - center_x)
-    
-    sorted_points = sorted(random_points, key=angle_from_center)
-    
-    # Close the polygon by adding the first point at the end
-    sorted_points.append(sorted_points[0])
-    
-    # Convert to WKT format
-    wkt = "POLYGON (("
-    wkt += ", ".join([f"{p[0]} {p[1]}" for p in sorted_points])
-    wkt += "))"
-    
-    return wkt, num_points
-
-def genPolygon_Random(input_bbox, num_holes=None, num_points=None, with_holes=False, area_percentage=None):
-    """
-    Generate a completely random polygon within the input_bbox in EPSG:4326 - WGS 84
+    Generate a completely random polygon within the INPUT_BBOX in EPSG:4326 - WGS 84
     Enhanced version that can include holes and area constraints
     
     Args:
-        input_bbox: List [min_lon, min_lat, max_lon, max_lat]
+        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
         with_holes: Boolean, whether to include holes
         num_holes: Optional int, number of holes if with_holes is True
         area_percentage: Optional float between 0 and 1, representing what percentage of the bbox area 
@@ -480,12 +618,12 @@ def genPolygon_Random(input_bbox, num_holes=None, num_points=None, with_holes=Fa
     # Generate polygon with holes if requested
     if with_holes:
         if random.random() < 0.3:  # 30% chance for multiple holes
-            return genPolygon_with_multiple_holes(input_bbox, area_percentage=area_percentage, num_holes=num_holes)
+            return genPolygon_with_multiple_holes(INPUT_BBOX, area_percentage=area_percentage, num_holes=num_holes)
         else:
-            return genPolygon_with_hole(input_bbox, area_percentage=area_percentage)
+            return genPolygon_with_hole(INPUT_BBOX, area_percentage=area_percentage)
     
     # Otherwise, use the area parameter to generate a polygon without holes
-    min_lon, min_lat, max_lon, max_lat = input_bbox
+    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
     
     # Determine area percentage if not specified
     if area_percentage is None:
@@ -500,11 +638,11 @@ def genPolygon_Random(input_bbox, num_holes=None, num_points=None, with_holes=Fa
     
     if strategy == 'convex':
         # Generate a convex polygon
-        return genPolygon_Convex(input_bbox, num_points)
+        return genPolygon_Convex(INPUT_BBOX, num_points)
     
     elif strategy == 'star':
         # Generate a star-like shape (which could be concave)
-        return genPolygon_Concave(input_bbox, random.uniform(0.2, 0.8))
+        return genPolygon_Concave(INPUT_BBOX, random.uniform(0.2, 0.8))
     
     else:
         # Generate an irregular shape with area constraints
@@ -550,12 +688,12 @@ def genPolygon_Random(input_bbox, num_holes=None, num_points=None, with_holes=Fa
         
         return wkt, num_points
     
-def genPolygon_Convex(input_bbox, num_points=None):
+def genPolygon_Convex(INPUT_BBOX, num_points=None):
     """
-    Generate a convex polygon within the input_bbox in EPSG:4326 - WGS 84
+    Generate a convex polygon within the INPUT_BBOX in EPSG:4326 - WGS 84
     
     Args:
-        input_bbox: List [min_lon, min_lat, max_lon, max_lat]
+        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
         num_points: Optional int, number of points in the polygon. If None, a random number between 4 and 12 is used.
         
     Returns:
@@ -565,7 +703,7 @@ def genPolygon_Convex(input_bbox, num_points=None):
         num_points = random.randint(4, 12)
     
     # Generate random points
-    random_points = genRandomPoints(input_bbox, num_points)
+    random_points = genRandomPoints(INPUT_BBOX, num_points)
     
     # Create convex hull (automatically sorts points correctly)
     try:
@@ -574,21 +712,21 @@ def genPolygon_Convex(input_bbox, num_points=None):
         return hull.wkt
     except ImportError:
         # Manual convex hull algorithm if shapely is not available
-        return genPolygon_Random(input_bbox)
+        return genPolygon_Random(INPUT_BBOX)
 
-def genPolygon_Concave(input_bbox, complexity=None):
+def genPolygon_Concave(INPUT_BBOX, complexity=None):
     """
-    Generate a concave (non-convex) polygon within the input_bbox in EPSG:4326 - WGS 84
+    Generate a concave (non-convex) polygon within the INPUT_BBOX in EPSG:4326 - WGS 84
     
     Args:
-        input_bbox: List [min_lon, min_lat, max_lon, max_lat]
+        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
         complexity: Optional float between 0 and 1, determining how concave the polygon is.
                    If None, a random value is used.
         
     Returns:
         String: WKT format polygon
     """
-    min_lon, min_lat, max_lon, max_lat = input_bbox
+    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
     
     # Determine complexity if not specified
     if complexity is None:
@@ -630,11 +768,16 @@ def genPolygon_Concave(input_bbox, complexity=None):
     wkt += ", ".join([f"{p[0]} {p[1]}" for p in points])
     wkt += "))"
     
+    # Double-check OGC compliance
+    is_valid, message = validate_ogc_polygon(wkt)
+    if not is_valid:
+        wkt = fix_ogc_polygon(wkt)
+        
     return wkt
 
-def genRandomPoints(input_bbox, num_points):
+def genRandomPoints(INPUT_BBOX, num_points):
     """Helper function to generate random points within the bbox"""
-    min_lon, min_lat, max_lon, max_lat = input_bbox
+    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
     points = []
     for _ in range(num_points):
         x = random.uniform(min_lon, max_lon)
@@ -642,76 +785,27 @@ def genRandomPoints(input_bbox, num_points):
         points.append((x, y))
     return points
 
-def visualize_polygon(wkt, input_bbox=None, title=None):
-    """
-    Visualize a WKT polygon
-    
-    Args:
-        wkt: WKT format polygon string
-        input_bbox: Optional bounding box to display
-        title: Optional title for the plot
-    """
-    try:
-        from shapely import wkt as shapely_wkt
-        import matplotlib.pyplot as plt
-        
-        # Parse the WKT string
-        polygon = shapely_wkt.loads(wkt)
-        
-        # Create a figure
-        fig, ax = plt.subplots(figsize=(10, 8))
-        
-        # Plot the polygon
-        x, y = polygon.exterior.xy
-        ax.plot(x, y, 'b-')
-        ax.fill(x, y, alpha=0.3, fc='blue')
-        
-        # If bbox is provided, plot it
-        if input_bbox:
-            min_lon, min_lat, max_lon, max_lat = input_bbox
-            ax.plot([min_lon, max_lon, max_lon, min_lon, min_lon], 
-                   [min_lat, min_lat, max_lat, max_lat, min_lat], 'r--')
-        
-        # Set title if provided
-        if title:
-            ax.set_title(title)
-        
-        ax.set_xlabel('Longitude')
-        ax.set_ylabel('Latitude')
-        ax.grid(True)
-        plt.axis('equal')
-        plt.show()
-        
-    except ImportError:
-        print("Visualization requires shapely and matplotlib packages.")
-        print("WKT polygon: ", wkt)
-
-def visualize_polygon_02(wkt_polygons, input_bbox=None, titles=None, rows=None, cols=None, iteration=None):
+def visualize_polygon_02(wkt_polygons, INPUT_BBOX=None, titles=None, rows=None, cols=None, iteration=None):
     """
     Visualize multiple WKT polygons in subplots within a single figure
     
     Args:
         wkt_polygons: List of WKT format polygon strings
-        input_bbox: Optional bounding box to display on each subplot
+        INPUT_BBOX: Optional bounding box to display on each subplot
         titles: Optional list of titles for each subplot
         rows: Optional number of rows for the subplot grid (auto-calculated if None)
         cols: Optional number of columns for the subplot grid (auto-calculated if None)
     """
     try:
-        from shapely import wkt as shapely_wkt
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import math
-       
+        from shapely import wkt as shapely_wkt       
         # Determine grid size if not provided
         n = len(wkt_polygons)
         if rows is None or cols is None:
-            cols = min(3, n)  # Maximum 3 columns
+            cols = min(4, n)  # Maximum 3 columns
             rows = math.ceil(n / cols)
         
         # Create figure with subplots
-        
-        plt.ion()
+        # plt.ion()
         # clear_output(wait=True)
         fig, axes = plt.subplots(rows, cols, figsize=(5*cols, 4*rows))
         # Flatten axes array for easy indexing if there are multiple subplots
@@ -778,8 +872,8 @@ def visualize_polygon_02(wkt_polygons, input_bbox=None, titles=None, rows=None, 
                     ax.add_patch(patch)
                     
                     # If bbox is provided, plot it
-                    if input_bbox:
-                        min_lon, min_lat, max_lon, max_lat = input_bbox
+                    if INPUT_BBOX:
+                        min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
                         ax.plot([min_lon, max_lon, max_lon, min_lon, min_lon], 
                                [min_lat, min_lat, max_lat, max_lat, min_lat], 'r--')
                     
@@ -802,13 +896,20 @@ def visualize_polygon_02(wkt_polygons, input_bbox=None, titles=None, rows=None, 
         for i in range(len(wkt_polygons), len(axes_flat)):
             axes_flat[i].axis('off')
         fig.suptitle('WKT Polygons (v' + str(iteration) + ')', fontsize=20)
+        # plt.ioff()  # Turn off interactive mode
+        # plt.pause(0.7)  # Pause to update the plot
         plt.tight_layout()
-        plt.show()
-        input('Press enter to continue')
+        # plt.show()
+        fig.savefig('./benchmark_scripts/v'+str(iteration)+'.png')
+        # plt.clf()
+        # input("Press enter to continue")
+
     except ImportError as e:
         print(f"Visualization requires shapely and matplotlib packages. Error: {e}")
 
-### OGC Complirancy Checking
+###############################
+### OGC Compliancy Checking ###
+###############################
 def validate_ogc_polygon(wkt):
     """
     Validate that a polygon in WKT format is OGC compliant
@@ -989,81 +1090,90 @@ def check_all_polygons_ogc_compliance(polygons_wkt, titles=None):
     return all_valid, results
 
 def main(iteration):
-    # # Create a python script to run the following function and variations of it
     # # bbox = left,bottom,right,top
     # # bbox = min Longitude , min Latitude , max Longitude , max Latitude 
 
-    # input_bbox = [11.015629, 55.128649, 24.199222, 69.380313] ## Sweden
-    input_bbox = [11.360694444453532, 48.06152777781623, 11.723194444453823, 48.24819444448305] ## Munich
-    
-    print("Generating Various Polygons Within Bounding Box:")
-    print(f"Bounding Box: {input_bbox}")
-    
-    # Generate and demonstrate different polygon types
+    # INPUT_BBOX = [11.015629, 55.128649, 24.199222, 69.380313] ## Sweden
+    INPUT_BBOX = [11.360694444453532, 48.06152777781623, 11.723194444453823, 48.24819444448305] ## Munich
 
-    simple_poly, num_points = genPolygonPoints(input_bbox, random.randint(3, 100))
-    print(f"\n1. Simple Polygon Points ({num_points}):\n")
-    print(simple_poly)
+    NUM_OF_POINTS = random.randint(3, 100)
+    PERCENTAGE_OF_AREA = random.uniform(0.01, 1.0)
     
-    small_poly, area_percentage = genPolygon_Area(input_bbox, random.uniform(0.01, 0.1))
-    print(f"\n3. Simple Polygon Area ({area_percentage * 100:.2f}% of bbox):\n")
-    print(small_poly)
+    #########################
+    ### OGC Polygon Types ###
+    #########################
+
+    simple_poly_fixed = genPolygonPointsFIXED(INPUT_BBOX, NUM_OF_POINTS)
+    # print(f"\n1. Simple Polygon Fixed Points ({num_points}):\n")
+    # print(simple_poly_fixed)
+
+    simple_poly = genPolygonPoints(INPUT_BBOX, NUM_OF_POINTS)
+    # print(f"\n1. Simple Polygon Points ({num_points}):\n")
+    # print(simple_poly)
     
-    print("\n4. Polygon with a Hole:\n")
-    single_hole_poly = genPolygon_with_hole(input_bbox)
-    print(single_hole_poly)
+    simple_poly_area_fixed  = genPolygon_AreaFIXED(INPUT_BBOX, PERCENTAGE_OF_AREA)
 
-    print("\n5. Polygon with Multiple Holes :\n")
-    multi_hole_poly, multi_hole_poly_valid = genPolygon_with_multiple_holes(input_bbox, num_holes=5)
-    print(multi_hole_poly)
-
-    print("\n6. Random Polygon:\n")
-    random_poly = genPolygon_Random(input_bbox, None, random.randint(3, 100), with_holes=True)
-    print(random_poly)
+    simple_poly_area = genPolygon_Area(INPUT_BBOX, PERCENTAGE_OF_AREA)
+    # print(f"\n3. Simple Polygon Area ({area_percentage * 100:.2f}% of bbox):\n")
+    # print(small_poly) genPolygon_AreaFIXED
     
+    # print("\n4. Polygon with a Hole:\n")
+    single_hole_poly = genPolygon_with_hole(INPUT_BBOX, NUM_OF_POINTS)
+    # print(single_hole_poly)
 
+    # print("\n5. Polygon with Multiple Holes :\n")
+    multi_hole_poly, multi_hole_poly_valid = genPolygon_with_multiple_holes(INPUT_BBOX, NUM_OF_POINTS, num_holes=5)
+    # print(multi_hole_poly)
+
+    # print("\n6. Random Polygon:\n")
+    random_poly = genPolygon_Random(INPUT_BBOX, None, NUM_OF_POINTS, with_holes=True)
+    # print(random_poly)
+    
     # print("\n6. Convex Polygon:")
-    # convex_poly = genPolygon_Convex(input_bbox)
+    convex_poly = genPolygon_Convex(INPUT_BBOX)
     # print(convex_poly)
     
     # print("\n7. Concave Polygon:")
-    # concave_poly = genPolygon_Concave(input_bbox)
+    concave_poly = genPolygon_Concave(INPUT_BBOX, NUM_OF_POINTS)
     # print(concave_poly)
     
 
     # Store all polygons and their titles
     polygons = [
+        simple_poly_fixed,
         simple_poly,
-        small_poly,
+        simple_poly_area_fixed,
+        simple_poly_area,
         single_hole_poly,
         multi_hole_poly,
-        multi_hole_poly_valid,
-        random_poly,
+        multi_hole_poly_valid, 
+        convex_poly,
+        concave_poly,
     ]
     
 
     
     titles = [
-        ""+ str(num_points)+" points",
-        # "Complex Polygon (15 points)",
-        ""+ str(round(area_percentage * 100.0, 2))+"% of BBOX Area",
-        "Single Hole",
-        "Multiple Holes (INVALID OGC)",
-        "Multiple Holes (VALID OGC)",
-        "Random (all in one)"
-        # "Convex Polygon",
-        # "Concave Polygon"
+        "BM1 - "+ str(NUM_OF_POINTS)+" POINTS (center)",
+        "BM2 - "+ str(NUM_OF_POINTS)+" POINTS (anywhere)",
+        "BM3 - "+ str(round(PERCENTAGE_OF_AREA * 100.0, 2))+"% of BBOX Area (center)",
+        "BM4 - "+ str(round(PERCENTAGE_OF_AREA * 100.0, 2))+"% of BBOX Area (anywhere)",
+        "BM5 - Single Hole",
+        "BM6 - Multiple Holes (INVALID OGC)",
+        "BM6 - Multiple Holes (VALID OGC)",
+        # "Random (all in one)"
+        "Convex Polygon",
+        "Concave Polygon"
     ]
-    
     
     # Visualize all polygons in one figure
     try:
         # print("\nVisualizing all polygons in subplots...")
-        all_valid, results = check_all_polygons_ogc_compliance(polygons, titles)
-        visualize_polygon_02(polygons, input_bbox, titles, iteration=iteration)
+        # all_valid, results = check_all_polygons_ogc_compliance(polygons, titles)
+        visualize_polygon_02(polygons, INPUT_BBOX, titles, iteration=iteration)
     except Exception as e:
         print(f"Visualization failed: {e}")
         print("Make sure you have shapely and matplotlib installed.")
 if __name__ == "__main__":
-    for iteration in tqdm(range(10)):
+    for iteration in tqdm(range(25)):
         main(iteration)
