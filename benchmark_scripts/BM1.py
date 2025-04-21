@@ -10,8 +10,9 @@ NUM_OF_POINTS = 103 # 1,2 points are not polygon
 PERCENTAGE_OF_AREA = 1.0
 NUM_OF_HOLES = 100
 SPARQL_QUERY = ''
+SPARQL_ENDPOINT = 'http://localhost:8082/sparql'
 
-def benchmark(input_bbox, num_points, percentage_of_area, num_of_holes, sparql_query):
+def benchmark(input_bbox, num_points=None, percentage_of_area=None, num_of_holes=None):
     print(f"Generating polygon with {num_points} points and {percentage_of_area * 100}% of the bbox area and {num_of_holes} holes...")
 
 def genPolygonPointsFIXED(input_bbox, num_points=None):

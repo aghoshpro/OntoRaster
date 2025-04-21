@@ -1,7 +1,7 @@
 # Create a python script to run the following function and variations of it
 # # bbox = left,bottom,right,top
 # # bbox = min Longitude , min Latitude , max Longitude , max Latitude 
-
+# # north, south, east, west = 48.24819444448305, 48.06152777781623, 11.360694444453532, 11.723194444453823
 # INPUT_BBOX = [11.015629,55.128649,24.199222,69.380313]
 
 # def genPolygonPoints(INPUT_BBOX):
