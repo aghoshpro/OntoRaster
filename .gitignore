@@ -1,2 +1,10 @@
 .vscode
 tempCodeRunnerFile.py
+myenv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+*.ipynb_checkpoints/

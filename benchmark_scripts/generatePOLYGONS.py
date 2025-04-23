@@ -1169,8 +1169,8 @@ def main(iteration):
     # Visualize all polygons in one figure
     try:
         # print("\nVisualizing all polygons in subplots...")
-        # all_valid, results = check_all_polygons_ogc_compliance(polygons, titles)
-        visualize_polygon_02(polygons, INPUT_BBOX, titles, iteration=iteration)
+        all_valid, results = check_all_polygons_ogc_compliance(polygons, titles)
+        # visualize_polygon_02(polygons, INPUT_BBOX, titles, iteration=iteration)
     except Exception as e:
         print(f"Visualization failed: {e}")
         print("Make sure you have shapely and matplotlib installed.")

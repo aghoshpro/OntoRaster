@@ -3,8 +3,11 @@ import time
 import math
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 import random
 import numpy as np
+from tqdm import tqdm
+import gc
 
 sparql = SPARQLWrapper("http://localhost:8082/sparql")
 sparql.setReturnFormat(JSON)
@@ -126,7 +129,7 @@ def genPolygon_AreaFIXED(INPUT_BBOX, num_points=None, area_percentage=None):
         y_radius = half_height
         
         # Add some randomness but maintain approximate area
-        radius_factor = random.uniform(0.9, 1.1)
+        radius_factor = random.uniform(0.5, 1.0)
         
         x = center_lon + math.cos(angle) * x_radius * radius_factor
         y = center_lat + math.sin(angle) * y_radius * radius_factor
@@ -332,92 +335,124 @@ def benchmark(poly):
 
 # input_bbox = [11.015629, 55.128649, 24.199222, 69.380313] ## Sweden
 input_bbox = [11.360694444453532, 48.06152777781623, 11.723194444453823, 48.24819444448305] ## Munich
-NUM_OF_POINTS = 7000 # 1,2 points are not polygon
-PERCENTAGE_OF_AREA = 0.1
-
+NUM_OF_POINTS = 50003 # 1,2 points are not polygon
+PERCENTAGE_OF_AREA = 0.25
+XTICKS_BIN = 1000
 # Create a list to store benchmark results
 benchmark_data = []
 
 # Run benchmarks with increasing LIMIT values
-point_values = list(range(3, NUM_OF_POINTS, 1))  # 10, 20, 30, ... 100
+point_values = list(range(3, NUM_OF_POINTS, 1000))  # 10, 20, 30, ... 100
 
-for point in point_values:
+for point in tqdm(point_values):
     try:
         # simple_poly_fixed = genPolygonPointsFIXED(input_bbox, point)
         sample_polygon = genPolygon_AreaFIXED(input_bbox, point, area_percentage=PERCENTAGE_OF_AREA)
         # print(simple_poly_fixed)
         time_taken = benchmark(sample_polygon)
-        # simple_poly_fixed = None
+        # sample_polygon = None
+        del sample_polygon
+        gc.collect()
         benchmark_data.append({'Points': point, 'Processing_Time': time_taken})
-        print(f"Points {point}: {time_taken:.4f} sec")
+        # print(f"Points {point}: {time_taken:.4f} sec")
         # print(simple_poly_fixed)
     except Exception as e:
         print(f"Error with Points {point}: {e}")
 
 # Create a pandas DataFrame from the benchmark data
 df = pd.DataFrame(benchmark_data)
+## Save the benchmark data to a CSV file
+df.to_csv('./benchmark_scripts/sparql_benchmark_results.csv', index=False)
+
+# df = pd.read_csv('./benchmark_scripts/sparql_benchmark_results.csv')
 
 # Identify min and max processing time
 min_time = df['Processing_Time'].min()
 max_time = df['Processing_Time'].max()
 
+# Log-transform the y-values
+y = df['Processing_Time']
+x = df['Points']
+
+# Fit a linear regression: log(y) = m*x + b
+m1, c = np.polyfit(x, y, 1)
+
+# Calculate fitted values for the trend line (in log scale)
+trend_log_y1 = m1 * x + c
+trend_y1 = 10 ** trend_log_y1  # Convert back to original scale
+
+
 # Assign colors
-colors = ['green' if t == min_time else 'red' if t == max_time else 'skyblue' for t in df['Processing_Time']]
-
+colors = ['green' if t == min_time else 'red' if t == max_time else 'deepskyblue' for t in df['Processing_Time']]
 # Plot the results
-plt.figure(figsize=(20, 10))
-bars = plt.bar(df['Points'], df['Processing_Time'], color=colors, width=1)
-
+plt.figure(figsize=(25, 10))
+bars = plt.bar(df['Points'], df['Processing_Time'], align='center', color=colors, width=999)
 # Get min and max heights
 min_height = min(bar.get_height() for bar in bars)
 max_height = max(bar.get_height() for bar in bars)
-
 # Label only min and max bars
 for bar in bars:
     height = bar.get_height()
     if height == min_height or height == max_height:
         plt.text(bar.get_x() + bar.get_width() / 2, height,
                  f'{height:.2f}', ha='center', va='bottom', color='blue', fontsize=10, fontweight='bold')
-
-plt.title('OntoRaster Performance Benchmark', fontsize=20, fontweight='bold')
-plt.xlabel('Varying Points of Polygon', fontsize=15, fontweight='bold')
-plt.xticks(range(df['Points'].min(), df['Points'].max() + 1, 100))
+# Plot the results
+# plt.plot(x, trend_y1, color='black', linestyle='--', label=f'Trend: y = {m1:.8f}x + {c:.4f}')
+plt.title('Query Processing Time VS Varying Points of Fixed Area Uniform Polygon (Case 1)', fontsize=20, fontweight='bold')
+plt.xlabel('Points', fontsize=15, fontweight='bold')
 plt.ylabel('Processing Time (seconds)', fontsize=15, fontweight='bold')
+plt.xticks(range(df['Points'].min(), df['Points'].max() + 1, XTICKS_BIN), fontsize=12, rotation = 35)
+plt.yticks(fontsize=15)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.margins(x=0)
 plt.savefig('./benchmark_scripts/benchmark_bar_plot.png')
 
-plt.figure(figsize=(20, 10))
-bars = plt.bar(df['Points'], df['Processing_Time'], color=colors, align='center', width=1)
-# Label only min and max bars
-for bar in bars:
-    height = bar.get_height()
-    if height == min_height or height == max_height:
-        plt.text(bar.get_x() + bar.get_width() / 2, height,
-                 f'{height:.2f}', ha='center', va='bottom', color='blue', fontsize=10, fontweight='bold')
+# plt.figure(figsize=(20, 10))
+# bars = plt.bar(df['Points'], df['Processing_Time'], color=colors, align='center', width=1)
+# # Label only min and max bars
+# for bar in bars:
+#     height = bar.get_height()
+#     if height == min_height or height == max_height:
+#         plt.text(bar.get_x() + bar.get_width() / 2, height,
+#                  f'{height:.2f}', ha='center', va='bottom', color='blue', fontsize=10, fontweight='bold')
         
-plt.title('OntoRaster Performance Benchmark (log scale)', fontsize=20, fontweight='bold')
-plt.yscale('log')  # Set y-axis to log scale
-plt.xticks(range(df['Points'].min(), df['Points'].max() + 1, 100))
-plt.xlabel('Varying Points of Polygon')
-plt.ylabel('Log Scale of Processing Time (seconds)')
-plt.grid(axis='y', which='both', linestyle='--', alpha=0.7)
-plt.tight_layout()
-plt.margins(x=0)
-plt.savefig('./benchmark_scripts/benchmark_bar_plot_log_scale.png')
+# plt.title('OntoRaster Performance Benchmark (log scale)', fontsize=20, fontweight='bold')
+# plt.yscale('log')  # Set y-axis to log scale
+# plt.xticks(range(df['Points'].min(), df['Points'].max() + 1, 100))
+# plt.xlabel('Varying Points of Polygon')
+# plt.ylabel('Log Scale of Processing Time (seconds)')
+# plt.grid(axis='y', which='both', linestyle='--', alpha=0.7)
+# plt.tight_layout()
+# plt.margins(x=0)
+# plt.savefig('./benchmark_scripts/benchmark_bar_plot_log_scale.png')
 
 
-# Plot the results
-plt.figure(figsize=(20, 10))
-plt.plot(df['Points'], df['Processing_Time'], color='red', marker='o', linestyle='')
-plt.title('OntoRaster Performance Benchmark', fontsize=20, fontweight='bold')
-plt.xticks(range(df['Points'].min(), df['Points'].max() + 1, 100))
-plt.xlabel('Varying Points of Polygon', fontsize=15, fontweight='bold')
-plt.ylabel('Processing Time (seconds)', fontsize=15, fontweight='bold')
-plt.grid(True)
-plt.margins(x=0)
-plt.savefig('./benchmark_scripts/benchmark_line_plot.png')
+# # Plot the results
+# plt.figure(figsize=(25, 10))
+# # sns.color_palette("icefire", as_cmap=True)
+# # sns.barplot(data = df, x='Points', y='Processing_Time', palette="icefire")
+# snscolors = sns.color_palette("Spectral_r", n_colors=len(df))
+# ax = sns.barplot(data=df, x='Points', y='Processing_Time', palette=snscolors)
+# plt.title('Processing Time by Points', fontsize=16, fontweight='bold', pad=20)
+# plt.xlabel('Varying Points of Fixed Area Uniform Polygon', fontsize=12, labelpad=10)
+# plt.ylabel('Processing Time (seconds)', fontsize=12, labelpad=10)
+# plt.xticks(ticks=range(len(df)), labels=df['Points'], rotation=0)
+# plt.grid(axis='y', linestyle='--', alpha=0.7)
+# sns.despine(left=False, bottom=False)
+# plt.tight_layout()
+# plt.margins(x=0)
+# plt.savefig('./benchmark_scripts/benchmark_bar_plot_log_sns.png')
+
+
+# plt.plot(df['Points'], df['Processing_Time'], color='red', marker='o', linestyle='')
+# plt.title('OntoRaster Performance Benchmark', fontsize=20, fontweight='bold')
+# plt.xticks(range(df['Points'].min(), df['Points'].max() + 1, XTICKS_BIN))
+# plt.xlabel('Varying Points of Polygon', fontsize=15, fontweight='bold')
+# plt.ylabel('Processing Time (seconds)', fontsize=15, fontweight='bold')
+# plt.grid(True)
+# plt.margins(x=0)
+# # plt.savefig('./benchmark_scripts/benchmark_line_plot.png')
 
 # Log-transform the y-values
 log_y = np.log10(df['Processing_Time'])
@@ -431,8 +466,8 @@ trend_log_y = m * x + b
 trend_y = 10 ** trend_log_y  # Convert back to original scale
 
 # Plot the bar chart
-plt.figure(figsize=(20, 10))
-bars = plt.bar(x, df['Processing_Time'], color=colors, align='center', width=1)
+plt.figure(figsize=(25, 10))
+barsh = plt.bar(x, df['Processing_Time'], color=colors, align='center', width=999)
 
 # Add value labels on top of each bar
 # for bar in bars:
@@ -441,27 +476,25 @@ bars = plt.bar(x, df['Processing_Time'], color=colors, align='center', width=1)
 #              f'{height:.2f}', ha='center', va='bottom', fontsize=10)
 
 # Label only min and max bars
-for bar in bars:
+for bar in barsh:
     height = bar.get_height()
     if height == min_height or height == max_height:
         plt.text(bar.get_x() + bar.get_width() / 2, height,
                  f'{height:.2f}', ha='center', va='bottom', color='blue', fontsize=10, fontweight='bold')
         
 # Plot the trend line
-plt.plot(x, trend_y, color='black', linestyle='--', label=f'Trend: log₁₀(y) = {m:.2f}x + {b:.2f}')
+plt.plot(x, trend_y, color='black', linestyle='--', label=f'Trend: log₁₀(y) = {m:.8f}x + {b:.2f}')
 plt.yscale('log')
-plt.title('OntoRaster Query Performance Benchmark (Log Scale)', fontsize=20, fontweight='bold')
-plt.xlabel('Varying Points of Polygon', fontsize=15, fontweight='bold')
-plt.ylabel('Log Scale Processing Time (seconds)', fontsize=15, fontweight='bold')
-plt.xticks(range(df['Points'].min(), df['Points'].max() + 1, 100))
+plt.title('Query Processing Time VS Varying Points of Fixed Area Uniform Polygon (Case 1)', fontsize=20, fontweight='bold')
+plt.xlabel('Points', fontsize=15, fontweight='bold')
+plt.ylabel('Log Scale Time (seconds)', fontsize=15, fontweight='bold')
+plt.xticks(range(df['Points'].min(), df['Points'].max() + 1, XTICKS_BIN), fontsize=12, rotation=35)
+plt.yticks(fontsize=15)
 plt.grid(axis='y', which='both', linestyle='--', alpha=0.7)
-plt.legend(loc='upper left', borderaxespad=0)
+plt.legend(loc='upper right', borderaxespad=0)
 plt.tight_layout()
 plt.margins(x=0)
 plt.savefig('./benchmark_scripts/benchmark_line_plot_log_scale_trend.png')
 plt.show()
 
-
-## Save the benchmark data to a CSV file
-# df.to_csv('./benchmark_scripts/sparql_benchmark_results.csv', index=False)
 # print("Benchmark completed and saved to CSV and PNG files.")
