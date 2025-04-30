@@ -8,3 +8,5 @@ __pycache__/
 *.log
 *.sqlite3
 *.ipynb_checkpoints/
+waste/
+data/

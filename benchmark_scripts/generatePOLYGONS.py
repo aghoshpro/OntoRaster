@@ -146,7 +146,7 @@ def genPolygonPoints(INPUT_BBOX, num_points=None):
         
     return wkt
 
-def genPolygon_AreaFIXED(INPUT_BBOX, area_percentage=None):
+def genPolygon_AreaFIXED(INPUT_BBOX, num_points=None, area_percentage=None):
     """
     Generate different polygons within the INPUT_BBOX in EPSG:4326 - WGS 84
     Ranges from small area polygon to large polygons with large area in OGC WKT format
@@ -187,7 +187,8 @@ def genPolygon_AreaFIXED(INPUT_BBOX, area_percentage=None):
     half_height = poly_height / 2
     
     # Create a more interesting polygon by adding some random points and perturbations
-    num_points = random.randint(3, 100)
+    if num_points is None:
+        num_points = random.randint(3, 20)
     points = []
     
     for i in range(num_points):
@@ -225,7 +226,7 @@ def genPolygon_AreaFIXED(INPUT_BBOX, area_percentage=None):
     
     return wkt
 
-def genPolygon_Area(INPUT_BBOX, area_percentage=None):
+def genPolygon_Area(INPUT_BBOX, num_points=None, area_percentage=None):
     """
     Generate different polygons within the INPUT_BBOX in EPSG:4326 - WGS 84
     Ranges from small area polygon to large polygons with large area in OGC WKT format
@@ -266,7 +267,8 @@ def genPolygon_Area(INPUT_BBOX, area_percentage=None):
     half_height = poly_height / 2
     
     # Create a more interesting polygon by adding some random points and perturbations
-    num_points = random.randint(3, 100)
+    if num_points is None:
+        num_points = random.randint(3, 20)
     points = []
     
     for i in range(num_points):
@@ -443,7 +445,7 @@ def genPolygon_with_multiple_holes(INPUT_BBOX, num_points=None, area_percentage=
     
     if hole_sizes is None:
         # Generate random hole sizes, smaller with more holes
-        max_size = min(0.6, 1.5 / num_holes)
+        max_size = min(0.6, 1.0 / num_holes)
         hole_sizes = [random.uniform(0.1, max_size) for _ in range(num_holes)]
     
     # Generate outer polygon similar to genPolygon_with_hole
@@ -459,7 +461,7 @@ def genPolygon_with_multiple_holes(INPUT_BBOX, num_points=None, area_percentage=
     outer_points = []
     for i in range(num_points):
         angle = 2 * math.pi * i / num_points
-        radius_factor = random.uniform(0.85, 1.15)
+        radius_factor = random.uniform(0.5, 1.0)
         x = center_lon + math.cos(angle) * (poly_width / 2) * radius_factor
         y = center_lat + math.sin(angle) * (poly_height / 2) * radius_factor
         x = max(min(x, max_lon), min_lon)
@@ -1097,7 +1099,7 @@ def main(iteration):
     INPUT_BBOX = [11.360694444453532, 48.06152777781623, 11.723194444453823, 48.24819444448305] ## Munich
 
     NUM_OF_POINTS = random.randint(3, 100)
-    PERCENTAGE_OF_AREA = random.uniform(0.01, 1.0)
+    PERCENTAGE_OF_AREA = random.uniform(0.05, 0.7)
     
     #########################
     ### OGC Polygon Types ###
@@ -1111,9 +1113,9 @@ def main(iteration):
     # print(f"\n1. Simple Polygon Points ({num_points}):\n")
     # print(simple_poly)
     
-    simple_poly_area_fixed  = genPolygon_AreaFIXED(INPUT_BBOX, PERCENTAGE_OF_AREA)
+    simple_poly_area_fixed  = genPolygon_AreaFIXED(INPUT_BBOX, NUM_OF_POINTS, PERCENTAGE_OF_AREA)
 
-    simple_poly_area = genPolygon_Area(INPUT_BBOX, PERCENTAGE_OF_AREA)
+    simple_poly_area = genPolygon_Area(INPUT_BBOX, NUM_OF_POINTS, PERCENTAGE_OF_AREA)
     # print(f"\n3. Simple Polygon Area ({area_percentage * 100:.2f}% of bbox):\n")
     # print(small_poly) genPolygon_AreaFIXED
     
@@ -1122,7 +1124,7 @@ def main(iteration):
     # print(single_hole_poly)
 
     # print("\n5. Polygon with Multiple Holes :\n")
-    multi_hole_poly, multi_hole_poly_valid = genPolygon_with_multiple_holes(INPUT_BBOX, NUM_OF_POINTS, num_holes=5)
+    multi_hole_poly, multi_hole_poly_valid = genPolygon_with_multiple_holes(INPUT_BBOX, NUM_OF_POINTS, num_holes=3)
     # print(multi_hole_poly)
 
     # print("\n6. Random Polygon:\n")
@@ -1130,7 +1132,7 @@ def main(iteration):
     # print(random_poly)
     
     # print("\n6. Convex Polygon:")
-    convex_poly = genPolygon_Convex(INPUT_BBOX)
+    convex_poly = genPolygon_Convex(INPUT_BBOX, NUM_OF_POINTS)
     # print(convex_poly)
     
     # print("\n7. Concave Polygon:")
@@ -1145,7 +1147,7 @@ def main(iteration):
         simple_poly_area_fixed,
         simple_poly_area,
         single_hole_poly,
-        multi_hole_poly,
+        # multi_hole_poly,
         multi_hole_poly_valid, 
         convex_poly,
         concave_poly,
@@ -1159,18 +1161,18 @@ def main(iteration):
         "BM3 - "+ str(round(PERCENTAGE_OF_AREA * 100.0, 2))+"% of BBOX Area (center)",
         "BM4 - "+ str(round(PERCENTAGE_OF_AREA * 100.0, 2))+"% of BBOX Area (anywhere)",
         "BM5 - Single Hole",
-        "BM6 - Multiple Holes (INVALID OGC)",
-        "BM6 - Multiple Holes (VALID OGC)",
+        # "BM6 - Multiple Holes (INVALID OGC)",
+        "BM6 - Multiple Holes",
         # "Random (all in one)"
-        "Convex Polygon",
-        "Concave Polygon"
+        "Random Convex Polygon",
+        "Random Concave Polygon"
     ]
     
     # Visualize all polygons in one figure
     try:
         # print("\nVisualizing all polygons in subplots...")
         all_valid, results = check_all_polygons_ogc_compliance(polygons, titles)
-        # visualize_polygon_02(polygons, INPUT_BBOX, titles, iteration=iteration)
+        visualize_polygon_02(polygons, INPUT_BBOX, titles, iteration=iteration)
     except Exception as e:
         print(f"Visualization failed: {e}")
         print("Make sure you have shapely and matplotlib installed.")

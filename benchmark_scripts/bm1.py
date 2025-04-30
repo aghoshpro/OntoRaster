@@ -9,152 +9,123 @@ import numpy as np
 from tqdm import tqdm
 import gc
 
+from shapely.geometry import Polygon, box
+from shapely import wkt
+from shapely.ops import transform
+from pyproj import Transformer
+
 sparql = SPARQLWrapper("http://localhost:8082/sparql")
 sparql.setReturnFormat(JSON)
 
-def genPolygonPointsFIXED(input_bbox, num_points=None):
+def calculateArea(poly_wkt_str):
+    polygon = wkt.loads(poly_wkt_str)
+    area_sq_degrees = polygon.area
+    centroid = polygon.centroid
+    lon, lat = centroid.x, centroid.y
+    utm_zone = int((lon + 180) / 6) + 1
+    proj_string = f"+proj=utm +zone={utm_zone} +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+    # # Set up the transformation
+    transformer = Transformer.from_crs("EPSG:4326", proj_string, always_xy=True)
+    utm_polygon = transform(transformer.transform, polygon)
+    area_sq_meters = utm_polygon.area
+    area_sq_kilometers = area_sq_meters / 1_000_000  # Convert to square kilometers
+    return float(format(area_sq_kilometers, '.2f'))
+
+def genPolygonExp(INPUT_BBOX, NUM_OF_POINTS, AREA_IN_km, UNIFORM_FACTOR):
     """
-    Generate different polygons within the input_bbox in EPSG:4326 - WGS 84
-    Ranges from simple polygon (3 points) to dense polygon (many points) in OGC WKT format
+    Generate a polygon with specified area in square kilometers
     
-    Args:
-        input_bbox: List [min_lon, min_lat, max_lon, max_lat]
-        num_points: Optional int, number of points in the polygon. If None, a random number between 3 and 20 is used.
-        
+    Parameters:
+    INPUT_BBOX: WKT string representing the bounding box
+    NUM_OF_POINTS: Number of points in the polygon
+    AREA_IN_km²: Target area in square kilometers
+    UNIFORM_FACTOR: Controls shape regularity (0.0: very irregular, 1.0: perfectly regular)
+    
     Returns:
-        String: WKT format polygon
+    WKT string representing the generated polygon in EPSG:4326
     """
-    min_lon, min_lat, max_lon, max_lat = input_bbox
+    # Parse the bounding box
+    if type(INPUT_BBOX) == str:
+        bbox = wkt.loads(INPUT_BBOX)
+        bbox_bounds = bbox.bounds
+        min_x, min_y, max_x, max_y = bbox_bounds
+    else:
+        min_x, min_y, max_x, max_y = INPUT_BBOX
+        bbox = wkt.loads((box(*INPUT_BBOX, ccw=True)).wkt)
     
-    # Determine number of points if not specified
-    if num_points is None:
-        num_points = random.randint(3, 20)
+    # Compute the centroid for UTM zone determination
+    centroid_x = (min_x + max_x) / 2
+    centroid_y = (min_y + max_y) / 2
+    
+    # Determine UTM zone
+    utm_zone = int((centroid_x + 180) / 6) + 1
+    proj_string = f"+proj=utm +zone={utm_zone} +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+    
+    # Create transformers for WGS84 <-> UTM conversion
+    transformer_to_utm = Transformer.from_crs("EPSG:4326", proj_string, always_xy=True)
+    transformer_from_utm = Transformer.from_crs(proj_string, "EPSG:4326", always_xy=True)
+    
+    # Transform the bounding box to UTM
+    utm_bbox = transform(transformer_to_utm.transform, bbox)
+    utm_bounds = utm_bbox.bounds
+    utm_min_x, utm_min_y, utm_max_x, utm_max_y = utm_bounds
+    
+    # Calculate the center point of the bounding box in UTM
+    center_x = (utm_min_x + utm_max_x) / 2
+    center_y = (utm_min_y + utm_max_y) / 2
+    
+    # Calculate the radius needed for the target area
+    # For a regular polygon with n sides, area = (n/4) * r² * sin(2π/n)
+    # Solving for r: r = sqrt(area / ((n/4) * sin(2π/n)))
+    target_area_m2 = AREA_IN_km * 1_000_000  # Convert km² to m²
+    
+    # For a regular polygon, calculate the radius
+    n = NUM_OF_POINTS
+    regular_radius = math.sqrt(target_area_m2 / ((n/4) * math.sin(2 * math.pi / n)))
     
     # Generate points for the polygon
-    points = []
+    angles = np.linspace(0, 2 * np.pi, NUM_OF_POINTS, endpoint=False)
     
-    # For more complex shapes, we'll use a circular distribution with random perturbations
-    center_lon = (min_lon + max_lon) / 2
-    center_lat = (min_lat + max_lat) / 2
-
-    # Maximum radius that fits in the bbox (approximate)
-    max_radius_lon = (max_lon - min_lon) / 2 * 0.9
-    max_radius_lat = (max_lat - min_lat) / 2 * 0.9
-    
-    for i in range(num_points):
-        # Calculate angle for this point
-        angle = 2 * math.pi * i / num_points
+    utm_points = []
+    for angle in angles:
+        # Start with perfectly regular distance (radius)
+        base_distance = regular_radius
         
-        # Add some randomness to the radius
-        radius_factor = random.uniform(0.5, 1.0)
+        # Add randomness based on the uniformity factor
+        if UNIFORM_FACTOR < 1.0:
+            # The lower the uniformity factor, the more randomness
+            random_variation = (1.0 - UNIFORM_FACTOR) * random.uniform(0.5, 1.5)
+            distance = base_distance * (1.0 + (1.0 - UNIFORM_FACTOR) * (random_variation - 1.0))
+        else:
+            distance = base_distance
         
-        # Calculate coordinates
-        x = center_lon + math.cos(angle) * max_radius_lon * radius_factor
-        y = center_lat + math.sin(angle) * max_radius_lat * radius_factor
-        
-        # Ensure points are within the bbox
-        x = max(min(x, max_lon), min_lon)
-        y = max(min(y, max_lat), min_lat)
-        
-        points.append((x, y))
+        # Calculate point coordinates
+        x = center_x + distance * np.cos(angle)
+        y = center_y + distance * np.sin(angle)
+        utm_points.append((x, y))
     
-    # Close the polygon by adding the first point at the end
-    points.append(points[0])
+    # Create the polygon in UTM
+    utm_polygon = Polygon(utm_points)
     
-    # Convert to WKT format
-    wkt = "POLYGON (("
-    wkt += ", ".join([f"{p[0]} {p[1]}" for p in points])
-    wkt += "))"
+    # Calculate the area of the generated polygon
+    initial_area_m2 = utm_polygon.area
     
-    # Double-check OGC compliance
-    is_valid, message = validate_ogc_polygon(wkt)
-    if not is_valid:
-        # print("Polygon is not OGC compliant. Attempting to fix...")
-        wkt = fix_ogc_polygon(wkt)
-        
-    return wkt
-
-def genPolygon_AreaFIXED(INPUT_BBOX, num_points=None, area_percentage=None):
-    """
-    Generate different polygons within the INPUT_BBOX in EPSG:4326 - WGS 84
-    Ranges from small area polygon to large polygons with large area in OGC WKT format
+    # Scale the polygon to match the target area
+    scaling_factor = math.sqrt(target_area_m2 / initial_area_m2)
     
-    Args:
-        INPUT_BBOX: List [min_lon, min_lat, max_lon, max_lat]
-        area_percentage: Optional float between 0 and 1, representing what percentage of the bbox area 
-                        the polygon should occupy. If None, a random value is used.
-        
-    Returns:
-        String: WKT format polygon
-    """
-    min_lon, min_lat, max_lon, max_lat = INPUT_BBOX
+    # Apply scaling: translate to origin, scale, translate back
+    def scale_around_center(x, y):
+        dx = x - center_x
+        dy = y - center_y
+        return center_x + dx * scaling_factor, center_y + dy * scaling_factor
     
-    # Determine area percentage if not specified
-    # if area_percentage is None:
-    #     area_percentage = random.uniform(0.1, 1.0)
+    scaled_utm_polygon = transform(lambda x, y: scale_around_center(x, y), utm_polygon)
     
-    # if num_points is None:
-    #     num_points = random.randint(3, 20)
+    # Transform the UTM polygon back to WGS84 (EPSG:4326)
+    wgs84_polygon = transform(transformer_from_utm.transform, scaled_utm_polygon)
     
-    # Get bbox dimensions
-    bbox_width = max_lon - min_lon
-    bbox_height = max_lat - min_lat
-    
-    # Calculate center of bbox
-    center_lon = (min_lon + max_lon) / 2
-    center_lat = (min_lat + max_lat) / 2
-
-    # Calculate anywhere of bbox
-    # center_lon = random.uniform(min_lon, max_lon)
-    # center_lat = random.uniform(min_lat, max_lat)
-    
-    # Calculate polygon dimensions based on area percentage
-    # For simplicity, we'll create a rectangular polygon
-    scale_factor = math.sqrt(area_percentage)
-    poly_width = bbox_width * scale_factor
-    poly_height = bbox_height * scale_factor
-    
-    # Calculate polygon corners
-    half_width = poly_width / 2
-    half_height = poly_height / 2
-    
-    # Create a more interesting polygon by adding some random points and perturbations
-    points = []
-    
-    for i in range(num_points):
-        angle = 2 * math.pi * i / num_points
-        
-        # Base radius is determined by the desired area
-        x_radius = half_width
-        y_radius = half_height
-        
-        # Add some randomness but maintain approximate area
-        radius_factor = random.uniform(0.5, 1.0)
-        
-        x = center_lon + math.cos(angle) * x_radius * radius_factor
-        y = center_lat + math.sin(angle) * y_radius * radius_factor
-        
-        # Ensure points are within the bbox
-        x = max(min(x, max_lon), min_lon)
-        y = max(min(y, max_lat), min_lat)
-        
-        points.append((x, y))
-    
-    # Close the polygon by adding the first point at the end
-    points.append(points[0])
-    
-    # Convert to WKT format
-    wkt = "POLYGON (("
-    wkt += ", ".join([f"{p[0]} {p[1]}" for p in points])
-    wkt += "))"
-
-    # Double-check OGC compliance
-    is_valid, message = validate_ogc_polygon(wkt)
-    if not is_valid:
-        # Try to fix the polygon
-        wkt = fix_ogc_polygon(wkt)
-    
-    return wkt
+    # Return the WKT representation
+    return wgs84_polygon.wkt
 
 def validate_ogc_polygon(wkt):
     """
@@ -334,35 +305,32 @@ def benchmark(poly):
     return processing_time
 
 # input_bbox = [11.015629, 55.128649, 24.199222, 69.380313] ## Sweden
-input_bbox = [11.360694444453532, 48.06152777781623, 11.723194444453823, 48.24819444448305] ## Munich
-NUM_OF_POINTS = 10003 # 1,2 points are not polygon
-PERCENTAGE_OF_AREA = 0.25
-XTICKS_BIN = 1000
+INPUT_BBOX = [11.360694444453532, 48.06152777781623, 11.723194444453823, 48.24819444448305] # MUNICH
+INPUT_BBOX_WKT_STRING = (box(*INPUT_BBOX, ccw=True)).wkt
+NUM_OF_POINTS = 500 # 1,2 points are not polygon
+AREA_IN_km = 100 
+UNIFORM_FACTOR = 0.9
+XTICKS_BIN = 50
 # Create a list to store benchmark results
 benchmark_data = []
 
 # Run benchmarks with increasing LIMIT values
-point_values = list(range(3, NUM_OF_POINTS, 1000))  # 10, 20, 30, ... 100
+point_values = list(range(3, NUM_OF_POINTS, 10))  # 10, 20, 30, ... 100
 
 for point in tqdm(point_values):
     try:
-        # simple_poly_fixed = genPolygonPointsFIXED(input_bbox, point)
-        sample_polygon = genPolygon_AreaFIXED(input_bbox, point, area_percentage=PERCENTAGE_OF_AREA)
-        # print(simple_poly_fixed)
+        sample_polygon = genPolygonExp(INPUT_BBOX, point, AREA_IN_km, UNIFORM_FACTOR)
         time_taken = benchmark(sample_polygon)
-        # sample_polygon = None
         del sample_polygon
         gc.collect()
         benchmark_data.append({'Points': point, 'Processing_Time': time_taken})
-        # print(f"Points {point}: {time_taken:.4f} sec")
-        # print(simple_poly_fixed)
     except Exception as e:
         print(f"Error with Points {point}: {e}")
 
 # Create a pandas DataFrame from the benchmark data
 df = pd.DataFrame(benchmark_data)
 ## Save the benchmark data to a CSV file
-df.to_csv('./benchmark_scripts/sparql_benchmark_results.csv', index=False)
+df.to_csv('./benchmark_scripts/bm1_20000.csv', index=False)
 
 # df = pd.read_csv('./benchmark_scripts/sparql_benchmark_results.csv')
 
@@ -385,8 +353,8 @@ trend_y1 = 10 ** trend_log_y1  # Convert back to original scale
 # Assign colors
 colors = ['green' if t == min_time else 'red' if t == max_time else 'deepskyblue' for t in df['Processing_Time']]
 # Plot the results
-plt.figure(figsize=(25, 10))
-bars = plt.bar(df['Points'], df['Processing_Time'], align='center', color=colors, width=999)
+plt.figure(figsize=(20, 10))
+bars = plt.bar(df['Points'], df['Processing_Time'], align='center', color=colors, width=10)
 # Get min and max heights
 min_height = min(bar.get_height() for bar in bars)
 max_height = max(bar.get_height() for bar in bars)
@@ -406,7 +374,7 @@ plt.yticks(fontsize=15)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.margins(x=0)
-plt.savefig('./benchmark_scripts/benchmark_bar_plot.png')
+plt.savefig('./benchmark_scripts/bm1_bar_plot20000.png')
 
 # plt.figure(figsize=(20, 10))
 # bars = plt.bar(df['Points'], df['Processing_Time'], color=colors, align='center', width=1)
@@ -466,8 +434,8 @@ trend_log_y = m * x + b
 trend_y = 10 ** trend_log_y  # Convert back to original scale
 
 # Plot the bar chart
-plt.figure(figsize=(25, 10))
-barsh = plt.bar(x, df['Processing_Time'], color=colors, align='center', width=999)
+plt.figure(figsize=(20, 10))
+barsh = plt.bar(x, df['Processing_Time'], color=colors, align='center', width=10)
 
 # Add value labels on top of each bar
 # for bar in bars:
@@ -494,7 +462,7 @@ plt.grid(axis='y', which='both', linestyle='--', alpha=0.7)
 plt.legend(loc='upper right', borderaxespad=0)
 plt.tight_layout()
 plt.margins(x=0)
-plt.savefig('./benchmark_scripts/benchmark_line_plot_log_scale_trend.png')
+plt.savefig('./benchmark_scripts/bm1_log_scale20000.png')
 plt.show()
 
 # print("Benchmark completed and saved to CSV and PNG files.")
