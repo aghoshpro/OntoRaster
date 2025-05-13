@@ -68,6 +68,7 @@ Demonstrating  **raster** extension of _Virtual Knowledge Graph (VKG)_ system **
 ### 2.1 Clone this repository
 
 -
+
   ```sh
   git clone https://github.com/aghoshpro/OntoRaster.git
   ```
@@ -209,7 +210,7 @@ The [GeoNames v3.3 Ontology](https://www.geonames.org/ontology/documentation.htm
 Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontologies) at the University of Geneva. In our research, [CityGML v2.0 Ontology](https://smartcity.linkeddata.es/ontologies/cui.unige.chcitygml2.0.html) is used for for the KG construction based on 3D CityGML buildings data with the further modifications and OSM integration by [Ding et al., 2024](https://doi.org/10.1080/10095020.2024.2337360).
 
 <!-- - Research is undergoing for more efficient integration of 3DCityGML data. -->
-- [CityGMl 3.0](https://doi.org/10.1007/s41064-020-00095-z) is in progress to be a standard. Although **CityGML 2.0** remains most popular yet for practical usage and implementation. 
+- [CityGMl 3.0](https://doi.org/10.1007/s41064-020-00095-z) is in progress to be a standard. Although **CityGML 2.0** remains most popular yet for practical usage and implementation.
 
 ### 4.6. Quantities, Units, Dimensions and Types (QUDT)
 
@@ -220,7 +221,7 @@ Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontol
 
 ### Area of Interest (AOI)
 
-- **Munich**, the capital of Bavaria, Germany, covering approximately **436.00** $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project [Dense and Deep Geographic Virtual Knowledge Graphs for Visual Analysis (D2G2)](https://gepris.dfg.de/gepris/projekt/500249124).
+- **Munich**, the capital of Bavaria, Germany, covering approximately **334.00** $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project [Dense and Deep Geographic Virtual Knowledge Graphs for Visual Analysis (D2G2)](https://gepris.dfg.de/gepris/projekt/500249124).
 
 - \***\*NOTE** - Any other or user-specific AOI with similar kinds of data can be used by adding relevant mappings assertions.
 
@@ -284,18 +285,17 @@ Contains over **12 million** unique geographical features with their 25 million 
 
 #### 5.1.3.2. Get Data
 
-- **GUI** - First check how many LOD2 gml files are needed to cover the aforementioned **AOI** 
+- **GUI** - First check how many LOD2 gml files are needed to cover the aforementioned **AOI**
 
   - Go to [OpenData](https://geodaten.bayern.de/opengeodata/OpenDataDetail.html?pn=lod2&active=MASSENDOWNLOAD) and upload text from `./citygml_data/Munich_EWKT.txt` containing geometry of the AOI in `EWKT` format.
 
   - It will result a file `./citygml_data/lod2.meta4` which contains all `.gml` files with respective links.
 
-  - Two ways to go using GUI are displayed below. 
+  - Two ways to go using GUI are displayed below.
 
     <div align="center">
       <img src="./diagrams/CityGMLGUI.png" width=800>
     </div>
-    
 
 - **CLI** - For the demo we used `./citygml_data/get.munich_citygml.sh` script (see below) which can be run in `terminal` (linux) or `gitbash` (Windows) to download all **110** `.gml` files (~ **6.4 GB**). .
 
@@ -343,6 +343,7 @@ Contains over **12 million** unique geographical features with their 25 million 
 #### Small AOI
 
 -
+
   ```sh
   wget -O Munich.osm "https://api.openstreetmap.org/api/0.6/map?bbox=11.2871,48.2697,11.9748,47.9816"
   ```
@@ -350,6 +351,7 @@ Contains over **12 million** unique geographical features with their 25 million 
 #### LARGER AOI (>300 MB)
 
 -
+
   ```sh
   wget -O Munich.osm "http://overpass.openstreetmap.ru/cgi/xapi_meta?*[bbox=11.3608770000001300,48.0615539900001068,11.7230828880000786,48.2481460580001453]"
   ```
