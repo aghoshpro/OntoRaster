@@ -1,5 +1,5 @@
 import pandas as pd
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 
 # Define column names based on the geonames specification
 columns = ['geonameid', 'name', 'asciiname', 'alternatenames', 'latitude', 'longitude',

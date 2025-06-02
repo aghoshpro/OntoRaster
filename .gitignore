@@ -1,6 +1,7 @@
 .vscode
 tempCodeRunnerFile.py
 myenv/
+venv
 __pycache__/
 *.pyc
 *.pyo
@@ -10,4 +11,5 @@ __pycache__/
 *.ipynb_checkpoints/
 waste/
 data/
+llms
 benchmark_scripts

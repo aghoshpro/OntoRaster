@@ -533,7 +533,7 @@ FILTER(?ndvi > 0.35) # NDVI Scale [0.1 (Desert) to >= 1.0 (Forest)]
 name="Q14c. View Hotels (in 7.665 sec)"
 query="""
 ###########################################################################################
-#### Query 14c. List all the hotels in Munich where elevation is more than 500 meters  ####
+#### Query 14c. List all the hotels in Munich where snowcover is moderately dense      ####
 ###########################################################################################
 
 PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
@@ -553,7 +553,7 @@ FILTER (geof:sfWithin(?bldgWkt, ?distWkt))
 FILTER (CONTAINS(?rasterName, 'Snow'))
 BIND ('2023-12-20T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp)
 BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?snowCover) 
-FILTER(?snowCover > 5 && ?snowCover < 100)
+FILTER(?snowCover > 5 && ?snowCover < 50)
 } 
 """
 

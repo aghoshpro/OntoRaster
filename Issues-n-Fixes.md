@@ -42,10 +42,17 @@ usr/lib/jvm/java-11-openjdk-amd64
 2. <https://simplemaps.com/gis/country/in#admin1>
 3. <https://9revolution9.com/tools/geo/shp_geojson/>
 4. <https://ogre.adc4gis.com/>
-5. <https://python-charts.com/spatial/interactive-maps-folium/>
-6. <https://leaflet-extras.github.io/leaflet-providers/preview/>
-7. <https://en-us.topographic-map.com/>
-8. <https://mapscaping.com/bounding-box-calculator/>
+5. <https://gipong.github.io/shp2geojson.js/>
+6. <https://python-charts.com/spatial/interactive-maps-folium/>
+7. <https://leaflet-extras.github.io/leaflet-providers/preview/>
+8. <https://python-charts.com/spatial/interactive-maps-folium/>
+9. <https://en-us.topographic-map.com/>
+10. <https://mapscaping.com/bounding-box-calculator/>
+
+### Jupyter Tools
+
+1. <https://nbviewer.org/>
+2. <https://kokes.github.io/nbviewer.js/viewer.html#IG5idmlld2VyLmpz>
 
 ### Vector Data
 
@@ -76,6 +83,9 @@ usr/lib/jvm/java-11-openjdk-amd64
 6. <https://training.parthenos-project.eu/sample-page/intro-to-ri/interoperability/what-are-knowledge-representation-systems-and-ontologies/#1547722765459-cd21269e-3130>
 7. <https://python.langchain.com/v0.1/docs/use_cases/graph/constructing/#llm-graph-transformer>
 
+
+### LLMs
+1. [HuggingFace CLI login](https://stackoverflow.com/questions/79211723/cannot-load-a-gated-model-from-hugginface-despite-having-access-and-logging-in)
 ### Latex
 
 1. <https://www.overleaf.com/learn/latex/Articles/Unicode%2C_UTF-8_and_multilingual_text%3A_An_introduction>

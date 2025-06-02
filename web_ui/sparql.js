@@ -48,6 +48,8 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
 
+
+
 SELECT ?regionName ?tempK ?regionWkt {
 	?region a :Region_ITALY.
 	?region rdfs:label ?regionName .
@@ -66,8 +68,10 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX lgdo: <http://linkedgeodata.org/ontology/>
 PREFIX rasdb: <https://github.com/aghoshpro/RasterDataCube/>
 
+
+
 SELECT ?bldgName ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktColor {
-	?building a lgdo:Church ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
+	?building a lgdo:School ; rdfs:label ?bldgName ; geo:asWKT ?bldgWkt .
 	?region a :District ; rdfs:label ?distName ; geo:asWKT ?distWkt .
 	BIND('#008AFF5C' AS ?distWktColor)
 	BIND('red' AS ?bldgWktColor)
@@ -75,13 +79,15 @@ SELECT ?bldgName ?distName ?elevation ?distWkt ?distWktColor ?bldgWkt ?bldgWktCo
 	?gridCoverage a :Raster ; rasdb:rasterName ?rasterName .
 	FILTER (CONTAINS(?rasterName, 'Elevation')) # NDVI
 	BIND ('2000-02-11T00:00:00+00:00'^^xsd:dateTime AS ?timeStamp) # 2022-01-01T00:00:00+00:00
-	BIND (rasdb:rasSpatialMinimum(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
-	FILTER(?elevation < 520) # FILTER(?ndvi > 0.35) # NDVI Scale [0.1 (Desert) to >= 1.0 (Forest)]
+	BIND (rasdb:rasSpatialAverage(?timeStamp, ?distWkt, ?rasterName) AS ?elevation)
+	FILTER(?elevation > 520) # FILTER(?ndvi > 0.35)
 }`,
 	'Query 3': `PREFIX :	<https://github.com/aghoshpro/OntoRaster/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+
 
 SELECT ?regionName ?tempK ?regionWkt {
 	?region a :Region_SWEDEN .
@@ -99,6 +105,8 @@ SELECT ?regionName ?tempK ?regionWkt {
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+
 
 SELECT ?regionName ?tempK ?regionWkt ?regionWktLabel ?regionWktColor {
 	?region a :Region_ITALY .
@@ -126,6 +134,8 @@ GROUP BY ?regionName ?tempK ?regionWkt ?regionWktLabel ?regionWktColor`,
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:	<http://www.opengis.net/ont/geosparql#>
 PREFIX rasdb:	<https://github.com/aghoshpro/RasterDataCube/>
+
+
 
 SELECT ?regionName ?answer ?regionWkt {
 	?region a :Region .

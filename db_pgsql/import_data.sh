@@ -19,13 +19,14 @@ shp2pgsql -s 4326 /data/gadm41_SWE_2.shp region_Sweden | psql -h rasdatabase -p 
 sleep 5
 echo "Loading vector data for Area of Interest (AOI) South Tyrol"
 shp2pgsql -s 4326 /data/South_Tyrol_LOD3.shp region_South_Tyrol | psql -h rasdatabase -p 5432 -U petauser -d vectordb
+sleep 5
 echo "Loading 25 Districts of Munich"
 shp2pgsql -s 4326 /data/Munich_25_Bezirke_Dissolved.shp public.munich_dist25 | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 5
 echo "Loading 105 Sub-Districts of Munich"
 shp2pgsql -s 4326 /data/Munich_105_Bezirke.shp public.munich_subdist105 | psql -h rasdatabase -p 5432 -U petauser -d vectordb
 sleep 5
-echo "Loading GeoNames data for Germany"
+echo "Loading GeoNames data"
 python3 -u importGEONAMES.py
 sleep 5
 echo "Loading OSM buildings of Munich"

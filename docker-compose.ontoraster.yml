@@ -8,8 +8,8 @@ services:
     environment:
       POSTGRES_USER: petauser
       POSTGRES_PASSWORD: petapasswd
-      # petascopedb is the default database name for rasdaman
-      # vectordb will store other geospatial vector data
+      # petascopedb is the default relational database for rasdaman storing metadata of rasters
+      # vectordb will store all relational data including the geospatial vector data
       POSTGRES_DB: petascopedb
       POSTGRES_MULTIPLE_DATABASES: petascopedb, vectordb
     ports:

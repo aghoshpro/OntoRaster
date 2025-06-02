@@ -162,10 +162,9 @@ async function explainQueryResults() {
   // Add at the top of your file with other constants
 const LOADING_MESSAGES = [
     "Insights are cooking....",
-    "Shh.. magic is happening 🔮.....",
+    "Shh.. magic is happening.....",
     "Thinking, wanna tea ? ☕..... ",
-    "To be or not to be, that's the question 🎭 or is it 🤔.....",
-    "Generating insights..."
+    "To be or not to be, that's the question or is it....."
 ];
 
 // Helper function to get random message
@@ -320,7 +319,8 @@ function buildExplanationPrompt(queryResults) {
     });
   }
   
-  prompt += `\n\nPlease explain in a short paragraph what this data represents and what insights can be drawn from it. If there are geographic features (WKT data), mention what regions are being shown without including the full geometry strings.`;
+  // prompt += `\n\nPlease explain in a short paragraph what this data represents and what insights can be drawn from it. If there are geographic features (WKT data), mention what regions are being shown without including the full geometry strings.`;
+  prompt += `\n\nPlease explain insights drawn from the data in a 2-3 sentences. Mention what regions are being shown without including the full geometry strings.`;
   
   console.log("Generated prompt:", prompt);
   return prompt;
