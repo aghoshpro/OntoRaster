@@ -221,7 +221,7 @@ Developed by the [Knowledge Engineering @ CUI](https://cui.unige.ch/isi/ke/ontol
 
 - **Munich**, the capital of Bavaria, Germany, covering approximately **334.00** $km^2$ including the city and the surrounding area. This area is densely populated, hence features numerous structures encompassing numerous  residential and commercial zones alongside public amenities, establishing it as a bustling business hub. Also, it aligns with our collaboration with TU Munich under the DFG Project [Dense and Deep Geographic Virtual Knowledge Graphs for Visual Analysis (D2G2)](https://gepris.dfg.de/gepris/projekt/500249124).
 
-- \***\*NOTE** - Any other or user-specific AOI with similar kinds of data can be used by adding relevant mappings assertions.
+- \***\*NOTE** - Any user-specific AOI with similar kinds of data can be used by adding relevant mappings assertions.
 
 ### 5.1 Relational Data
 
