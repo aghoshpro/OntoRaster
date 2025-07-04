@@ -10,9 +10,9 @@ Demonstrating  **raster** extension of _Virtual Knowledge Graph (VKG)_ system **
 
 ## Features
 
-- 🧠 Smart integration of heterogenous relational data, 2D & 3D geometrical data and $n-dimensional$ data in geospatial domain (or ideally any arbitrary domain) with respective meta data handling during query time.
-- 🎯 Supports **RasSPARQL**, an extended SPARQL with raster functionalities compliant with GeoSPARQL functions.
-- 🧮 Incremental addition of new OWL ontologies, DB Schemas with respective R2RML mappings to VKG specification.
+- 🧠 On-the-fly integration of heterogenous tabular data, 2D & 3D geometrical data and $n-dimensional$ data in geospatial (or any arbitrary domain) with automatic meta data handling during query time.
+- 🎯 Supports **RasSPARQL**, an extended SPARQL with GeoSPARQL and novel raster functions.
+- 🧮 Incremental addition of new OWL ontologies, geo databases with respective mappings.
 - 🗜️ Supported Data Formats : `.txt`, `.shp`, `.geojson`, `.geotiff`, `.netcdf`, `.gml`, `json`.
 - 🤖 Query Answers are explainable by LLMs i.e., Ollama, ChatGPT, Claude etc.
 - 🖥️ Clean Web UI and SPARQL YASGUI for usage demonstration.
@@ -75,7 +75,7 @@ Demonstrating  **raster** extension of _Virtual Knowledge Graph (VKG)_ system **
 
 - Go to <https://docs.docker.com/desktop/> and install docker on your favourite OS.
 
-### 2.3 Run the demo
+### 2.3 Run The Demo
 
 - For this demo, we assume that the ports `7777`, `7001-7010` (used for the RDBMS),`8080` (for Array DBMS), `8082` (used by Ontop), `6060` (prompt success msg and endpoint) are free. If you need to use different ports, please edit the file `.env`.
 
@@ -98,15 +98,15 @@ It becomes available at <http://localhost:8082/> under `success` in docker deskt
 
 <img src="diagrams/Success1.PNG"/>
 
-#### 2.4.1 RasSPARQL Query Editor
+#### 2.4.1 RasSPARQL Query Yasgui Editor 
 
 <!-- <img src="diagrams/Ontop-Endpoint.gif"/> -->
 
 <img src="diagrams/Munich02.gif"/>
 
-### 2.5 Stop demo (optional)
+### 2.5 Stop Demo (optional)
 
-- Press `Ctrl+C` to stop and then run the following to remove containers, images, volumes to start fresh.
+- Press `Ctrl+C` to stop and then run the following,
 
   ```sh
   docker-compose -f docker-compose.ontoraster.yml down --volumes --rmi all 

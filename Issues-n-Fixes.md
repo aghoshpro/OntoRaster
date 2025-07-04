@@ -49,10 +49,15 @@ usr/lib/jvm/java-11-openjdk-amd64
 9. <https://en-us.topographic-map.com/>
 10. <https://mapscaping.com/bounding-box-calculator/>
 
-### Jupyter Tools
+### Python
 
 1. <https://nbviewer.org/>
 2. <https://kokes.github.io/nbviewer.js/viewer.html#IG5idmlld2VyLmpz>
+3. https://matplotlib.org/stable/gallery/ticks/tick-formatters.html
+4. <https://stackoverflow.com/questions/37738731/require-packages-in-my-script>
+5. <https://stackoverflow.com/questions/42045767/how-can-i-change-the-x-axis-so-there-is-no-white-space/42045987#42045987>
+6. <https://stackoverflow.com/questions/69886690/remove-empty-space-from-matplotlib-bar-plot>
+7. <https://stackoverflow.com/questions/65104927/add-text-to-folium-map-using-an-absolute-position>
 
 ### Vector Data
 
@@ -67,13 +72,19 @@ usr/lib/jvm/java-11-openjdk-amd64
 9. <https://macwright.com/lonlat/>
 10. <https://spatialreference.org/>
 
+#### OpenStreetMap (OSM) Data
+
+1. [Tags](https://wiki.openstreetmap.org/wiki/Map_features)
+2. [Simple 3D Buildings](https://wiki.openstreetmap.org/wiki/Simple_3D_Buildings)
+3. [Osmosis](https://wiki.openstreetmap.org/wiki/Osmosis)
+
 ### Raster Data
 
 1. <https://sentiwiki.copernicus.eu/web/sentiwiki>
 2. <https://dwtkns.com/srtm30m/>
 3. <https://www.earthdata.nasa.gov/data/instruments/srtm>
 
-### KG Construction
+### Knowledge Graph Data
 
 1. <https://schema.org/>
 2. <https://w3c-cg.github.io/rdfsurfaces/>
@@ -82,14 +93,34 @@ usr/lib/jvm/java-11-openjdk-amd64
 5. <https://protegeproject.github.io/protege/class-expression-syntax/>
 6. <https://training.parthenos-project.eu/sample-page/intro-to-ri/interoperability/what-are-knowledge-representation-systems-and-ontologies/#1547722765459-cd21269e-3130>
 7. <https://python.langchain.com/v0.1/docs/use_cases/graph/constructing/#llm-graph-transformer>
+8. https://programminghistorian.org/en/lessons/intro-to-linked-data#rdf-and-data-formats
+9. <https://stackoverflow.com/questions/3346396/in-semantic-web-are-owl-el-rl-ql-all-instances-of-dl-what-is-the-difference>
+10. <https://stackoverflow.com/questions/24817607/why-must-rdfdatatype-subclass-rdfclass-in-rdf>
+11. <https://github.com/RDFLib/sparqlwrapper/issues/124>
+12. <https://sparqlwrapper.readthedocs.io/en/latest/main.html> <!-- ### SPARQLWrapper QueryBadFormed Error for long SELECT query [10, 11] -->
+13. [ROBOT](https://robot.obolibrary.org/convert.html)
+14. https://owl2vec-star.readthedocs.io/en/latest/index.html
 
 
-### LLMs
+### Large Language Models (LLMs)
 1. [HuggingFace CLI login](https://stackoverflow.com/questions/79211723/cannot-load-a-gated-model-from-hugginface-despite-having-access-and-logging-in)
+2. [Unsloth](https://docs.unsloth.ai/)
+3. https://python.langchain.com/docs/integrations/vectorstores/
+4. https://python.langchain.com/docs/integrations/text_embedding/ollama/
+5. https://supabase.com/docs/guides/ai/langchain
+6. https://python.langchain.com/docs/versions/migrating_memory/conversation_buffer_memory/
+
 ### Latex
 
 1. <https://www.overleaf.com/learn/latex/Articles/Unicode%2C_UTF-8_and_multilingual_text%3A_An_introduction>
 2. <https://tex.stackexchange.com/questions/156964/guide-to-draw-charts-basic-pie-bar-from-data>
+
+### Docker
+
+1. https://stackoverflow.com/questions/36726799/is-there-a-way-to-stop-a-command-in-a-docker-container
+2. https://docs.docker.com/reference/api/engine/sdk/examples/
+3. https://hub.docker.com/r/ontop/ontop/tags
+4. https://learn.microsoft.com/en-us/windows/wsl/wsl-config#configure-global-options-with-wslconfig
 
 ### StackOverflow
 
@@ -97,14 +128,6 @@ usr/lib/jvm/java-11-openjdk-amd64
 2. <https://stackoverflow.com/questions/60065441/java-home-variable-issues>
 3. <https://stackoverflow.com/questions/14788345/how-to-install-the-jdk-on-ubuntu-linux>
 4. <https://stackoverflow.com/questions/21343529/all-my-java-applications-now-throw-a-java-awt-headlessexception>
-5. <https://stackoverflow.com/questions/42045767/how-can-i-change-the-x-axis-so-there-is-no-white-space/42045987#42045987>
-6. <https://stackoverflow.com/questions/69886690/remove-empty-space-from-matplotlib-bar-plot>
-7. <https://stackoverflow.com/questions/65104927/add-text-to-folium-map-using-an-absolute-position>
-8. <https://stackoverflow.com/questions/3346396/in-semantic-web-are-owl-el-rl-ql-all-instances-of-dl-what-is-the-difference>
-9. <https://stackoverflow.com/questions/24817607/why-must-rdfdatatype-subclass-rdfclass-in-rdf>
-10. <https://github.com/RDFLib/sparqlwrapper/issues/124>
-11. <https://sparqlwrapper.readthedocs.io/en/latest/main.html> <!-- ### SPARQLWrapper QueryBadFormed Error for long SELECT query [10, 11] -->
-12. <https://gis.stackexchange.com/questions/222662/why-is-pgraster-much-slower>
-13. <https://graphdb.ontotext.com/documentation/10.7/sql-access-over-jdbc.html>
-14. <https://github.com/perrygeo/bbox-cheatsheet/tree/master>
-15. <https://stackoverflow.com/questions/37738731/require-packages-in-my-script>
+5. <https://gis.stackexchange.com/questions/222662/why-is-pgraster-much-slower>
+6. <https://graphdb.ontotext.com/documentation/10.7/sql-access-over-jdbc.html>
+7. <https://github.com/perrygeo/bbox-cheatsheet/tree/master>

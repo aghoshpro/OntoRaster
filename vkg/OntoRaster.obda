@@ -31,7 +31,7 @@ source     SELECT geonameid, country_code FROM public.geonames
 
 mappingId  GeoNames_Feature_Location
 target     :geonames/{geonameid} geo:asWKT {pointWkt}^^geo:wktLiteral .
-source     SELECT geonameid, ST_AsText(ST_Point(longitude, latitude)) AS pointWkt FROM public.geonames
+source     SELECT geonameid, ST_AsText(ST_Point(longitude, latitude, 4326)) AS pointWkt FROM public.geonames
 
 mappingId  GeoNames_ID_Feature_Code
 target     :geonames/{geonameid} a gn:{featureCode} .
@@ -139,6 +139,13 @@ source		SELECT gid AS buildingId,
                        ELSE ST_AsText(geom)
                    END AS bldgWkt
             FROM public.munich_bldings_osm
+
+;SELECT gid AS buildingId,
+;                   CASE
+;                       WHEN ST_NumGeometries(geom) = 1 THEN ST_SetSRID(ST_AsText(ST_GeometryN(geom, 1)), 4326)
+;                       ELSE ST_SetSRID(ST_AsText(geom), 4326)
+;                   END AS bldgWkt
+;            FROM public.munich_bldings_osm;
 
 ; ---------------- 3DCityGML Buildings Data of Munich -----------------
 

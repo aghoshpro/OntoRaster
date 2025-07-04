@@ -10,7 +10,7 @@ RUN chmod +x import_data.sh
 COPY lookup_scripts.sql .
 
 COPY importGEONAMES.py .
-RUN unzip /data/SE.zip -d /data
+RUN unzip /data/DE.zip -d /data
 # Load data
 # CMD ["python3", "-u", "importGEONAMES.py"]
 ENTRYPOINT ["/import_data.sh"]
