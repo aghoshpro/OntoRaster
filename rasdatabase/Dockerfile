@@ -5,9 +5,9 @@ RUN apt-get  update && apt-get install -y wget postgresql-15-postgis-3
 
 # Install the necessary packages to get the plpython3 extension
 RUN apt-get update && apt-get install -y \
-    python3.11 \
+    python3.13 \
     postgresql-plpython3-15 \
-    python3.11-venv
+    python3.13-venv
 
 # Install the necessary packages to get the gdal working in Python
 
@@ -29,7 +29,7 @@ COPY requirements.txt /opt/envrasdaman/requirements.txt
 RUN /opt/envrasdaman/bin/pip install -r /opt/envrasdaman/requirements.txt
 
 # Set the PYTHONPATH environment variable
-ENV PYTHONPATH=/opt/envrasdaman/lib/python3.11/site-packages
+ENV PYTHONPATH=/opt/envrasdaman/lib/python3.13/site-packages
 
 # Step 2 - Initial SQL scripts
 # NOTE: PostgreSQL runs scripts sequentially in alphabetical order

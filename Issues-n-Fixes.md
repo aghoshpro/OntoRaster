@@ -1,6 +1,6 @@
 # Issues and Fixes
 
-### Java Installation in Ubuntu [1,2,3,4]
+### Java Installation in Ubuntu [stackoverflow 1,2,3,4]
 
 ```sh
 apt search openjdk
@@ -71,6 +71,8 @@ usr/lib/jvm/java-11-openjdk-amd64
 8. <https://www.reddit.com/r/gis/comments/1bu2c1h/crs84_epgs4326_wgs84/>
 9. <https://macwright.com/lonlat/>
 10. <https://spatialreference.org/>
+11. https://gsp.humboldt.edu/Websites/BlueSpray/STUsersGuide/Scripting/Script_SimpleFeatures.html
+12. https://gis.stackexchange.com/questions/146266/understanding-the-format-wkb-from-wkt-and-how-to-convert-the-first-into-the-lat
 
 #### OpenStreetMap (OSM) Data
 
@@ -100,9 +102,11 @@ usr/lib/jvm/java-11-openjdk-amd64
 12. <https://sparqlwrapper.readthedocs.io/en/latest/main.html> <!-- ### SPARQLWrapper QueryBadFormed Error for long SELECT query [10, 11] -->
 13. [ROBOT](https://robot.obolibrary.org/convert.html)
 14. https://owl2vec-star.readthedocs.io/en/latest/index.html
+15. https://www.w3.org/2005/Incubator/geo/XGR-geo-ont/
 
 
 ### Large Language Models (LLMs)
+
 1. [HuggingFace CLI login](https://stackoverflow.com/questions/79211723/cannot-load-a-gated-model-from-hugginface-despite-having-access-and-logging-in)
 2. [Unsloth](https://docs.unsloth.ai/)
 3. https://python.langchain.com/docs/integrations/vectorstores/

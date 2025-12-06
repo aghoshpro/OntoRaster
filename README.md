@@ -371,6 +371,19 @@ Contains over **12 million** unique geographical features with their 25 million 
 - Metadata of rasters are stored in `raster_lookup` table as shown below.
 - `raster_lookup` <img src="diagrams/raster_lookupx.png">
 
+  | raster\_id | raster\_name | field\_id | field\_name | fill\_nan | scale\_factor | min\_lon | max\_lon | min\_lon\_grid | max\_lon\_grid | res\_lon | min\_lat | max\_lat | min\_lat\_grid | max\_lat\_grid | res\_lat | start\_time | end\_time | start\_time\_grid | end\_time\_grid | res\_time |
+  | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+  | 18 | Sweden\_Surface\_Temperature | 36 | LST\_Night\_1km | 0 | 0.02 | 10.958333332351629 | 24.174999997834277 | 0 | 1585 | 0.00833333333258679 | 55.333333328376284 | 69.06666666047931 | 0 | 1647 | 0.008333333332586788 | "2022-03-31T12:00:00+00:00" | "2022-11-15T12:00:00+00:00" | 0 | 228 | 1 |
+  | 41 | Bavaria\_Temperature\_MODIS\_1km | 59 | LST\_Night\_1km | 0 | 0.02 | 8.974999999195973 | 13.841666665426658 | 0 | 583 | 0.00833333333258679 | 47.26666666243227 | 50.56666666213664 | 0 | 395 | 0.008333333332586797 | "2022-12-31T12:00:00+00:00" | "2023-10-31T12:00:00+00:00" | 0 | 303 | 1 |
+  | 64 | South\_Tyrol\_Temperature\_MODIS\_1km | 82 | LST\_Night\_1km | 0 | 0.02 | 10.38333333240314 | 12.483333332215011 | 0 | 251 | 0.008333333332586793 | 46.216666662526336 | 47.099999995780536 | 0 | 105 | 0.008333333332586762 | "2022-12-31T12:00:00+00:00" | "2023-11-01T12:00:00+00:00" | 0 | 304 | 1 |
+  | 87 | Munich\_SRTM\_Elevation\_30m | 105 | SRTMGL1\_DEM | -32768 | 1 | 11.360694444453532 | 11.723194444453823 | 0 | 1304 | 0.0002777777777779992 | 48.06152777781623 | 48.24819444448305 | 0 | 671 | 0.000277777777777997 | "2000-02-10T12:00:00+00:00" | "2000-02-11T12:00:00+00:00" | 0 | 0 | 1 |
+  | 110 | Munich\_MODIS\_Temperature\_1km | 128 | LST\_Night\_1km | 0 | 0.02 | 11.35833333230611 | 11.724999998939616 | 0 | 43 | 0.008333333332579674 | 48.05833332898704 | 48.24999999563637 | 0 | 22 | 0.008333333332579728 | "2021-12-31T12:00:00+00:00" | "2024-11-07T12:00:00+00:00" | 0 | 1041 | 1 |
+  | 133 | Munich\_MODIS\_NDVI\_250m | 151 | NDVI | -3000 | 0.0001 | 11.360416665648941 | 11.724999998949613 | 0 | 174 | 0.0020833333331467013 | 48.06041666236116 | 48.24999999567751 | 0 | 90 | 0.0020833333331466667 | "2021-12-11T00:00:00+00:00" | "2024-10-23T00:00:00+00:00" | 0 | 65 | 16 |
+  | 156 | Munich\_MODIS\_SnowCover\_500m | 174 | SnowCover | 200 | 1 | 11.358333332315794 | 11.724999998949613 | 0 | 87 | 0.004166666666293403 | 48.05833332902802 | 48.24999999567751 | 0 | 45 | 0.004166666666293467 | "2023-11-30T12:00:00+00:00" | "2024-11-30T12:00:00+00:00" | 0 | 365 | 1 |
+  | 179 | Munich\_ECOSTRESS\_SoilMoisture\_70m | 197 | SoilMoisture | nan | 1 | 11.360555257287388 | 11.723286514146125 | 0 | 576 | 0.0006286503585073437 | 48.0612374476909 | 48.24857525452609 | 0 | 297 | 0.0006286503585073535 | "2024-05-20T06:13:26+00:00" | "2024-10-25T18:48:56+00:00" | 0 | 158 | 1 |
+  
+
+
 - Ideally any 3-D gridded raster data of geospatial domain should work with the addition of relevant mappings.
 
 ## 6. Mapping (**_M_**)
@@ -393,7 +406,7 @@ Mappings design is the most crucial user-centric step in generating Virtual Know
 - Target
 
   ```sparql
-  :vector_region/bavaria/munich/districts/{regionId} a :District .
+  :vector/bavaria/munich/districts/{regionId} a :District .
   ```
 
 - Source
@@ -407,7 +420,7 @@ Mappings design is the most crucial user-centric step in generating Virtual Know
 - Target
 
   ```sparql
-  :vector_region/bavaria/munich/districts/{regionId} rdfs:label {regionName}^^xsd:string .
+  :vector/bavaria/munich/districts/{regionId} rdfs:label {regionName}^^xsd:string .
   ```
 
 - Source
@@ -420,7 +433,7 @@ Mappings design is the most crucial user-centric step in generating Virtual Know
 - **Target**
 
   ```sparql
-  :vector_region/bavaria/munich/districts/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
+  :vector/bavaria/munich/districts/{regionId} geo:asWKT {regionWkt}^^geo:wktLiteral .
   ```
 
 - **Source**
